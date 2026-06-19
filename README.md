@@ -22,18 +22,17 @@
       --text: #1e293b;
       --muted: #64748b;
     }
-    
-    /* TRAVA DE ROLAGEM GLOBAL - A mágica acontece aqui */
-    html, body {
-      max-width: 100%;
-      overflow-x: hidden; /* Impede que o site inteiro role para o lado */
-    }
 
+    /* Removido o bloqueio global que estava quebrando o celular */
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+    
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: var(--bg);
       color: var(--text);
-      margin: 0;
       padding: 10px;
       box-sizing: border-box;
     }
@@ -99,26 +98,24 @@
     .link-inline { font-size: 0.85rem; background: none; border: none; cursor: pointer; padding: 0; }
 
     /* =========================================
-       CONTAINER DA TABELA
+       CONTAINER DA TABELA (COM SCROLL APENAS AQUI)
        ========================================= */
     .calendar-container {
       width: 100%; 
-      overflow-x: auto; /* Apenas este bloco pode rolar */
+      overflow-x: auto; /* A barra de rolagem horizontal funciona APENAS na tabela */
       -webkit-overflow-scrolling: touch; 
       background: var(--surface);
       border-radius: 12px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       padding-bottom: 10px;
-      position: relative;
     }
 
     /* =========================================
-       TABELA
+       A TABELA E A COLUNA FIXA (BLINDADA)
        ========================================= */
     #scheduleTable { 
-      table-layout: fixed; 
-      width: max-content; /* Se adapta exatamente ao conteúdo sem estourar o container pai */
-      border-collapse: separate; 
+      width: max-content; /* Faz a tabela esticar além da tela para gerar o scroll */
+      border-collapse: separate; /* Fundamental para o sticky funcionar */
       border-spacing: 0; 
     }
     
@@ -126,38 +123,52 @@
       border-bottom: 1px solid var(--border); 
       border-right: 1px solid var(--border); 
       text-align: center; 
-      padding: 10px 2px; /* Espaço interno ajustado */
+      padding: 10px 0; /* Padding vertical ajustado */
       font-size: 0.85rem;
       background-color: #ffffff;
-      width: 40px;      /* TAMANHO EXATO DE 40px PARA OS DIAS */
+      
+      /* QUADRADOS DOS DIAS EXATAMENTE COM 40px */
+      width: 40px; 
       min-width: 40px; 
       max-width: 40px;
+      box-sizing: border-box;
     }
     
     #scheduleTable th { background-color: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
 
-    /* COLUNA DOS NOMES COMPLETAMENTE TRAVADA */
+    /* COLUNA DOS NOMES CHUMBADA NA ESQUERDA */
     #scheduleTable th:first-child,
     #scheduleTable td:first-child {
-      position: -webkit-sticky !important; /* Safari/iOS */
-      position: sticky !important;         /* Android/Chrome */
-      left: 0 !important;
+      position: -webkit-sticky; /* Para iPhone/Safari */
+      position: sticky;         /* Para Android/Chrome */
+      left: 0;                  /* Cola no lado esquerdo da tela */
+      
       width: 130px;      
       min-width: 130px;
       max-width: 130px;
       text-align: left;
       padding-left: 10px;
       font-weight: bold;
-      z-index: 10;
-      border-right: 2px solid #94a3b8 !important; 
-      box-shadow: 3px 0px 5px rgba(0,0,0,0.08); 
+      z-index: 10;              /* Fica por cima das células que deslizam */
+      
+      border-right: 2px solid #94a3b8; /* Borda mais forte separando dos dias */
+      box-shadow: 3px 0 5px rgba(0,0,0,0.05); /* Sombra para dar profundidade */
+      
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    #scheduleTable td:first-child { background-color: #ffffff !important; }
-    #scheduleTable th:first-child { background-color: #f1f5f9 !important; z-index: 11; }
+    #scheduleTable td:first-child {
+      background-color: #ffffff; 
+      border-left: 1px solid var(--border);
+    }
+    
+    #scheduleTable th:first-child {
+      background-color: #f1f5f9;
+      z-index: 11; /* O topo esquerdo fica acima de tudo */
+      border-left: 1px solid var(--border);
+    }
 
     /* Comportamento de clique nas células de dias */
     #scheduleTable td:not(:first-child) { cursor: pointer; transition: filter 0.2s; }
