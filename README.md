@@ -89,6 +89,7 @@
 
     .bulk-actions { display:flex; gap:8px; padding: 0 15px 8px; flex-wrap: wrap; }
     .bulk-actions button { padding: 8px 12px; border: 1px solid var(--border); background:#f8fafc; border-radius:6px; cursor:pointer; font-size:0.9rem; flex: 1; }
+    .link-inline { font-size: 0.85rem; background: none; border: none; cursor: pointer; padding: 0; }
 
     .calendar-container, .list-container {
       background: var(--surface);
@@ -98,7 +99,7 @@
       padding-bottom: 10px;
       -webkit-overflow-scrolling: touch;
       position: relative;
-      max-width: 100vw;
+      z-index: 1;
     }
 
     .list-container { padding: 20px; display: none; }
@@ -106,36 +107,56 @@
     .list-container th { text-align: left; padding: 10px; border-bottom: 2px solid var(--border); }
 
     /* TABELA PRINCIPAL */
-    #scheduleTable { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
+    #scheduleTable { 
+      width: 100%; 
+      border-collapse: separate; 
+      border-spacing: 0; 
+      min-width: 800px; 
+    }
     
     #scheduleTable th, #scheduleTable td { 
       border-bottom: 1px solid var(--border); 
       border-right: 1px solid var(--border); 
       text-align: center; 
       padding: 12px 4px; 
-      font-size: 0.85rem; 
+      font-size: 0.85rem;
+      background-clip: padding-box; /* Previne vazamento de fundo no scroll */
     }
     
     #scheduleTable th { background: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
 
-    /* FORÇANDO A COLUNA DO NOME A FICAR TRAVADA (STICKY) */
-    .sticky-col {
-      position: -webkit-sticky !important; /* Para Safari/iOS */
+    /* ========================================================
+       A MÁGICA DA COLUNA FIXA (Anti-Bug de Celular)
+       ======================================================== */
+    #scheduleTable th:first-child,
+    #scheduleTable td:first-child {
+      position: -webkit-sticky !important; /* Safari */
       position: sticky !important;
       left: 0 !important;
-      font-weight: bold;
       text-align: left !important;
       padding-left: 10px !important;
-      z-index: 20;
+      font-weight: bold;
       border-right: 2px solid #cbd5e1 !important;
-      box-shadow: 2px 0px 5px rgba(0,0,0,0.05); /* Sombra para destacar o limite */
+      background-color: #ffffff !important;
+      z-index: 50 !important;
+      /* Força a aceleração de hardware para o nome não sumir ao rolar: */
+      -webkit-transform: translateZ(0); 
+      transform: translateZ(0);
+      will-change: transform;
     }
     
-    td.sticky-col { background-color: #ffffff !important; }
-    th.sticky-col { background-color: #f1f5f9 !important; z-index: 30 !important; }
+    #scheduleTable th:first-child {
+      background-color: #f1f5f9 !important;
+      z-index: 60 !important;
+      border-left: 1px solid var(--border);
+    }
+    #scheduleTable td:first-child {
+      border-left: 1px solid var(--border);
+    }
 
-    #scheduleTable td:not(.sticky-col) { cursor: pointer; transition: background 0.2s; }
-    #scheduleTable td:not(.sticky-col):active { filter: brightness(0.8); }
+    /* Comportamento de clique nas células de dias */
+    #scheduleTable td:not(:first-child) { cursor: pointer; transition: filter 0.2s; }
+    #scheduleTable td:not(:first-child):active { filter: brightness(0.8); }
 
     /* Cores das Células */
     .folga { background-color: var(--success) !important; color: white !important; font-weight: bold; }
@@ -377,6 +398,14 @@
       return cur >= start && cur <= end;
     }
 
+    // Função NOVA para apagar as férias
+    function clearVacation(index) {
+      employees[index].vacationStart = '';
+      employees[index].vacationEnd = '';
+      renderConfigPanel();
+      renderCalendar();
+    }
+
     function renderConfigPanel() {
       configList.innerHTML = '';
       employees.forEach((emp, index) => {
@@ -407,9 +436,13 @@
             </div>
           </div>
 
-          <div class="input-group" style="border-top: 1px dashed #ccc; padding-top: 10px; margin-top: 10px;">
-            <div><label>Férias (Início)</label><input type="date" value="${emp.vacationStart}" onchange="updateEmp(${index}, 'vacationStart', this.value); renderCalendar();" /></div>
-            <div><label>Férias (Fim)</label><input type="date" value="${emp.vacationEnd}" onchange="updateEmp(${index}, 'vacationEnd', this.value); renderCalendar();" /></div>
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; border-top: 1px dashed #ccc; padding-top: 10px; margin-top: 10px; margin-bottom: 4px;">
+            <label style="margin:0;">Período de Férias</label>
+            <button class="link-inline" style="color:#ef4444; font-weight:bold;" onclick="clearVacation(${index}); return false;">🗑️ Limpar Marcação</button>
+          </div>
+          <div class="input-group">
+            <div><label style="font-weight:normal;">Início</label><input type="date" value="${emp.vacationStart}" onchange="updateEmp(${index}, 'vacationStart', this.value); renderCalendar();" /></div>
+            <div><label style="font-weight:normal;">Fim</label><input type="date" value="${emp.vacationEnd}" onchange="updateEmp(${index}, 'vacationEnd', this.value); renderCalendar();" /></div>
           </div>
 
           <div class="input-group" style="border-top: 1px dashed #ccc; padding-top: 10px;">
@@ -443,8 +476,7 @@
 
       const daysInMonth = new Date(year, month + 1, 0).getDate();
       
-      // Adicionada classe sticky-col no header Func
-      let htmlHeader = '<th class="sticky-col">Func.</th>';
+      let htmlHeader = '<th>Func.</th>';
       for (let d = 1; d <= daysInMonth; d++) {
         const date = new Date(year, month, d);
         htmlHeader += `<th style="${(date.getDay() === 0 || date.getDay() === 6) ? 'background:#e2e8f0' : ''}">${d}</th>`;
@@ -456,8 +488,7 @@
       selected.forEach(emp => {
         const empIndex = employees.findIndex(e => e.id === emp.id);
         
-        // Adicionada classe sticky-col na linha do nome
-        htmlBody += `<tr><td class="sticky-col">${emp.name}</td>`;
+        htmlBody += `<tr><td>${emp.name}</td>`;
 
         for (let d = 1; d <= daysInMonth; d++) {
           const date = new Date(year, month, d);
@@ -498,7 +529,6 @@
       
       const reasonInput = document.getElementById('occReason');
       const btnDel = document.getElementById('btnDelOcc');
-      const btnGroupRight = document.getElementById('btnGroupRight');
       
       if (emp.occurrences && emp.occurrences[dateStr]) {
         reasonInput.value = emp.occurrences[dateStr];
