@@ -1,4 +1,3 @@
-TABELA DE TURNO
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -171,7 +170,26 @@ TABELA DE TURNO
     .empty-hint { color: var(--muted); text-align:center; padding: 14px; font-size:0.9rem; }
 
     .link-inline { font-size: 0.8rem; color: #2563eb; text-decoration: underline; background: none; border: none; cursor: pointer; padding: 0; }
-  </style>
+  
+.actions-bar{
+  position:sticky;
+  top:0;
+  z-index:999;
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-bottom:8px;
+  padding:8px;
+  background:#f8fafc;
+  border-bottom:1px solid #e2e8f0;
+}
+.actions-bar .save-btn{
+  width:auto !important;
+  margin-top:0 !important;
+  padding:10px 14px !important;
+}
+
+</style>
 </head>
 <body>
   <h1>📅 Escala de Folgas</h1>
@@ -181,7 +199,7 @@ TABELA DE TURNO
     <select id="selYear" onchange="renderCalendar()"></select>
   </div>
 
-  <details open>
+  <details>
     <summary>Configurar Escalas (Toque aqui)</summary>
     <div class="bulk-actions">
       <button onclick="selectAll(true)">Selecionar todos</button>
@@ -194,11 +212,19 @@ TABELA DE TURNO
       • Marque <em>"Mostrar na tabela"</em> para exibir o funcionário no calendário.
     </div>
     <div style="padding: 0 15px 15px;">
-      <button class="save-btn" onclick="saveData()">💾 Salvar Configurações</button>
+      
     </div>
   </details>
 
-  <div class="calendar-container">
+  
+  
+<div class="actions-bar">
+  <button class="save-btn" onclick="saveData()">💾 Salvar</button>
+  <button class="save-btn" onclick="toggleConfig()">⚙️ Configurações</button>
+</div>
+
+<div class="calendar-container" id="calendarContainer" style="display:block;">
+
     <table id="scheduleTable">
       <thead>
         <tr id="headerRow"></tr>
@@ -543,7 +569,26 @@ TABELA DE TURNO
       emptyHint.style.display = selected.length ? 'none' : 'block';
     }
 
+    
+    function toggleConfig() {
+      const d=document.querySelector('details');
+      d.open=!d.open;
+    }
+
+    function toggleTable() {
+      const c = document.getElementById('calendarContainer');
+      const btn = event.target;
+      if (c.style.display === 'none') {
+        c.style.display = 'block';
+        btn.textContent = '📉 Minimizar Tabela';
+      } else {
+        c.style.display = 'none';
+        btn.textContent = '📊 Maximizar Tabela';
+      }
+    }
+
     init();
+
   </script>
 </body>
 </html>
