@@ -22,18 +22,12 @@
       --muted: #64748b;
     }
     
-    /* BLOQUEIO TOTAL DA PÁGINA PARA NÃO ARRASTAR */
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100vw;
-      overflow-x: hidden;
-    }
-
+    /* Corpo limpo, SEM overflow hidden, para o sticky funcionar nos telemóveis */
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: var(--bg);
       color: var(--text);
+      margin: 0;
       padding: 10px;
       box-sizing: border-box;
     }
@@ -59,27 +53,22 @@
     .link-inline { font-size: 0.85rem; background: none; border: none; cursor: pointer; padding: 0; }
 
     /* =========================================
-       ZONA DA TABELA (SCROLL BLINDADO)
+       ZONA DA TABELA (SCROLL NATIVO)
        ========================================= */
     .calendar-container {
       width: 100%; 
-      max-width: 100vw;
       overflow-x: auto; 
-      overflow-y: hidden;
+      overflow-y: visible; /* Garante que não corta as sombras */
       -webkit-overflow-scrolling: touch; 
       background: var(--surface);
       border-radius: 12px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      padding-bottom: 15px;
-      position: relative;
     }
 
     #scheduleTable { 
-      table-layout: fixed; 
+      border-collapse: separate; /* Obrigatório para o nome não mexer */
+      border-spacing: 0; 
       width: max-content; 
-      border-collapse: separate !important; 
-      border-spacing: 0 !important; 
-      min-width: 800px;
     }
     
     #scheduleTable th, #scheduleTable td { 
@@ -89,32 +78,35 @@
       padding: 10px 0; 
       font-size: 0.85rem;
       background-color: #ffffff;
+      box-sizing: border-box;
     }
     
-    #scheduleTable th { background-color: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
+    #scheduleTable th { 
+      background-color: #f1f5f9; 
+      font-weight: 600; 
+      border-top: 1px solid var(--border); 
+    }
 
-    /* A CLASSE MÁGICA: APLICAÇÃO DIRETA NO NOME
-       Isto impede que o telemóvel ignore o comando
-    */
+    /* A CLASSE QUE PRENDE O NOME (SEM CONFLITOS AGORA) */
     .fixar-nome {
       position: -webkit-sticky !important; 
       position: sticky !important;         
       left: 0 !important;
       
-      width: 120px !important;      
-      min-width: 120px !important;
-      max-width: 120px !important;
+      width: 130px !important;      
+      min-width: 130px !important;
+      max-width: 130px !important;
       
       text-align: left !important;
       padding-left: 10px !important;
       font-weight: bold;
       
       background-color: #ffffff !important;
-      z-index: 50 !important; 
+      z-index: 10 !important; 
       
       border-right: 2px solid #94a3b8 !important; 
-      outline: 1px solid #e2e8f0; /* Previne falhas gráficas no iOS */
-      box-shadow: 3px 0px 6px rgba(0,0,0,0.1) !important; 
+      border-left: 1px solid var(--border) !important;
+      box-shadow: 3px 0px 5px rgba(0,0,0,0.05);
       
       white-space: nowrap;
       overflow: hidden;
@@ -123,7 +115,7 @@
 
     th.fixar-nome {
       background-color: #f1f5f9 !important;
-      z-index: 60 !important; 
+      z-index: 20 !important; 
     }
 
     /* QUADRADOS DOS DIAS A EXATOS 40PX */
@@ -131,7 +123,6 @@
       width: 40px !important;
       min-width: 40px !important;
       max-width: 40px !important;
-      box-sizing: border-box;
       cursor: pointer;
       transition: filter 0.2s;
     }
@@ -240,7 +231,7 @@
 
   <div class="modal-overlay" id="occurrenceModal">
     <div class="modal-content">
-      <h3 id="occTitle" style="margin-top: 0; color: #1e293b;">Registrar Ausência</h3>
+      <h3 id="occTitle" style="margin-top: 0; color: #1e293b;">Registar Ausência</h3>
       <label for="occReason" style="font-weight: bold; color: #334155;">Motivo (Atestado, falta...)</label>
       <textarea id="occReason" placeholder="Descreva aqui o motivo..."></textarea>
       
@@ -428,7 +419,7 @@
       localStorage.setItem(STORAGE_KEY_V2, JSON.stringify(employees));
       renderCalendar();
       if(document.getElementById('listContainer').style.display === 'block') refreshOccurrencesList();
-      alert('Dados salvos com sucesso!');
+      alert('Dados guardados com sucesso!');
     }
 
     function renderCalendar() {
@@ -438,7 +429,6 @@
 
       const daysInMonth = new Date(year, month + 1, 0).getDate();
       
-      // Aplicar classe explícita fixar-nome
       let htmlHeader = '<th class="fixar-nome">Func.</th>';
       for (let d = 1; d <= daysInMonth; d++) {
         const date = new Date(year, month, d);
@@ -451,7 +441,6 @@
       selected.forEach(emp => {
         const empIndex = employees.findIndex(e => e.id === emp.id);
         
-        // Aplicar classe explícita fixar-nome
         htmlBody += `<tr><td class="fixar-nome" title="${emp.name}">${emp.name}</td>`;
 
         for (let d = 1; d <= daysInMonth; d++) {
