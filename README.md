@@ -11,9 +11,7 @@
       --surface: #ffffff;
       --border: #e2e8f0;
       --success: #22c55e;
-      --vacation: #facc15;
-      --exam-periodic: #1d4ed8;
-      --exam-clinical: #93c5fd;
+      --vacation: #8b4513; /* Marrom para férias */
       --occurrence: #ef4444; 
       
       /* Cores dos Cargos */
@@ -77,15 +75,14 @@
     summary::after { content: "⚙️"; }
 
     .config-grid { padding: 15px; display: grid; gap: 15px; }
-    .employee-card { border: 1px solid var(--border); padding: 10px; border-radius: 8px; background: #fafafa; }
-    .employee-card h3 { margin: 0 0 10px 0; font-size: 1rem; }
-
+    .employee-card { border: 1px solid var(--border); padding: 15px; border-radius: 8px; background: #fafafa; }
+    
     .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
-    .row .name-input { flex: 1; font-weight:bold; border:none; border-bottom:1px solid #ccc; padding:6px; min-width: 150px; background: transparent; }
-    .row .visibility { white-space: nowrap; font-size: 0.9rem; color: var(--muted); }
+    .row .name-input { flex: 1; font-weight:bold; border:none; border-bottom:1px solid #ccc; padding:6px; min-width: 150px; background: transparent; font-size: 1.05rem;}
+    .row .visibility { white-space: nowrap; font-size: 0.9rem; color: var(--muted); font-weight: bold;}
 
-    .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
-    label { font-size: 0.8rem; color: #64748b; display: block; margin-bottom: 2px; font-weight: 600;}
+    .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    label { font-size: 0.8rem; color: #475569; display: block; margin-bottom: 4px; font-weight: 600;}
     input[type="number"], input[type="date"], textarea, select.cargo-select { 
       width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; font-size: 1rem;
     }
@@ -99,60 +96,57 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       overflow-x: auto;
       padding-bottom: 10px;
-      -webkit-overflow-scrolling: touch; /* Melhor rolagem no iOS */
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+      max-width: 100vw;
     }
 
     .list-container { padding: 20px; display: none; }
-    .list-container table { min-width: 100%; }
-    .list-container th { text-align: left; padding: 10px; }
+    .list-container table { min-width: 100%; border-collapse: collapse; }
+    .list-container th { text-align: left; padding: 10px; border-bottom: 2px solid var(--border); }
 
-    /* CORREÇÃO DA TABELA PARA NÃO SUMIR O NOME */
-    table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
+    /* TABELA PRINCIPAL */
+    #scheduleTable { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
     
-    th, td { 
+    #scheduleTable th, #scheduleTable td { 
       border-bottom: 1px solid var(--border); 
       border-right: 1px solid var(--border); 
       text-align: center; 
-      padding: 10px 4px; 
+      padding: 12px 4px; 
       font-size: 0.85rem; 
     }
     
-    th { background: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
-    th:first-child, td:first-child { border-left: 1px solid var(--border); }
+    #scheduleTable th { background: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
 
-    /* Fixação Absoluta da Primeira Coluna */
-    td:first-child {
-      font-weight: bold; text-align: left; padding-left: 10px;
-      position: sticky; left: 0; 
-      background-color: #ffffff;
-      border-right: 2px solid var(--border); 
-      z-index: 10;
+    /* FORÇANDO A COLUNA DO NOME A FICAR TRAVADA (STICKY) */
+    .sticky-col {
+      position: -webkit-sticky !important; /* Para Safari/iOS */
+      position: sticky !important;
+      left: 0 !important;
+      font-weight: bold;
+      text-align: left !important;
+      padding-left: 10px !important;
+      z-index: 20;
+      border-right: 2px solid #cbd5e1 !important;
+      box-shadow: 2px 0px 5px rgba(0,0,0,0.05); /* Sombra para destacar o limite */
     }
     
-    th:first-child {
-      position: sticky; left: 0; 
-      background-color: #f1f5f9; 
-      z-index: 20; 
-      border-right: 2px solid var(--border);
-    }
+    td.sticky-col { background-color: #ffffff !important; }
+    th.sticky-col { background-color: #f1f5f9 !important; z-index: 30 !important; }
 
-    #scheduleTable td:not(:first-child) { cursor: pointer; transition: background 0.2s; }
-    #scheduleTable td:not(:first-child):active { filter: brightness(0.8); }
+    #scheduleTable td:not(.sticky-col) { cursor: pointer; transition: background 0.2s; }
+    #scheduleTable td:not(.sticky-col):active { filter: brightness(0.8); }
 
     /* Cores das Células */
-    .folga { background-color: var(--success); color: white; font-weight: bold; }
-    .ferias { background-color: var(--vacation); color: #000; font-weight: bold; }
-    .exam { font-weight: 700; color: #fff; }
-    .exam-periodic { background-color: var(--exam-periodic); }
-    .exam-clinical { background-color: var(--exam-clinical); color: #0f172a; }
-    .exam.weekend { background-color: #000 !important; color: #fff !important; }
+    .folga { background-color: var(--success) !important; color: white !important; font-weight: bold; }
+    .ferias { background-color: var(--vacation) !important; color: white !important; font-weight: bold; }
     .ocorrencia { background-color: var(--occurrence) !important; color: white !important; font-weight: bold; }
     
-    .cargo1-bg { background-color: var(--cargo1); }
-    .cargo2-bg { background-color: var(--cargo2); }
-    .cargo3-bg { background-color: var(--cargo3); }
+    .cargo1-bg { background-color: var(--cargo1) !important; }
+    .cargo2-bg { background-color: var(--cargo2) !important; }
+    .cargo3-bg { background-color: var(--cargo3) !important; }
 
-    .legend { color: var(--muted); font-size: 0.8rem; margin: 6px 0 12px; text-align: center; line-height: 1.6; }
+    .legend { color: var(--muted); font-size: 0.85rem; margin: 6px 0 12px; text-align: center; line-height: 1.6; }
 
     .save-btn {
       padding: 10px 14px; background: var(--primary); color: white; border: none;
@@ -170,7 +164,7 @@
       margin-bottom:12px; padding:8px; background:#f8fafc; border-bottom:1px solid #e2e8f0;
     }
 
-    /* Estilos do Modal (Bloco de notas) */
+    /* Modal (Bloco de notas) */
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
@@ -180,50 +174,23 @@
       background: #fff; padding: 20px; border-radius: 12px; width: 90%; max-width: 450px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
-    .modal-content textarea { height: 100px; margin-top: 5px; resize: vertical; font-family: inherit; }
+    .modal-content textarea { height: 100px; margin-top: 5px; resize: vertical; font-family: inherit; width: 100%; box-sizing: border-box; }
     .modal-buttons { display: flex; gap: 10px; justify-content: space-between; margin-top: 15px; flex-wrap: wrap; }
     .btn-action { padding: 12px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1; text-align: center; font-size: 0.95rem; }
     .btn-save-occ { background: var(--primary); color: white; }
     .btn-cancel-occ { background: #e2e8f0; color: #1e293b; }
     .btn-delete-occ { background: var(--occurrence); color: white; }
 
-    /* =========================================
-       REGRAS PARA SMARTPHONES (Telas Menores)
-       ========================================= */
     @media (max-width: 600px) {
-      .actions-bar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .actions-bar .save-btn {
-        width: 100% !important;
-        margin-bottom: 5px;
-        text-align: center;
-      }
-      .controls {
-        flex-direction: column;
-      }
-      .input-group {
-        grid-template-columns: 1fr; /* Quebra para 1 coluna no celular */
-      }
-      .row .visibility {
-        margin-top: 5px;
-      }
-      .apply-btn {
-        width: auto;
-      }
-      .modal-buttons {
-        flex-direction: column;
-      }
-      #btnGroupRight {
-        flex-direction: column;
-        width: 100%;
-        gap: 10px;
-      }
-      .btn-delete-occ {
-        width: 100%;
-        margin-bottom: 10px;
-      }
+      .actions-bar { flex-direction: column; align-items: stretch; }
+      .actions-bar .save-btn { width: 100% !important; margin-bottom: 5px; text-align: center; }
+      .controls { flex-direction: column; }
+      .input-group { grid-template-columns: 1fr; }
+      .row .visibility { margin-top: 5px; }
+      .apply-btn { width: auto; }
+      .modal-buttons { flex-direction: column; }
+      #btnGroupRight { flex-direction: column; width: 100%; gap: 10px; }
+      .btn-delete-occ { width: 100%; margin-bottom: 10px; }
     }
   </style>
 </head>
@@ -247,18 +214,18 @@
       <button onclick="selectAll(true)">Selecionar todos</button>
       <button onclick="selectAll(false)">Ocultar todos</button>
     </div>
+    
     <div class="config-grid" id="configList"></div>
+    
     <div class="legend" style="border-top: 1px solid #ccc; padding-top: 10px;">
       • <strong>Cores de Trabalho:</strong> 
-      <span style="background:#e0f2fe;padding:0 4px;border:1px solid #ccc;display:inline-block;margin:2px;">Cargo 1</span> 
-      <span style="background:#ffedd5;padding:0 4px;border:1px solid #ccc;display:inline-block;margin:2px;">Cargo 2</span> 
-      <span style="background:#fef9c3;padding:0 4px;border:1px solid #ccc;display:inline-block;margin:2px;">Cargo 3</span><br />
+      <span style="background:#e0f2fe;padding:2px 6px;border:1px solid #ccc;border-radius:4px;display:inline-block;margin:2px;">Cargo 1</span> 
+      <span style="background:#ffedd5;padding:2px 6px;border:1px solid #ccc;border-radius:4px;display:inline-block;margin:2px;">Cargo 2</span> 
+      <span style="background:#fef9c3;padding:2px 6px;border:1px solid #ccc;border-radius:4px;display:inline-block;margin:2px;">Cargo 3</span><br />
       • <strong>Demais Cores:</strong> 
-      <span style="background:#22c55e;color:#fff;padding:0 4px;display:inline-block;margin:2px;">Folga</span> 
-      <span style="background:#facc15;padding:0 4px;display:inline-block;margin:2px;">Férias</span> 
-      <span style="background:#1d4ed8;color:#fff;padding:0 4px;display:inline-block;margin:2px;">EP</span> 
-      <span style="background:#93c5fd;padding:0 4px;display:inline-block;margin:2px;">EC</span> 
-      <span style="background:#ef4444;color:#fff;padding:0 4px;display:inline-block;margin:2px;">Afastamento (⚠️)</span>
+      <span style="background:#22c55e;color:#fff;padding:2px 6px;border-radius:4px;display:inline-block;margin:2px;">Folga</span> 
+      <span style="background:#8b4513;color:#fff;padding:2px 6px;border-radius:4px;display:inline-block;margin:2px;">Férias (Marrom)</span> 
+      <span style="background:#ef4444;color:#fff;padding:2px 6px;border-radius:4px;display:inline-block;margin:2px;">Afastamento/Falta (⚠️)</span>
     </div>
   </details>
 
@@ -326,8 +293,6 @@
       emp.visible = (typeof emp.visible === 'boolean') ? emp.visible : true;
       emp.vacationStart = emp.vacationStart ?? '';
       emp.vacationEnd = emp.vacationEnd ?? '';
-      emp.examPeriodic = emp.examPeriodic ?? '';
-      emp.examClinical = emp.examClinical ?? '';
       emp.cargo = emp.cargo || ''; 
       emp.occurrences = emp.occurrences || {}; 
       
@@ -385,13 +350,6 @@
       renderCalendar();
     }
 
-    function sameDate(dateObj, dateStr){
-      if (!dateStr) return false;
-      const t = new Date(dateStr + 'T00:00:00');
-      if (isNaN(t)) return false;
-      return dateObj.getFullYear() === t.getFullYear() && dateObj.getMonth() === t.getMonth() && dateObj.getDate() === t.getDate();
-    }
-
     function isDayOff(dateObj, emp) {
       const start = new Date(emp.startDate + 'T00:00:00');
       const current = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
@@ -441,7 +399,7 @@
               </select>
             </div>
             <div>
-              <label>Início da Escala</label>
+              <label>Início da Escala (Trabalho)</label>
               <div style="display:flex; gap:5px;">
                 <input type="date" value="${emp.startDate}" onchange="updateEmp(${index}, 'startDate', this.value); renderCalendar();" style="flex:1;" />
                 <button class="apply-btn" onclick="renderCalendar()">Aplicar</button>
@@ -449,7 +407,12 @@
             </div>
           </div>
 
-          <div class="input-group">
+          <div class="input-group" style="border-top: 1px dashed #ccc; padding-top: 10px; margin-top: 10px;">
+            <div><label>Férias (Início)</label><input type="date" value="${emp.vacationStart}" onchange="updateEmp(${index}, 'vacationStart', this.value); renderCalendar();" /></div>
+            <div><label>Férias (Fim)</label><input type="date" value="${emp.vacationEnd}" onchange="updateEmp(${index}, 'vacationEnd', this.value); renderCalendar();" /></div>
+          </div>
+
+          <div class="input-group" style="border-top: 1px dashed #ccc; padding-top: 10px;">
             <div><label>Escala A - Trab.</label><input type="number" min="0" value="${emp.cycles[0].workDays}" onchange="updateCycle(${index}, 0, 'workDays', this.value)" /></div>
             <div><label>Escala A - Folga</label><input type="number" min="0" value="${emp.cycles[0].offDays}" onchange="updateCycle(${index}, 0, 'offDays', this.value)" /></div>
           </div>
@@ -479,7 +442,9 @@
       if (isNaN(month) || isNaN(year)) return;
 
       const daysInMonth = new Date(year, month + 1, 0).getDate();
-      let htmlHeader = '<th>Func</th>';
+      
+      // Adicionada classe sticky-col no header Func
+      let htmlHeader = '<th class="sticky-col">Func.</th>';
       for (let d = 1; d <= daysInMonth; d++) {
         const date = new Date(year, month, d);
         htmlHeader += `<th style="${(date.getDay() === 0 || date.getDay() === 6) ? 'background:#e2e8f0' : ''}">${d}</th>`;
@@ -490,18 +455,17 @@
       let htmlBody = '';
       selected.forEach(emp => {
         const empIndex = employees.findIndex(e => e.id === emp.id);
-        htmlBody += `<tr><td>${emp.name}</td>`;
+        
+        // Adicionada classe sticky-col na linha do nome
+        htmlBody += `<tr><td class="sticky-col">${emp.name}</td>`;
 
         for (let d = 1; d <= daysInMonth; d++) {
           const date = new Date(year, month, d);
           const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
           
-          const weekend = (date.getDay() === 0 || date.getDay() === 6);
           const occReason = emp.occurrences && emp.occurrences[dateStr];
           const vac = isVacation(date, emp);
-          const ep = sameDate(date, emp.examPeriodic);
-          const ec = sameDate(date, emp.examClinical);
-          const isOff = !vac && !ep && !ec && isDayOff(date, emp);
+          const isOff = !vac && isDayOff(date, emp);
 
           let content = '', classes = '', title = '';
 
@@ -509,11 +473,6 @@
             classes = 'ocorrencia'; content = '⚠️'; title = `${occReason}`;
           } else if (vac) {
             classes = 'ferias'; title = 'Férias';
-          } else if (ep || ec) {
-            classes = 'exam ' + (ep && ec ? 'exam-periodic' : (ep ? 'exam-periodic' : 'exam-clinical'));
-            if (weekend) classes += ' weekend';
-            content = ep && ec ? 'EP/EC' : (ep ? 'EP' : 'EC');
-            title = ep && ec ? 'EP e EC' : (ep ? 'EP' : 'EC');
           } else if (isOff) {
             classes = 'folga'; content = 'F'; title = 'Folga';
           } else {
