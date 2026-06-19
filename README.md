@@ -1,4 +1,4 @@
-<Deus seja louvado!>
+
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -92,16 +92,16 @@
     .link-inline { font-size: 0.85rem; background: none; border: none; cursor: pointer; padding: 0; }
 
     /* =========================================
-       CONTAINER DA TABELA
+       CONTAINER DA TABELA BLINDADO
        ========================================= */
     .calendar-container {
-      width: 100%; /* Limita a largura ao tamanho da tela */
-      overflow-x: auto; /* Cria a barra de rolagem horizontal aqui */
+      width: 100%; 
+      overflow-x: auto; 
+      -webkit-overflow-scrolling: touch; /* Suavidade no scroll do iOS */
       background: var(--surface);
       border-radius: 12px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       padding-bottom: 10px;
-      -webkit-overflow-scrolling: touch;
     }
 
     .list-container { padding: 20px; display: none; background: var(--surface); border-radius: 12px; }
@@ -109,13 +109,13 @@
     .list-container th { text-align: left; padding: 10px; border-bottom: 2px solid var(--border); }
 
     /* =========================================
-       A TABELA E A COLUNA FIXA
+       A TABELA E A COLUNA FIXA (AGORA VAI!)
        ========================================= */
     #scheduleTable { 
       width: 100%; 
-      border-collapse: separate; /* Fundamental para o sticky funcionar bem */
+      border-collapse: separate; /* OBRIGATÓRIO PARA O STICKY FUNCIONAR */
       border-spacing: 0; 
-      min-width: 800px; /* Força a tabela a ser mais larga que o celular, criando o scroll */
+      min-width: 800px; 
     }
     
     #scheduleTable th, #scheduleTable td { 
@@ -126,29 +126,31 @@
       font-size: 0.85rem;
     }
     
-    #scheduleTable th { background: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
+    /* Fundo padrão das linhas da tabela */
+    #scheduleTable tbody tr { background-color: #ffffff; }
+    #scheduleTable th { background-color: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
 
-    /* Mágica da Coluna Travada (Sticky) */
+    /* MÁGICA DEFINITIVA DO TRAVAMENTO (iOS e Android) */
     #scheduleTable th:first-child,
     #scheduleTable td:first-child {
-      position: sticky;
-      left: 0;
+      position: -webkit-sticky !important; /* Para navegadores Apple/Safari */
+      position: sticky !important;         /* Para os demais navegadores */
+      left: 0 !important;
       text-align: left;
       padding-left: 10px;
       font-weight: bold;
-      background-color: #ffffff; /* Fundo sólido essencial */
-      z-index: 5; /* Fica acima das outras células ao rolar */
-      box-shadow: 2px 0 5px rgba(0,0,0,0.08); /* Sombra para dividir o nome dos dias */
+      z-index: 10 !important; /* Mantém acima das células que rolam */
+      border-right: 2px solid #94a3b8 !important; /* Borda mais grossa para destacar */
+      box-shadow: 3px 0 5px -1px rgba(0,0,0,0.1); /* Sombrinha para dar o efeito flutuante */
+    }
+
+    #scheduleTable td:first-child {
+      background-color: #ffffff !important; /* Impede a transparência ao rolar */
     }
     
     #scheduleTable th:first-child {
-      background-color: #f1f5f9;
-      z-index: 6; /* Fica acima da célula de dados */
-      border-left: 1px solid var(--border);
-    }
-    
-    #scheduleTable td:first-child {
-      border-left: 1px solid var(--border);
+      background-color: #f1f5f9 !important;
+      z-index: 11 !important; /* O cabeçalho precisa ficar um nível acima da coluna */
     }
 
     /* Comportamento de clique nas células de dias */
@@ -395,7 +397,7 @@
       return cur >= start && cur <= end;
     }
 
-    // Função que apaga os dados de férias ao clicar no botão "Limpar"
+    // Função para apagar as férias
     function clearVacation(index) {
       employees[index].vacationStart = '';
       employees[index].vacationEnd = '';
