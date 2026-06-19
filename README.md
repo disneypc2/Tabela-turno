@@ -1,3 +1,4 @@
+
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -343,4 +344,239 @@
       if (diffDays < 0) return false;
 
       const w1 = toInt(emp.cycles[0].workDays, 6), o1 = toInt(emp.cycles[0].offDays, 2);
-      const w2 = toInt(emp.cycles[1].workDays, 5), o2 = toInt(emp.cycles[1].offDays
+      const w2 = toInt(emp.cycles[1].workDays, 5), o2 = toInt(emp.cycles[1].offDays, 2);
+      const len1 = w1 + o1, len2 = w2 + o2;
+
+      if (len1 === 0 && len2 === 0) return false;
+      if (len1 === 0) return (diffDays % len2) >= w2;
+      if (len2 === 0) return (diffDays % len1) >= w1;
+
+      const r = diffDays % (len1 + len2);
+      return r < len1 ? (r >= w1) : ((r - len1) >= w2);
+    }
+
+    function isVacation(dateObj, emp){
+      if (!emp.vacationStart || !emp.vacationEnd) return false;
+      const a = new Date(emp.vacationStart + 'T00:00:00'), b = new Date(emp.vacationEnd + 'T00:00:00');
+      if (isNaN(a) || isNaN(b)) return false;
+      const start = a <= b ? a : b, end = a <= b ? b : a;
+      const cur = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+      return cur >= start && cur <= end;
+    }
+
+    function renderConfigPanel() {
+      configList.innerHTML = '';
+      employees.forEach((emp, index) => {
+        const div = document.createElement('div');
+        div.className = 'employee-card';
+        div.innerHTML = `
+          <div class="row">
+            <input class="name-input" type="text" value="${emp.name}" onchange="updateEmp(${index}, 'name', this.value)" />
+            <label class="visibility"><input type="checkbox" ${emp.visible ? 'checked' : ''} onchange="updateEmp(${index}, 'visible', this.checked); renderCalendar();" /> Mostrar</label>
+          </div>
+          
+          <div class="input-group">
+            <div>
+              <label>Cargo do Funcionário</label>
+              <select class="cargo-select" onchange="updateEmp(${index}, 'cargo', this.value); renderCalendar();">
+                <option value="">Nenhum (Branco)</option>
+                <option value="cargo1" ${emp.cargo === 'cargo1' ? 'selected' : ''}>Cargo 1 (Azul Clarinho)</option>
+                <option value="cargo2" ${emp.cargo === 'cargo2' ? 'selected' : ''}>Cargo 2 (Laranja Clarinho)</option>
+                <option value="cargo3" ${emp.cargo === 'cargo3' ? 'selected' : ''}>Cargo 3 (Amarelo Clarinho)</option>
+              </select>
+            </div>
+            <div>
+              <label>Data Início Escala (A)</label>
+              <div style="display:flex; gap:5px;">
+                <input type="date" value="${emp.startDate}" onchange="updateEmp(${index}, 'startDate', this.value); renderCalendar();" />
+                <button class="apply-btn" onclick="renderCalendar()">Aplicar</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div><label>Escala A - Trab.</label><input type="number" min="0" value="${emp.cycles[0].workDays}" onchange="updateCycle(${index}, 0, 'workDays', this.value)" /></div>
+            <div><label>Escala A - Folga</label><input type="number" min="0" value="${emp.cycles[0].offDays}" onchange="updateCycle(${index}, 0, 'offDays', this.value)" /></div>
+          </div>
+          <div class="input-group">
+            <div><label>Escala B - Trab.</label><input type="number" min="0" value="${emp.cycles[1].workDays}" onchange="updateCycle(${index}, 1, 'workDays', this.value)" /></div>
+            <div><label>Escala B - Folga</label><input type="number" min="0" value="${emp.cycles[1].offDays}" onchange="updateCycle(${index}, 1, 'offDays', this.value)" /></div>
+          </div>
+        `;
+        configList.appendChild(div);
+      });
+    }
+
+    function updateEmp(index, field, value) { employees[index][field] = field === 'visible' ? !!value : value; }
+    function updateCycle(index, cycleIdx, field, value) { employees[index].cycles[cycleIdx][field] = toInt(value, 0); }
+    function selectAll(flag) { employees.forEach(emp => emp.visible = !!flag); renderConfigPanel(); renderCalendar(); }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY_V2, JSON.stringify(employees));
+      renderCalendar();
+      if(document.getElementById('listContainer').style.display === 'block') refreshOccurrencesList();
+      alert('Dados salvos com sucesso!');
+    }
+
+    function renderCalendar() {
+      const month = parseInt(selMonth.value, 10);
+      const year = parseInt(selYear.value, 10);
+      if (isNaN(month) || isNaN(year)) return;
+
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      let htmlHeader = '<th>Func</th>';
+      for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(year, month, d);
+        htmlHeader += `<th style="${(date.getDay() === 0 || date.getDay() === 6) ? 'background:#e2e8f0' : ''}">${d}</th>`;
+      }
+      headerRow.innerHTML = htmlHeader;
+
+      const selected = employees.filter(emp => emp.visible);
+      let htmlBody = '';
+      selected.forEach(emp => {
+        const empIndex = employees.findIndex(e => e.id === emp.id);
+        htmlBody += `<tr><td>${emp.name}</td>`;
+
+        for (let d = 1; d <= daysInMonth; d++) {
+          const date = new Date(year, month, d);
+          const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          
+          const weekend = (date.getDay() === 0 || date.getDay() === 6);
+          const occReason = emp.occurrences && emp.occurrences[dateStr];
+          const vac = isVacation(date, emp);
+          const ep = sameDate(date, emp.examPeriodic);
+          const ec = sameDate(date, emp.examClinical);
+          const isOff = !vac && !ep && !ec && isDayOff(date, emp);
+
+          let content = '', classes = '', title = 'Clique para registrar ocorrência/falta';
+
+          if (occReason) {
+            classes = 'ocorrencia'; content = '⚠️'; title = `Ocorrência registrada: ${occReason} (Clique para editar)`;
+          } else if (vac) {
+            classes = 'ferias'; title = 'Férias (Clique para registrar ocorrência)';
+          } else if (ep || ec) {
+            classes = 'exam ' + (ep && ec ? 'exam-periodic' : (ep ? 'exam-periodic' : 'exam-clinical'));
+            if (weekend) classes += ' weekend';
+            content = ep && ec ? 'EP/EC' : (ep ? 'EP' : 'EC');
+            title = ep && ec ? 'Exame (Clique para registrar ocorrência)' : (ep ? 'Exame Periódico' : 'Exame Clínico');
+          } else if (isOff) {
+            classes = 'folga'; content = 'F'; title = 'Folga (Clique para registrar ocorrência)';
+          } else {
+            // Dia trabalhado normal - Aplica a cor do cargo
+            if (emp.cargo === 'cargo1') classes = 'cargo1-bg';
+            else if (emp.cargo === 'cargo2') classes = 'cargo2-bg';
+            else if (emp.cargo === 'cargo3') classes = 'cargo3-bg';
+          }
+
+          htmlBody += `<td class="${classes}" title="${title}" onclick="openModal(${empIndex}, '${dateStr}')">${content}</td>`;
+        }
+        htmlBody += `</tr>`;
+      });
+      bodyRows.innerHTML = htmlBody;
+      emptyHint.style.display = selected.length ? 'none' : 'block';
+    }
+
+    // Modal Funções
+    function openModal(empIndex, dateStr) {
+      activeEmpIndex = empIndex;
+      activeDateStr = dateStr;
+      const emp = employees[empIndex];
+      const [y, m, d] = dateStr.split('-');
+      document.getElementById('occTitle').innerText = `Ausência: ${emp.name} (${d}/${m}/${y})`;
+      
+      const reasonInput = document.getElementById('occReason');
+      const btnDel = document.getElementById('btnDelOcc');
+      const btnGroupRight = document.getElementById('btnGroupRight');
+      
+      if (emp.occurrences && emp.occurrences[dateStr]) {
+        reasonInput.value = emp.occurrences[dateStr];
+        btnDel.style.display = 'block';
+        btnGroupRight.style.width = 'auto';
+      } else {
+        reasonInput.value = '';
+        btnDel.style.display = 'none';
+        btnGroupRight.style.width = '100%';
+      }
+      modal.style.display = 'flex';
+      reasonInput.focus();
+    }
+
+    function closeModal() { modal.style.display = 'none'; }
+
+    function saveOccurrence() {
+      const reason = document.getElementById('occReason').value.trim();
+      if (!employees[activeEmpIndex].occurrences) employees[activeEmpIndex].occurrences = {};
+      
+      if (reason) employees[activeEmpIndex].occurrences[activeDateStr] = reason;
+      else delete employees[activeEmpIndex].occurrences[activeDateStr];
+      
+      closeModal();
+      saveData();
+    }
+
+    function deleteOccurrence() {
+      if (employees[activeEmpIndex].occurrences) delete employees[activeEmpIndex].occurrences[activeDateStr];
+      closeModal();
+      saveData();
+    }
+
+    // Lista Estratificada
+    function toggleOccurrencesList() {
+      const calContainer = document.getElementById('calendarContainer');
+      const listContainer = document.getElementById('listContainer');
+      const controls = document.getElementById('mainControls');
+      const details = document.getElementById('configDetails');
+
+      if (listContainer.style.display === 'block') {
+        listContainer.style.display = 'none';
+        calContainer.style.display = 'block';
+        controls.style.display = 'flex';
+        details.style.display = 'block';
+      } else {
+        refreshOccurrencesList();
+        calContainer.style.display = 'none';
+        controls.style.display = 'none';
+        details.style.display = 'none';
+        listContainer.style.display = 'block';
+      }
+    }
+
+    function refreshOccurrencesList() {
+      const listBody = document.getElementById('absencesListBody');
+      let allOccurrences = [];
+
+      employees.forEach(emp => {
+        if (emp.occurrences) {
+          for (const [dateStr, reason] of Object.entries(emp.occurrences)) {
+            allOccurrences.push({ date: dateStr, name: emp.name, reason: reason });
+          }
+        }
+      });
+
+      allOccurrences.sort((a, b) => b.date.localeCompare(a.date));
+      listBody.innerHTML = '';
+      if (allOccurrences.length === 0) {
+        listBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #64748b; padding: 30px;">Nenhum afastamento, falta ou atestado registrado ainda.</td></tr>`;
+      } else {
+        allOccurrences.forEach(occ => {
+          const [y, m, d] = occ.date.split('-');
+          listBody.innerHTML += `
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 10px; text-align: left;">${d}/${m}/${y}</td>
+              <td style="font-weight: bold; text-align: left; padding: 10px;">${occ.name}</td>
+              <td style="text-align: left; padding: 10px; color: #ef4444; font-weight: 500;">${occ.reason}</td>
+            </tr>
+          `;
+        });
+      }
+    }
+
+    function toggleConfig() {
+      const d = document.querySelector('details');
+      d.open = !d.open;
+    }
+
+    init();
+  </script>
+</body>
+</html>
