@@ -96,62 +96,62 @@
        ========================================= */
     .calendar-container {
       width: 100%; 
+      max-width: 100vw; 
       overflow-x: auto; 
-      -webkit-overflow-scrolling: touch; /* Suavidade no scroll do iOS */
+      -webkit-overflow-scrolling: touch; 
       background: var(--surface);
       border-radius: 12px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       padding-bottom: 10px;
+      position: relative;
     }
 
-    .list-container { padding: 20px; display: none; background: var(--surface); border-radius: 12px; }
-    .list-container table { min-width: 100%; border-collapse: collapse; }
-    .list-container th { text-align: left; padding: 10px; border-bottom: 2px solid var(--border); }
-
     /* =========================================
-       A TABELA E A COLUNA FIXA (AGORA VAI!)
+       A TABELA E A COLUNA FIXA (SOLUÇÃO FINAL)
        ========================================= */
     #scheduleTable { 
+      table-layout: fixed; 
       width: 100%; 
-      border-collapse: separate; /* OBRIGATÓRIO PARA O STICKY FUNCIONAR */
+      border-collapse: separate; 
       border-spacing: 0; 
-      min-width: 800px; 
+      min-width: 1000px; 
     }
     
     #scheduleTable th, #scheduleTable td { 
       border-bottom: 1px solid var(--border); 
       border-right: 1px solid var(--border); 
       text-align: center; 
-      padding: 12px 4px; 
-      font-size: 0.85rem;
+      padding: 14px 4px; /* Aumentado levemente o padding vertical */
+      font-size: 0.9rem; /* Fonte ligeiramente maior */
+      background-color: #ffffff;
+      width: 45px; /* AUMENTADO O TAMANHO DOS QUADRADOS DOS DIAS */
+      min-width: 45px; 
     }
     
-    /* Fundo padrão das linhas da tabela */
-    #scheduleTable tbody tr { background-color: #ffffff; }
     #scheduleTable th { background-color: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
 
-    /* MÁGICA DEFINITIVA DO TRAVAMENTO (iOS e Android) */
+    /* COLUNA DOS NOMES COMPLETAMENTE TRAVADA */
     #scheduleTable th:first-child,
     #scheduleTable td:first-child {
-      position: -webkit-sticky !important; /* Para navegadores Apple/Safari */
-      position: sticky !important;         /* Para os demais navegadores */
+      position: -webkit-sticky !important; /* Safari/iOS */
+      position: sticky !important;         /* Android/Chrome */
       left: 0 !important;
+      width: 130px;      
+      min-width: 130px;
+      max-width: 130px;
       text-align: left;
       padding-left: 10px;
       font-weight: bold;
-      z-index: 10 !important; /* Mantém acima das células que rolam */
-      border-right: 2px solid #94a3b8 !important; /* Borda mais grossa para destacar */
-      box-shadow: 3px 0 5px -1px rgba(0,0,0,0.1); /* Sombrinha para dar o efeito flutuante */
+      z-index: 10;
+      border-right: 2px solid #94a3b8 !important; 
+      box-shadow: 3px 0px 5px rgba(0,0,0,0.08); 
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    #scheduleTable td:first-child {
-      background-color: #ffffff !important; /* Impede a transparência ao rolar */
-    }
-    
-    #scheduleTable th:first-child {
-      background-color: #f1f5f9 !important;
-      z-index: 11 !important; /* O cabeçalho precisa ficar um nível acima da coluna */
-    }
+    #scheduleTable td:first-child { background-color: #ffffff !important; }
+    #scheduleTable th:first-child { background-color: #f1f5f9 !important; z-index: 11; }
 
     /* Comportamento de clique nas células de dias */
     #scheduleTable td:not(:first-child) { cursor: pointer; transition: filter 0.2s; }
@@ -184,7 +184,11 @@
       margin-bottom:12px; padding:8px; background:#f8fafc; border-bottom:1px solid #e2e8f0;
     }
 
-    /* Modal (Bloco de notas) */
+    /* Listas e Modal */
+    .list-container { padding: 20px; display: none; background: var(--surface); border-radius: 12px; }
+    .list-container table { min-width: 100%; border-collapse: collapse; }
+    .list-container th { text-align: left; padding: 10px; border-bottom: 2px solid var(--border); }
+
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
@@ -397,7 +401,7 @@
       return cur >= start && cur <= end;
     }
 
-    // Função para apagar as férias
+    // Apaga as datas de férias e renderiza novamente
     function clearVacation(index) {
       employees[index].vacationStart = '';
       employees[index].vacationEnd = '';
@@ -487,7 +491,7 @@
       selected.forEach(emp => {
         const empIndex = employees.findIndex(e => e.id === emp.id);
         
-        htmlBody += `<tr><td>${emp.name}</td>`;
+        htmlBody += `<tr><td title="${emp.name}">${emp.name}</td>`;
 
         for (let d = 1; d <= daysInMonth; d++) {
           const date = new Date(year, month, d);
