@@ -9,10 +9,11 @@
       --bg: #f8fafc;
       --surface: #ffffff;
       --border: #e2e8f0;
-      --success: #22c55e; /* Cor da folga */
-      --vacation: #facc15; /* Cor das férias (amarelo) */
-      --exam-periodic: #1d4ed8; /* Azul - Exame Periódico */
-      --exam-clinical: #93c5fd; /* Azul claro - Exame Clínico */
+      --success: #22c55e;
+      --vacation: #facc15;
+      --exam-periodic: #1d4ed8;
+      --exam-clinical: #93c5fd;
+      --occurrence: #ef4444; /* Vermelho para faltas/afastamentos */
       --text: #1e293b;
       --muted: #64748b;
     }
@@ -26,7 +27,6 @@
 
     h1 { font-size: 1.2rem; text-align: center; margin-bottom: 15px; }
 
-    /* Controles de Data */
     .controls {
       background: var(--surface);
       padding: 15px;
@@ -47,7 +47,6 @@
       min-width: 140px;
     }
 
-    /* Configurações (Acordeão) */
     details {
       background: var(--surface);
       border-radius: 12px;
@@ -66,140 +65,104 @@
       justify-content: space-between;
       align-items: center;
     }
-
     summary::after { content: "⚙️"; }
 
-    .config-grid {
-      padding: 15px;
-      display: grid;
-      gap: 15px;
-    }
-
-    .employee-card {
-      border: 1px solid var(--border);
-      padding: 10px;
-      border-radius: 8px;
-    }
-
+    .config-grid { padding: 15px; display: grid; gap: 15px; }
+    .employee-card { border: 1px solid var(--border); padding: 10px; border-radius: 8px; }
     .employee-card h3 { margin: 0 0 10px 0; font-size: 1rem; }
 
-    .row {
-      display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px;
-    }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
     .row .name-input { flex: 1; font-weight:bold; border:none; border-bottom:1px solid #ccc; padding:6px; }
     .row .visibility { white-space: nowrap; font-size: 0.9rem; color: var(--muted); }
 
-    .input-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-
+    .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
     label { font-size: 0.8rem; color: #64748b; display: block; margin-bottom: 2px; }
-    input[type="number"], input[type="date"] { width: 100%; padding: 6px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; }
+    input[type="number"], input[type="date"], textarea { width: 100%; padding: 6px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; }
 
     .bulk-actions { display:flex; gap:8px; padding: 0 15px 8px; }
     .bulk-actions button { padding: 6px 10px; border: 1px solid var(--border); background:#f8fafc; border-radius:6px; cursor:pointer; font-size:0.9rem; }
 
-    /* Tabela de Escala */
-    .calendar-container {
+    .calendar-container, .list-container {
       background: var(--surface);
       border-radius: 12px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      overflow-x: auto; /* Permite rolagem horizontal no celular */
+      overflow-x: auto;
       padding-bottom: 10px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 800px; /* Força largura para scroll funcionar bem */
-    }
+    .list-container { padding: 20px; display: none; }
 
-    th, td {
-      border: 1px solid var(--border);
-      text-align: center;
-      padding: 8px 4px;
-      font-size: 0.85rem;
-    }
-
+    table { width: 100%; border-collapse: collapse; min-width: 800px; }
+    th, td { border: 1px solid var(--border); text-align: center; padding: 8px 4px; font-size: 0.85rem; }
     th { background: #f1f5f9; font-weight: 600; }
 
-    /* Coluna fixa do nome */
     td:first-child {
-      font-weight: bold;
-      text-align: left;
-      padding-left: 10px;
-      position: sticky;
-      left: 0;
-      background: var(--surface);
-      border-right: 2px solid var(--border);
-      z-index: 10;
+      font-weight: bold; text-align: left; padding-left: 10px;
+      position: sticky; left: 0; background: var(--surface); border-right: 2px solid var(--border); z-index: 10;
     }
     th:first-child {
-      position: sticky;
-      left: 0;
-      background: #f1f5f9;
-      z-index: 11;
-      border-right: 2px solid var(--border);
+      position: sticky; left: 0; background: #f1f5f9; z-index: 11; border-right: 2px solid var(--border);
     }
 
-    /* Estilos de células */
+    #scheduleTable td:not(:first-child) { cursor: pointer; transition: background 0.2s; }
+    #scheduleTable td:not(:first-child):hover { filter: brightness(0.9); }
+
     .folga { background-color: var(--success); color: white; font-weight: bold; }
     .ferias { background-color: var(--vacation); color: #000; font-weight: bold; }
-
     .exam { font-weight: 700; color: #fff; }
     .exam-periodic { background-color: var(--exam-periodic); }
     .exam-clinical { background-color: var(--exam-clinical); color: #0f172a; }
     .exam.weekend { background-color: #000 !important; color: #fff !important; }
+    .ocorrencia { background-color: var(--occurrence) !important; color: white !important; font-weight: bold; }
 
     .legend { color: var(--muted); font-size: 0.8rem; margin: 6px 0 12px; text-align: center; }
 
     .save-btn {
-      width: 100%;
-      padding: 12px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      margin-top: 10px;
-      cursor: pointer;
+      width: 100%; padding: 12px; background: var(--primary); color: white; border: none;
+      border-radius: 8px; font-size: 1rem; margin-top: 10px; cursor: pointer;
     }
     .empty-hint { color: var(--muted); text-align:center; padding: 14px; font-size:0.9rem; }
-
     .link-inline { font-size: 0.8rem; color: #2563eb; text-decoration: underline; background: none; border: none; cursor: pointer; padding: 0; }
   
-.actions-bar{
-  position:sticky;
-  top:0;
-  z-index:999;
-  display:flex;
-  justify-content:flex-end;
-  gap:8px;
-  margin-bottom:8px;
-  padding:8px;
-  background:#f8fafc;
-  border-bottom:1px solid #e2e8f0;
-}
-.actions-bar .save-btn{
-  width:auto !important;
-  margin-top:0 !important;
-  padding:10px 14px !important;
-}
+    .actions-bar {
+      position:sticky; top:0; z-index:999; display:flex; justify-content:flex-end; gap:8px;
+      margin-bottom:8px; padding:8px; background:#f8fafc; border-bottom:1px solid #e2e8f0; flex-wrap: wrap;
+    }
+    .actions-bar .save-btn { width:auto !important; margin-top:0 !important; padding:10px 14px !important; }
 
-</style>
+    /* Modal de Ocorrências */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 10000;
+    }
+    .modal-content {
+      background: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 400px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .modal-content textarea { height: 100px; margin-top: 5px; resize: vertical; }
+    .modal-buttons { display: flex; gap: 10px; justify-content: space-between; margin-top: 15px; }
+    .btn-action { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .btn-save-occ { background: var(--primary); color: white; }
+    .btn-cancel-occ { background: var(--muted); color: white; }
+    .btn-delete-occ { background: var(--occurrence); color: white; }
+
+  </style>
 </head>
 <body>
   <h1>📅 Escala de Folgas</h1>
 
-  <div class="controls">
+  <div class="actions-bar">
+    <button class="save-btn" style="background:#f59e0b;" onclick="toggleOccurrencesList()">📋 Relatório de Ausências</button>
+    <button class="save-btn" onclick="saveData()">💾 Salvar</button>
+    <button class="save-btn" onclick="toggleConfig()">⚙️ Configurações</button>
+  </div>
+
+  <div class="controls" id="mainControls">
     <select id="selMonth" onchange="renderCalendar()"></select>
     <select id="selYear" onchange="renderCalendar()"></select>
   </div>
 
-  <details>
+  <details id="configDetails">
     <summary>Configurar Escalas (Toque aqui)</summary>
     <div class="bulk-actions">
       <button onclick="selectAll(true)">Selecionar todos</button>
@@ -207,24 +170,18 @@
     </div>
     <div class="config-grid" id="configList"></div>
     <div class="legend">
-      • Alternância de escalas: <strong>A → B → A → B…</strong><br />
-      • Cores: <span style="background:#22c55e;color:#fff;padding:0 4px;">Folga</span> | <span style="background:#facc15;padding:0 4px;">Férias</span> | <span style="background:#1d4ed8;color:#fff;padding:0 4px;">Exame Periódico (EP)</span> | <span style="background:#93c5fd;padding:0 4px;">Exame Clínico (EC)</span> | <span style="background:#000;color:#fff;padding:0 4px;">Exame no Fim de Semana</span><br />
-      • Marque <em>"Mostrar na tabela"</em> para exibir o funcionário no calendário.
-    </div>
-    <div style="padding: 0 15px 15px;">
-      
+      • Alternância: <strong>A → B → A → B…</strong><br />
+      • Cores: <span style="background:#22c55e;color:#fff;padding:0 4px;">Folga</span> | 
+      <span style="background:#facc15;padding:0 4px;">Férias</span> | 
+      <span style="background:#1d4ed8;color:#fff;padding:0 4px;">EP</span> | 
+      <span style="background:#93c5fd;padding:0 4px;">EC</span> | 
+      <span style="background:#000;color:#fff;padding:0 4px;">Exame FDS</span> | 
+      <span style="background:#ef4444;color:#fff;padding:0 4px;">Afastamento/Falta (⚠️)</span>
     </div>
   </details>
 
-  
-  
-<div class="actions-bar">
-  <button class="save-btn" onclick="saveData()">💾 Salvar</button>
-  <button class="save-btn" onclick="toggleConfig()">⚙️ Configurações</button>
-</div>
-
-<div class="calendar-container" id="calendarContainer" style="display:block;">
-
+  <!-- Container da Tabela Principal -->
+  <div class="calendar-container" id="calendarContainer">
     <table id="scheduleTable">
       <thead>
         <tr id="headerRow"></tr>
@@ -234,16 +191,49 @@
     <div id="emptyHint" class="empty-hint" style="display:none;">Nenhum funcionário selecionado para exibição.</div>
   </div>
 
+  <!-- Container da Lista de Ausências -->
+  <div class="list-container" id="listContainer">
+    <button class="save-btn" style="width: auto; margin-bottom: 15px; background: var(--muted);" onclick="toggleOccurrencesList()">⬅️ Retornar para a Escala</button>
+    <h2 style="margin-top: 0;">Lista Estratificada de Ausências</h2>
+    <table style="min-width: 100%;">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Funcionário</th>
+          <th>Motivo / Observação</th>
+        </tr>
+      </thead>
+      <tbody id="absencesListBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Modal de Registro de Ocorrência -->
+  <div class="modal-overlay" id="occurrenceModal">
+    <div class="modal-content">
+      <h3 id="occTitle" style="margin-top: 0;">Registrar Ocorrência</h3>
+      <label for="occReason">Motivo da falta, afastamento, atestado, etc.</label>
+      <textarea id="occReason" placeholder="Ex: Atestado médico, Falta injustificada..."></textarea>
+      
+      <div class="modal-buttons">
+        <button class="btn-action btn-delete-occ" id="btnDelOcc" onclick="deleteOccurrence()">Excluir Registro</button>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-action btn-cancel-occ" onclick="closeModal()">Cancelar</button>
+          <button class="btn-action btn-save-occ" onclick="saveOccurrence()">Salvar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // --- Configuração Inicial ---
     const startYear = 2026;
     const endYear = 2030;
     const defaultEmployees = 10;
     const STORAGE_KEY_V2 = 'escalaData_v2';
     const LEGACY_KEY_V1 = 'escalaData_v1';
 
-    // Dados
     let employees = [];
+    let activeEmpIndex = -1;
+    let activeDateStr = '';
 
     function toInt(n, fallback = 0){
       const v = parseInt(n, 10); return isNaN(v) ? fallback : v;
@@ -259,6 +249,8 @@
       emp.vacationEnd = emp.vacationEnd ?? '';
       emp.examPeriodic = emp.examPeriodic ?? '';
       emp.examClinical = emp.examClinical ?? '';
+      emp.occurrences = emp.occurrences || {}; // Nova estrutura para suportar afastamentos
+      
       const c1 = emp.cycles && emp.cycles[0] ? emp.cycles[0] : { label:'A', workDays: 6, offDays: 2 };
       const c2 = emp.cycles && emp.cycles[1] ? emp.cycles[1] : { label:'B', workDays: 5, offDays: 2 };
       emp.cycles = [
@@ -269,299 +261,165 @@
     }
 
     function initData() {
-      // Prioriza novo formato (v2)
       const savedV2 = localStorage.getItem(STORAGE_KEY_V2);
       if (savedV2) {
         try { employees = (JSON.parse(savedV2) || []).map(ensureShape); } catch(e){ employees = []; }
       } else {
-        // Migração do legado (v1) se existir
         const savedV1 = localStorage.getItem(LEGACY_KEY_V1);
         if (savedV1) {
           try {
             const legacy = JSON.parse(savedV1) || [];
             employees = legacy.map((emp, i) => ensureShape({
-              id: emp.id ?? (i+1),
-              name: emp.name ?? `Funcionário ${i+1}`,
-              startDate: emp.startDate ?? '2026-01-01',
-              visible: true,
-              cycles: [
-                { label: 'A', workDays: toInt(emp.workDays, 6), offDays: toInt(emp.offDays, 2) },
-                { label: 'B', workDays: 5, offDays: 2 }
-              ]
+              id: emp.id ?? (i+1), name: emp.name ?? `Funcionário ${i+1}`,
+              startDate: emp.startDate ?? '2026-01-01', visible: true,
+              cycles: [{ label: 'A', workDays: toInt(emp.workDays, 6), offDays: toInt(emp.offDays, 2) }, { label: 'B', workDays: 5, offDays: 2 }]
             }, i));
           } catch(e) {}
         }
-        // Se ainda não houver dados, cria padrão
         if (!employees || employees.length === 0) {
-          for (let i = 0; i < defaultEmployees; i++) {
-            employees.push(ensureShape({}, i));
-          }
+          for (let i = 0; i < defaultEmployees; i++) { employees.push(ensureShape({}, i)); }
         }
       }
     }
 
-    // --- Elementos DOM ---
     const selMonth = document.getElementById('selMonth');
     const selYear = document.getElementById('selYear');
     const configList = document.getElementById('configList');
     const headerRow = document.getElementById('headerRow');
     const bodyRows = document.getElementById('bodyRows');
     const emptyHint = document.getElementById('emptyHint');
+    const modal = document.getElementById('occurrenceModal');
 
-    // --- Inicialização ---
     function init() {
       initData();
-
-      // Popular Selects
       const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-      months.forEach((m, i) => {
-        selMonth.innerHTML += `<option value="${i}">${m}</option>`;
-      });
-      for (let y = startYear; y <= endYear; y++) {
-        selYear.innerHTML += `<option value="${y}">${y}</option>`;
-      }
-      // Seleciona mês/ano atuais dentro do range; caso contrário, começa em Jan/ano inicial
+      months.forEach((m, i) => { selMonth.innerHTML += `<option value="${i}">${m}</option>`; });
+      for (let y = startYear; y <= endYear; y++) { selYear.innerHTML += `<option value="${y}">${y}</option>`; }
+      
       const now = new Date();
       const initYear = (now.getFullYear() >= startYear && now.getFullYear() <= endYear) ? now.getFullYear() : startYear;
       selYear.value = String(initYear);
       selMonth.value = String((initYear === now.getFullYear()) ? now.getMonth() : 0);
 
-      // Renderizar Painel de Configuração
       renderConfigPanel();
-      // Renderizar Calendário Inicial
       renderCalendar();
     }
 
-    // --- Utilidades de data ---
     function sameDate(dateObj, dateStr){
       if (!dateStr) return false;
       const t = new Date(dateStr + 'T00:00:00');
       if (isNaN(t)) return false;
-      return dateObj.getFullYear() === t.getFullYear() &&
-             dateObj.getMonth() === t.getMonth() &&
-             dateObj.getDate() === t.getDate();
+      return dateObj.getFullYear() === t.getFullYear() && dateObj.getMonth() === t.getMonth() && dateObj.getDate() === t.getDate();
     }
 
-    // --- Lógica Principal de Cálculo ---
-    // Alterna entre duas escalas: A -> B -> A -> B ... a partir da data de início.
     function isDayOff(dateObj, emp) {
       const start = new Date(emp.startDate + 'T00:00:00');
       const current = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
-      const diffTime = current - start;
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      if (diffDays < 0) return false; // Antes do início
+      const diffDays = Math.floor((current - start) / (1000 * 60 * 60 * 24));
+      if (diffDays < 0) return false;
 
-      const c1 = (emp.cycles && emp.cycles[0]) ? emp.cycles[0] : { workDays: 6, offDays: 2 };
-      const c2 = (emp.cycles && emp.cycles[1]) ? emp.cycles[1] : { workDays: 5, offDays: 2 };
-
-      const w1 = toInt(c1.workDays, 6), o1 = toInt(c1.offDays, 2);
-      const w2 = toInt(c2.workDays, 5), o2 = toInt(c2.offDays, 2);
-      const len1 = w1 + o1;
-      const len2 = w2 + o2;
+      const w1 = toInt(emp.cycles[0].workDays, 6), o1 = toInt(emp.cycles[0].offDays, 2);
+      const w2 = toInt(emp.cycles[1].workDays, 5), o2 = toInt(emp.cycles[1].offDays, 2);
+      const len1 = w1 + o1, len2 = w2 + o2;
 
       if (len1 === 0 && len2 === 0) return false;
-      if (len1 === 0) {
-        const r = diffDays % len2; return r >= w2; // só escala B
-      }
-      if (len2 === 0) {
-        const r = diffDays % len1; return r >= w1; // só escala A
-      }
+      if (len1 === 0) return (diffDays % len2) >= w2;
+      if (len2 === 0) return (diffDays % len1) >= w1;
 
-      const superLen = len1 + len2; // A + B
-      const r = diffDays % superLen;
-      if (r < len1) {
-        // Dentro da Escala A
-        return r >= w1;
-      } else {
-        // Dentro da Escala B
-        const r2 = r - len1;
-        return r2 >= w2;
-      }
+      const r = diffDays % (len1 + len2);
+      return r < len1 ? (r >= w1) : ((r - len1) >= w2);
     }
 
-    // Verifica se a data está dentro do período de férias do funcionário (inclusivo)
     function isVacation(dateObj, emp){
-      const { vacationStart, vacationEnd } = emp || {};
-      if (!vacationStart || !vacationEnd) return false;
-      const a = new Date(vacationStart + 'T00:00:00');
-      const b = new Date(vacationEnd + 'T00:00:00');
+      if (!emp.vacationStart || !emp.vacationEnd) return false;
+      const a = new Date(emp.vacationStart + 'T00:00:00'), b = new Date(emp.vacationEnd + 'T00:00:00');
       if (isNaN(a) || isNaN(b)) return false;
-      // Permite datas invertidas: considera o menor como início
-      const start = a <= b ? a : b;
-      const end = a <= b ? b : a;
+      const start = a <= b ? a : b, end = a <= b ? b : a;
       const cur = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
       return cur >= start && cur <= end;
     }
 
-    // --- Renderização ---
     function renderConfigPanel() {
       configList.innerHTML = '';
       employees.forEach((emp, index) => {
-        const c1 = (emp.cycles && emp.cycles[0]) ? emp.cycles[0] : { label:'A', workDays: 6, offDays: 2 };
-        const c2 = (emp.cycles && emp.cycles[1]) ? emp.cycles[1] : { label:'B', workDays: 5, offDays: 2 };
         const div = document.createElement('div');
         div.className = 'employee-card';
         div.innerHTML = `
           <div class="row">
-            <input class="name-input" type="text" value="${emp.name}"
-                   onchange="updateEmp(${index}, 'name', this.value)" />
-            <label class="visibility">
-              <input type="checkbox" ${emp.visible ? 'checked' : ''}
-                     onchange="updateEmp(${index}, 'visible', this.checked); renderCalendar();" />
-              Mostrar na tabela
-            </label>
+            <input class="name-input" type="text" value="${emp.name}" onchange="updateEmp(${index}, 'name', this.value)" />
+            <label class="visibility"><input type="checkbox" ${emp.visible ? 'checked' : ''} onchange="updateEmp(${index}, 'visible', this.checked); renderCalendar();" /> Mostrar</label>
           </div>
           <div class="input-group">
-            <div>
-              <label>Escala A - Dias Trab.</label>
-              <input type="number" min="0" value="${c1.workDays}"
-                     onchange="updateCycle(${index}, 0, 'workDays', this.value)" />
-            </div>
-            <div>
-              <label>Escala A - Dias Folga</label>
-              <input type="number" min="0" value="${c1.offDays}"
-                     onchange="updateCycle(${index}, 0, 'offDays', this.value)" />
-            </div>
+            <div><label>Escala A - Dias Trab.</label><input type="number" min="0" value="${emp.cycles[0].workDays}" onchange="updateCycle(${index}, 0, 'workDays', this.value)" /></div>
+            <div><label>Escala A - Dias Folga</label><input type="number" min="0" value="${emp.cycles[0].offDays}" onchange="updateCycle(${index}, 0, 'offDays', this.value)" /></div>
           </div>
           <div class="input-group">
-            <div>
-              <label>Escala B - Dias Trab.</label>
-              <input type="number" min="0" value="${c2.workDays}"
-                     onchange="updateCycle(${index}, 1, 'workDays', this.value)" />
-            </div>
-            <div>
-              <label>Escala B - Dias Folga</label>
-              <input type="number" min="0" value="${c2.offDays}"
-                     onchange="updateCycle(${index}, 1, 'offDays', this.value)" />
-            </div>
+            <div><label>Escala B - Dias Trab.</label><input type="number" min="0" value="${emp.cycles[1].workDays}" onchange="updateCycle(${index}, 1, 'workDays', this.value)" /></div>
+            <div><label>Escala B - Dias Folga</label><input type="number" min="0" value="${emp.cycles[1].offDays}" onchange="updateCycle(${index}, 1, 'offDays', this.value)" /></div>
           </div>
-          <div>
-            <label>Data Início (começa pela Escala A)</label>
-            <input type="date" value="${emp.startDate}"
-                   onchange="updateEmp(${index}, 'startDate', this.value)" />
-          </div>
-          <div style="margin-top:10px;">
-            <label style="font-weight:600;">Período de Férias</label>
-            <div class="input-group">
-              <div>
-                <label>Início</label>
-                <input type="date" value="${emp.vacationStart || ''}"
-                       onchange="updateEmp(${index}, 'vacationStart', this.value); renderCalendar();" />
-              </div>
-              <div>
-                <label>Final</label>
-                <input type="date" value="${emp.vacationEnd || ''}"
-                       onchange="updateEmp(${index}, 'vacationEnd', this.value); renderCalendar();" />
-              </div>
-            </div>
-            <button class="link-inline" onclick="clearVacation(${index}); return false;">Limpar férias</button>
-          </div>
-          <div style="margin-top:10px;">
-            <label style="font-weight:600;">Exames</label>
-            <div class="input-group">
-              <div>
-                <label>Exame Periódico (azul)</label>
-                <input type="date" value="${emp.examPeriodic || ''}"
-                       onchange="updateEmp(${index}, 'examPeriodic', this.value); renderCalendar();" />
-              </div>
-              <div>
-                <label>Exame Clínico (azul claro)</label>
-                <input type="date" value="${emp.examClinical || ''}"
-                       onchange="updateEmp(${index}, 'examClinical', this.value); renderCalendar();" />
-              </div>
-            </div>
-            <button class="link-inline" onclick="clearExams(${index}); return false;">Limpar exames</button>
-          </div>
+          <div><label>Data Início (Escala A)</label><input type="date" value="${emp.startDate}" onchange="updateEmp(${index}, 'startDate', this.value)" /></div>
         `;
         configList.appendChild(div);
       });
     }
 
-    function updateEmp(index, field, value) {
-      if (field === 'visible') {
-        employees[index][field] = !!value;
-      } else {
-        employees[index][field] = value;
-      }
-    }
-
-    function updateCycle(index, cycleIdx, field, value) {
-      if (!employees[index].cycles) employees[index].cycles = [ {label:'A', workDays:6, offDays:2}, {label:'B', workDays:5, offDays:2} ];
-      employees[index].cycles[cycleIdx][field] = toInt(value, 0);
-    }
-
-    function clearVacation(index){
-      employees[index].vacationStart = '';
-      employees[index].vacationEnd = '';
-      renderConfigPanel();
-      renderCalendar();
-    }
-
-    function clearExams(index){
-      employees[index].examPeriodic = '';
-      employees[index].examClinical = '';
-      renderConfigPanel();
-      renderCalendar();
-    }
-
-    function selectAll(flag){
-      employees.forEach(emp => emp.visible = !!flag);
-      renderConfigPanel();
-      renderCalendar();
-    }
+    function updateEmp(index, field, value) { employees[index][field] = field === 'visible' ? !!value : value; }
+    function updateCycle(index, cycleIdx, field, value) { employees[index].cycles[cycleIdx][field] = toInt(value, 0); }
+    function selectAll(flag) { employees.forEach(emp => emp.visible = !!flag); renderConfigPanel(); renderCalendar(); }
 
     function saveData() {
       localStorage.setItem(STORAGE_KEY_V2, JSON.stringify(employees));
       renderCalendar();
-      alert('Configurações Salvas!');
+      if(document.getElementById('listContainer').style.display === 'block') refreshOccurrencesList();
+      alert('Dados Salvos!');
     }
 
     function renderCalendar() {
       const month = parseInt(selMonth.value, 10);
       const year = parseInt(selYear.value, 10);
-      if (isNaN(month) || isNaN(year)) return; // guarda de segurança
+      if (isNaN(month) || isNaN(year)) return;
 
       const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-      // 1. Cabeçalho
       let htmlHeader = '<th>Func</th>';
       for (let d = 1; d <= daysInMonth; d++) {
         const date = new Date(year, month, d);
-        const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-        const style = isWeekend ? 'background:#e2e8f0' : '';
-        htmlHeader += `<th style="${style}">${d}</th>`;
+        htmlHeader += `<th style="${(date.getDay() === 0 || date.getDay() === 6) ? 'background:#e2e8f0' : ''}">${d}</th>`;
       }
       headerRow.innerHTML = htmlHeader;
 
-      // 2. Linhas
       const selected = employees.filter(emp => emp.visible);
       let htmlBody = '';
       selected.forEach(emp => {
-        htmlBody += `<tr>`;
-        htmlBody += `<td>${emp.name}</td>`;
+        const empIndex = employees.findIndex(e => e.id === emp.id);
+        htmlBody += `<tr><td>${emp.name}</td>`;
 
         for (let d = 1; d <= daysInMonth; d++) {
           const date = new Date(year, month, d);
+          const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          
           const weekend = (date.getDay() === 0 || date.getDay() === 6);
+          const occReason = emp.occurrences && emp.occurrences[dateStr];
           const vac = isVacation(date, emp);
           const ep = sameDate(date, emp.examPeriodic);
           const ec = sameDate(date, emp.examClinical);
-          const isOff = !vac && !ep && !ec && isDayOff(date, emp); // prioridade: férias > exames > folga
+          const isOff = !vac && !ep && !ec && isDayOff(date, emp);
 
-          if (vac) {
-            htmlBody += `<td class="ferias" title="Férias"></td>`;
+          let content = '', classes = '', title = '';
+
+          if (occReason) {
+            classes = 'ocorrencia'; content = '⚠️'; title = `Ocorrência: ${occReason}`;
+          } else if (vac) {
+            classes = 'ferias'; title = 'Férias';
           } else if (ep || ec) {
-            // Se ambos caírem no mesmo dia, mostra EP/EC combinado
-            let classes = 'exam ' + (ep && ec ? 'exam-periodic' : (ep ? 'exam-periodic' : 'exam-clinical'));
+            classes = 'exam ' + (ep && ec ? 'exam-periodic' : (ep ? 'exam-periodic' : 'exam-clinical'));
             if (weekend) classes += ' weekend';
-            const label = ep && ec ? 'EP/EC' : (ep ? 'EP' : 'EC');
-            const title = ep && ec ? 'Exame Periódico e Exame Clínico' : (ep ? 'Exame Periódico' : 'Exame Clínico');
-            htmlBody += `<td class="${classes}" title="${title}">${label}</td>`;
+            content = ep && ec ? 'EP/EC' : (ep ? 'EP' : 'EC');
+            title = ep && ec ? 'Exame Periódico e Exame Clínico' : (ep ? 'Exame Periódico' : 'Exame Clínico');
           } else if (isOff) {
-            htmlBody += `<td class="folga" title="Folga">F</td>`;
-          } else {
-            htmlBody += `<td></td>`;
+            classes = 'folga'; content = 'F'; title = 'Folga';
           }
+
+          htmlBody += `<td class="${classes}" title="${title}" onclick="openModal(${empIndex}, '${dateStr}')">${content}</td>`;
         }
         htmlBody += `</tr>`;
       });
@@ -569,26 +427,115 @@
       emptyHint.style.display = selected.length ? 'none' : 'block';
     }
 
-    
-    function toggleConfig() {
-      const d=document.querySelector('details');
-      d.open=!d.open;
+    // --- Funções do Modal de Ocorrência ---
+    function openModal(empIndex, dateStr) {
+      activeEmpIndex = empIndex;
+      activeDateStr = dateStr;
+      const emp = employees[empIndex];
+      
+      const [y, m, d] = dateStr.split('-');
+      document.getElementById('occTitle').innerText = `Ocorrência: ${emp.name} (${d}/${m}/${y})`;
+      
+      const reasonInput = document.getElementById('occReason');
+      const btnDel = document.getElementById('btnDelOcc');
+      
+      if (emp.occurrences && emp.occurrences[dateStr]) {
+        reasonInput.value = emp.occurrences[dateStr];
+        btnDel.style.display = 'block';
+      } else {
+        reasonInput.value = '';
+        btnDel.style.display = 'none';
+      }
+      modal.style.display = 'flex';
     }
 
-    function toggleTable() {
-      const c = document.getElementById('calendarContainer');
-      const btn = event.target;
-      if (c.style.display === 'none') {
-        c.style.display = 'block';
-        btn.textContent = '📉 Minimizar Tabela';
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    function saveOccurrence() {
+      const reason = document.getElementById('occReason').value.trim();
+      if (!employees[activeEmpIndex].occurrences) {
+        employees[activeEmpIndex].occurrences = {};
+      }
+      
+      if (reason) {
+        employees[activeEmpIndex].occurrences[activeDateStr] = reason;
       } else {
-        c.style.display = 'none';
-        btn.textContent = '📊 Maximizar Tabela';
+        delete employees[activeEmpIndex].occurrences[activeDateStr];
+      }
+      
+      closeModal();
+      saveData();
+    }
+
+    function deleteOccurrence() {
+      if (employees[activeEmpIndex].occurrences) {
+        delete employees[activeEmpIndex].occurrences[activeDateStr];
+      }
+      closeModal();
+      saveData();
+    }
+
+    // --- Funções do Relatório de Ausências ---
+    function toggleOccurrencesList() {
+      const calContainer = document.getElementById('calendarContainer');
+      const listContainer = document.getElementById('listContainer');
+      const controls = document.getElementById('mainControls');
+      const details = document.getElementById('configDetails');
+
+      if (listContainer.style.display === 'block') {
+        listContainer.style.display = 'none';
+        calContainer.style.display = 'block';
+        controls.style.display = 'flex';
+        details.style.display = 'block';
+      } else {
+        refreshOccurrencesList();
+        calContainer.style.display = 'none';
+        controls.style.display = 'none';
+        details.style.display = 'none';
+        listContainer.style.display = 'block';
       }
     }
 
-    init();
+    function refreshOccurrencesList() {
+      const listBody = document.getElementById('absencesListBody');
+      let allOccurrences = [];
 
+      employees.forEach(emp => {
+        if (emp.occurrences) {
+          for (const [dateStr, reason] of Object.entries(emp.occurrences)) {
+            allOccurrences.push({ date: dateStr, name: emp.name, reason: reason });
+          }
+        }
+      });
+
+      // Ordenar pelas datas mais recentes
+      allOccurrences.sort((a, b) => b.date.localeCompare(a.date));
+
+      listBody.innerHTML = '';
+      if (allOccurrences.length === 0) {
+        listBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #64748b; padding: 20px;">Nenhuma ocorrência ou ausência registrada no sistema.</td></tr>`;
+      } else {
+        allOccurrences.forEach(occ => {
+          const [y, m, d] = occ.date.split('-');
+          listBody.innerHTML += `
+            <tr>
+              <td>${d}/${m}/${y}</td>
+              <td style="font-weight: bold; text-align: left; padding-left: 10px;">${occ.name}</td>
+              <td style="text-align: left; padding-left: 10px;">${occ.reason}</td>
+            </tr>
+          `;
+        });
+      }
+    }
+
+    function toggleConfig() {
+      const d = document.querySelector('details');
+      d.open = !d.open;
+    }
+
+    init();
   </script>
 </body>
 </html>
