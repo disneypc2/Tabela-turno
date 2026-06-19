@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Gestor de Escalas 2026-2030</title>
   <style>
     :root {
@@ -24,6 +24,7 @@
       --text: #1e293b;
       --muted: #64748b;
     }
+    
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: var(--bg);
@@ -43,6 +44,7 @@
       display: flex;
       gap: 10px;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     select {
@@ -75,19 +77,21 @@
     summary::after { content: "⚙️"; }
 
     .config-grid { padding: 15px; display: grid; gap: 15px; }
-    .employee-card { border: 1px solid var(--border); padding: 10px; border-radius: 8px; }
+    .employee-card { border: 1px solid var(--border); padding: 10px; border-radius: 8px; background: #fafafa; }
     .employee-card h3 { margin: 0 0 10px 0; font-size: 1rem; }
 
-    .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
-    .row .name-input { flex: 1; font-weight:bold; border:none; border-bottom:1px solid #ccc; padding:6px; }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .row .name-input { flex: 1; font-weight:bold; border:none; border-bottom:1px solid #ccc; padding:6px; min-width: 150px; background: transparent; }
     .row .visibility { white-space: nowrap; font-size: 0.9rem; color: var(--muted); }
 
     .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
     label { font-size: 0.8rem; color: #64748b; display: block; margin-bottom: 2px; font-weight: 600;}
-    input[type="number"], input[type="date"], textarea, select.cargo-select { width: 100%; padding: 6px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; }
+    input[type="number"], input[type="date"], textarea, select.cargo-select { 
+      width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; font-size: 1rem;
+    }
 
-    .bulk-actions { display:flex; gap:8px; padding: 0 15px 8px; }
-    .bulk-actions button { padding: 6px 10px; border: 1px solid var(--border); background:#f8fafc; border-radius:6px; cursor:pointer; font-size:0.9rem; }
+    .bulk-actions { display:flex; gap:8px; padding: 0 15px 8px; flex-wrap: wrap; }
+    .bulk-actions button { padding: 8px 12px; border: 1px solid var(--border); background:#f8fafc; border-radius:6px; cursor:pointer; font-size:0.9rem; flex: 1; }
 
     .calendar-container, .list-container {
       background: var(--surface);
@@ -95,33 +99,45 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       overflow-x: auto;
       padding-bottom: 10px;
+      -webkit-overflow-scrolling: touch; /* Melhor rolagem no iOS */
     }
 
     .list-container { padding: 20px; display: none; }
     .list-container table { min-width: 100%; }
     .list-container th { text-align: left; padding: 10px; }
 
-    table { width: 100%; border-collapse: collapse; min-width: 800px; }
-    th, td { border: 1px solid var(--border); text-align: center; padding: 8px 4px; font-size: 0.85rem; }
-    th { background: #f1f5f9; font-weight: 600; }
+    /* CORREÇÃO DA TABELA PARA NÃO SUMIR O NOME */
+    table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
+    
+    th, td { 
+      border-bottom: 1px solid var(--border); 
+      border-right: 1px solid var(--border); 
+      text-align: center; 
+      padding: 10px 4px; 
+      font-size: 0.85rem; 
+    }
+    
+    th { background: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
+    th:first-child, td:first-child { border-left: 1px solid var(--border); }
 
-    /* CORREÇÃO DA COLUNA FIXA DOS NOMES */
+    /* Fixação Absoluta da Primeira Coluna */
     td:first-child {
       font-weight: bold; text-align: left; padding-left: 10px;
       position: sticky; left: 0; 
-      background-color: #ffffff; /* Fundo sólido forçado */
+      background-color: #ffffff;
       border-right: 2px solid var(--border); 
-      z-index: 50; /* Z-index elevado para não ser coberto */
+      z-index: 10;
     }
+    
     th:first-child {
       position: sticky; left: 0; 
       background-color: #f1f5f9; 
-      z-index: 60; /* Maior que a célula da linha */
+      z-index: 20; 
       border-right: 2px solid var(--border);
     }
 
     #scheduleTable td:not(:first-child) { cursor: pointer; transition: background 0.2s; }
-    #scheduleTable td:not(:first-child):hover { filter: brightness(0.85); box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
+    #scheduleTable td:not(:first-child):active { filter: brightness(0.8); }
 
     /* Cores das Células */
     .folga { background-color: var(--success); color: white; font-weight: bold; }
@@ -139,37 +155,76 @@
     .legend { color: var(--muted); font-size: 0.8rem; margin: 6px 0 12px; text-align: center; line-height: 1.6; }
 
     .save-btn {
-      width: 100%; padding: 12px; background: var(--primary); color: white; border: none;
-      border-radius: 8px; font-size: 1rem; margin-top: 10px; cursor: pointer; font-weight: bold;
+      padding: 10px 14px; background: var(--primary); color: white; border: none;
+      border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: bold;
     }
+    
     .apply-btn {
-      padding: 6px 12px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; height: 100%;
+      padding: 8px 12px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem;
     }
+    
     .empty-hint { color: var(--muted); text-align:center; padding: 14px; font-size:0.9rem; }
-    .link-inline { font-size: 0.8rem; color: #2563eb; text-decoration: underline; background: none; border: none; cursor: pointer; padding: 0; }
   
     .actions-bar {
       position:sticky; top:0; z-index:999; display:flex; justify-content:flex-end; gap:8px;
-      margin-bottom:8px; padding:8px; background:#f8fafc; border-bottom:1px solid #e2e8f0; flex-wrap: wrap;
+      margin-bottom:12px; padding:8px; background:#f8fafc; border-bottom:1px solid #e2e8f0;
     }
-    .actions-bar .save-btn { width:auto !important; margin-top:0 !important; padding:10px 14px !important; }
 
+    /* Estilos do Modal (Bloco de notas) */
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
       backdrop-filter: blur(2px);
     }
     .modal-content {
-      background: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 450px;
+      background: #fff; padding: 20px; border-radius: 12px; width: 90%; max-width: 450px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
-    .modal-content textarea { height: 120px; margin-top: 5px; resize: vertical; font-family: inherit; }
-    .modal-buttons { display: flex; gap: 10px; justify-content: space-between; margin-top: 15px; }
-    .btn-action { padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .modal-content textarea { height: 100px; margin-top: 5px; resize: vertical; font-family: inherit; }
+    .modal-buttons { display: flex; gap: 10px; justify-content: space-between; margin-top: 15px; flex-wrap: wrap; }
+    .btn-action { padding: 12px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1; text-align: center; font-size: 0.95rem; }
     .btn-save-occ { background: var(--primary); color: white; }
-    .btn-cancel-occ { background: var(--muted); color: white; }
+    .btn-cancel-occ { background: #e2e8f0; color: #1e293b; }
     .btn-delete-occ { background: var(--occurrence); color: white; }
 
+    /* =========================================
+       REGRAS PARA SMARTPHONES (Telas Menores)
+       ========================================= */
+    @media (max-width: 600px) {
+      .actions-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .actions-bar .save-btn {
+        width: 100% !important;
+        margin-bottom: 5px;
+        text-align: center;
+      }
+      .controls {
+        flex-direction: column;
+      }
+      .input-group {
+        grid-template-columns: 1fr; /* Quebra para 1 coluna no celular */
+      }
+      .row .visibility {
+        margin-top: 5px;
+      }
+      .apply-btn {
+        width: auto;
+      }
+      .modal-buttons {
+        flex-direction: column;
+      }
+      #btnGroupRight {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+      }
+      .btn-delete-occ {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -195,15 +250,15 @@
     <div class="config-grid" id="configList"></div>
     <div class="legend" style="border-top: 1px solid #ccc; padding-top: 10px;">
       • <strong>Cores de Trabalho:</strong> 
-      <span style="background:#e0f2fe;padding:0 4px;border:1px solid #ccc;">Cargo 1</span> | 
-      <span style="background:#ffedd5;padding:0 4px;border:1px solid #ccc;">Cargo 2</span> | 
-      <span style="background:#fef9c3;padding:0 4px;border:1px solid #ccc;">Cargo 3</span><br />
+      <span style="background:#e0f2fe;padding:0 4px;border:1px solid #ccc;display:inline-block;margin:2px;">Cargo 1</span> 
+      <span style="background:#ffedd5;padding:0 4px;border:1px solid #ccc;display:inline-block;margin:2px;">Cargo 2</span> 
+      <span style="background:#fef9c3;padding:0 4px;border:1px solid #ccc;display:inline-block;margin:2px;">Cargo 3</span><br />
       • <strong>Demais Cores:</strong> 
-      <span style="background:#22c55e;color:#fff;padding:0 4px;">Folga</span> | 
-      <span style="background:#facc15;padding:0 4px;">Férias</span> | 
-      <span style="background:#1d4ed8;color:#fff;padding:0 4px;">EP</span> | 
-      <span style="background:#93c5fd;padding:0 4px;">EC</span> | 
-      <span style="background:#ef4444;color:#fff;padding:0 4px;">Afastamento/Falta (⚠️)</span>
+      <span style="background:#22c55e;color:#fff;padding:0 4px;display:inline-block;margin:2px;">Folga</span> 
+      <span style="background:#facc15;padding:0 4px;display:inline-block;margin:2px;">Férias</span> 
+      <span style="background:#1d4ed8;color:#fff;padding:0 4px;display:inline-block;margin:2px;">EP</span> 
+      <span style="background:#93c5fd;padding:0 4px;display:inline-block;margin:2px;">EC</span> 
+      <span style="background:#ef4444;color:#fff;padding:0 4px;display:inline-block;margin:2px;">Afastamento (⚠️)</span>
     </div>
   </details>
 
@@ -218,14 +273,14 @@
   </div>
 
   <div class="list-container" id="listContainer">
-    <button class="save-btn" style="width: auto; margin-bottom: 15px; background: var(--muted);" onclick="toggleOccurrencesList()">⬅️ Retornar para a Escala</button>
-    <h2 style="margin-top: 0; color: #1e293b;">Lista Estratificada de Ausências e Afastamentos</h2>
+    <button class="save-btn" style="width: 100%; margin-bottom: 15px; background: var(--muted);" onclick="toggleOccurrencesList()">⬅️ Retornar para a Escala</button>
+    <h2 style="margin-top: 0; color: #1e293b; font-size: 1.2rem;">Lista de Ausências</h2>
     <table>
       <thead>
         <tr>
-          <th style="width: 120px;">Data</th>
-          <th style="width: 200px;">Funcionário</th>
-          <th>Motivo / Observação</th>
+          <th style="width: 90px;">Data</th>
+          <th style="width: 150px;">Func.</th>
+          <th>Motivo</th>
         </tr>
       </thead>
       <tbody id="absencesListBody"></tbody>
@@ -235,14 +290,14 @@
   <div class="modal-overlay" id="occurrenceModal">
     <div class="modal-content">
       <h3 id="occTitle" style="margin-top: 0; color: #1e293b;">Registrar Ausência</h3>
-      <label for="occReason" style="font-weight: bold; color: #334155;">Motivo (Atestado, falta, suspensão...)</label>
-      <textarea id="occReason" placeholder="Descreva aqui o motivo da ausência do funcionário..."></textarea>
+      <label for="occReason" style="font-weight: bold; color: #334155;">Motivo (Atestado, falta...)</label>
+      <textarea id="occReason" placeholder="Descreva aqui o motivo..."></textarea>
       
       <div class="modal-buttons">
-        <button class="btn-action btn-delete-occ" id="btnDelOcc" onclick="deleteOccurrence()">Excluir</button>
+        <button class="btn-action btn-delete-occ" id="btnDelOcc" onclick="deleteOccurrence()">🗑️ Excluir</button>
         <div style="display: flex; gap: 10px; width: 100%; justify-content: flex-end;" id="btnGroupRight">
           <button class="btn-action btn-cancel-occ" onclick="closeModal()">Cancelar</button>
-          <button class="btn-action btn-save-occ" onclick="saveOccurrence()">Salvar Ocorrência</button>
+          <button class="btn-action btn-save-occ" onclick="saveOccurrence()">Salvar</button>
         </div>
       </div>
     </div>
@@ -273,7 +328,7 @@
       emp.vacationEnd = emp.vacationEnd ?? '';
       emp.examPeriodic = emp.examPeriodic ?? '';
       emp.examClinical = emp.examClinical ?? '';
-      emp.cargo = emp.cargo || ''; // Novo campo para o cargo (cargo1, cargo2, cargo3)
+      emp.cargo = emp.cargo || ''; 
       emp.occurrences = emp.occurrences || {}; 
       
       const c1 = emp.cycles && emp.cycles[0] ? emp.cycles[0] : { label:'A', workDays: 6, offDays: 2 };
@@ -380,15 +435,15 @@
               <label>Cargo do Funcionário</label>
               <select class="cargo-select" onchange="updateEmp(${index}, 'cargo', this.value); renderCalendar();">
                 <option value="">Nenhum (Branco)</option>
-                <option value="cargo1" ${emp.cargo === 'cargo1' ? 'selected' : ''}>Cargo 1 (Azul Clarinho)</option>
-                <option value="cargo2" ${emp.cargo === 'cargo2' ? 'selected' : ''}>Cargo 2 (Laranja Clarinho)</option>
-                <option value="cargo3" ${emp.cargo === 'cargo3' ? 'selected' : ''}>Cargo 3 (Amarelo Clarinho)</option>
+                <option value="cargo1" ${emp.cargo === 'cargo1' ? 'selected' : ''}>Cargo 1 (Azul)</option>
+                <option value="cargo2" ${emp.cargo === 'cargo2' ? 'selected' : ''}>Cargo 2 (Laranja)</option>
+                <option value="cargo3" ${emp.cargo === 'cargo3' ? 'selected' : ''}>Cargo 3 (Amarelo)</option>
               </select>
             </div>
             <div>
-              <label>Data Início Escala (A)</label>
+              <label>Início da Escala</label>
               <div style="display:flex; gap:5px;">
-                <input type="date" value="${emp.startDate}" onchange="updateEmp(${index}, 'startDate', this.value); renderCalendar();" />
+                <input type="date" value="${emp.startDate}" onchange="updateEmp(${index}, 'startDate', this.value); renderCalendar();" style="flex:1;" />
                 <button class="apply-btn" onclick="renderCalendar()">Aplicar</button>
               </div>
             </div>
@@ -448,21 +503,20 @@
           const ec = sameDate(date, emp.examClinical);
           const isOff = !vac && !ep && !ec && isDayOff(date, emp);
 
-          let content = '', classes = '', title = 'Clique para registrar ocorrência/falta';
+          let content = '', classes = '', title = '';
 
           if (occReason) {
-            classes = 'ocorrencia'; content = '⚠️'; title = `Ocorrência registrada: ${occReason} (Clique para editar)`;
+            classes = 'ocorrencia'; content = '⚠️'; title = `${occReason}`;
           } else if (vac) {
-            classes = 'ferias'; title = 'Férias (Clique para registrar ocorrência)';
+            classes = 'ferias'; title = 'Férias';
           } else if (ep || ec) {
             classes = 'exam ' + (ep && ec ? 'exam-periodic' : (ep ? 'exam-periodic' : 'exam-clinical'));
             if (weekend) classes += ' weekend';
             content = ep && ec ? 'EP/EC' : (ep ? 'EP' : 'EC');
-            title = ep && ec ? 'Exame (Clique para registrar ocorrência)' : (ep ? 'Exame Periódico' : 'Exame Clínico');
+            title = ep && ec ? 'EP e EC' : (ep ? 'EP' : 'EC');
           } else if (isOff) {
-            classes = 'folga'; content = 'F'; title = 'Folga (Clique para registrar ocorrência)';
+            classes = 'folga'; content = 'F'; title = 'Folga';
           } else {
-            // Dia trabalhado normal - Aplica a cor do cargo
             if (emp.cargo === 'cargo1') classes = 'cargo1-bg';
             else if (emp.cargo === 'cargo2') classes = 'cargo2-bg';
             else if (emp.cargo === 'cargo3') classes = 'cargo3-bg';
@@ -476,7 +530,6 @@
       emptyHint.style.display = selected.length ? 'none' : 'block';
     }
 
-    // Modal Funções
     function openModal(empIndex, dateStr) {
       activeEmpIndex = empIndex;
       activeDateStr = dateStr;
@@ -491,14 +544,12 @@
       if (emp.occurrences && emp.occurrences[dateStr]) {
         reasonInput.value = emp.occurrences[dateStr];
         btnDel.style.display = 'block';
-        btnGroupRight.style.width = 'auto';
       } else {
         reasonInput.value = '';
         btnDel.style.display = 'none';
-        btnGroupRight.style.width = '100%';
       }
       modal.style.display = 'flex';
-      reasonInput.focus();
+      setTimeout(() => reasonInput.focus(), 100);
     }
 
     function closeModal() { modal.style.display = 'none'; }
@@ -520,7 +571,6 @@
       saveData();
     }
 
-    // Lista Estratificada
     function toggleOccurrencesList() {
       const calContainer = document.getElementById('calendarContainer');
       const listContainer = document.getElementById('listContainer');
@@ -556,13 +606,13 @@
       allOccurrences.sort((a, b) => b.date.localeCompare(a.date));
       listBody.innerHTML = '';
       if (allOccurrences.length === 0) {
-        listBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #64748b; padding: 30px;">Nenhum afastamento, falta ou atestado registrado ainda.</td></tr>`;
+        listBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #64748b; padding: 30px;">Nenhuma ausência registrada.</td></tr>`;
       } else {
         allOccurrences.forEach(occ => {
           const [y, m, d] = occ.date.split('-');
           listBody.innerHTML += `
             <tr style="border-bottom: 1px solid #e2e8f0;">
-              <td style="padding: 10px; text-align: left;">${d}/${m}/${y}</td>
+              <td style="padding: 10px; text-align: left;">${d}/${m}</td>
               <td style="font-weight: bold; text-align: left; padding: 10px;">${occ.name}</td>
               <td style="text-align: left; padding: 10px; color: #ef4444; font-weight: 500;">${occ.reason}</td>
             </tr>
