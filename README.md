@@ -23,12 +23,19 @@
       --muted: #64748b;
     }
     
+    /* TRAVA DE ROLAGEM GLOBAL - A mágica acontece aqui */
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden; /* Impede que o site inteiro role para o lado */
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: var(--bg);
       color: var(--text);
       margin: 0;
       padding: 10px;
+      box-sizing: border-box;
     }
 
     h1 { font-size: 1.2rem; text-align: center; margin-bottom: 15px; }
@@ -92,12 +99,11 @@
     .link-inline { font-size: 0.85rem; background: none; border: none; cursor: pointer; padding: 0; }
 
     /* =========================================
-       CONTAINER DA TABELA BLINDADO
+       CONTAINER DA TABELA
        ========================================= */
     .calendar-container {
       width: 100%; 
-      max-width: 100vw; 
-      overflow-x: auto; 
+      overflow-x: auto; /* Apenas este bloco pode rolar */
       -webkit-overflow-scrolling: touch; 
       background: var(--surface);
       border-radius: 12px;
@@ -107,25 +113,25 @@
     }
 
     /* =========================================
-       A TABELA E A COLUNA FIXA (SOLUÇÃO FINAL)
+       TABELA
        ========================================= */
     #scheduleTable { 
       table-layout: fixed; 
-      width: 100%; 
+      width: max-content; /* Se adapta exatamente ao conteúdo sem estourar o container pai */
       border-collapse: separate; 
       border-spacing: 0; 
-      min-width: 1000px; 
     }
     
     #scheduleTable th, #scheduleTable td { 
       border-bottom: 1px solid var(--border); 
       border-right: 1px solid var(--border); 
       text-align: center; 
-      padding: 14px 4px; /* Aumentado levemente o padding vertical */
-      font-size: 0.9rem; /* Fonte ligeiramente maior */
+      padding: 10px 2px; /* Espaço interno ajustado */
+      font-size: 0.85rem;
       background-color: #ffffff;
-      width: 45px; /* AUMENTADO O TAMANHO DOS QUADRADOS DOS DIAS */
-      min-width: 45px; 
+      width: 40px;      /* TAMANHO EXATO DE 40px PARA OS DIAS */
+      min-width: 40px; 
+      max-width: 40px;
     }
     
     #scheduleTable th { background-color: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
