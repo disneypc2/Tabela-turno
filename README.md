@@ -1,5 +1,5 @@
 
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -11,24 +11,25 @@
       --surface: #ffffff;
       --border: #e2e8f0;
       --success: #22c55e;
-      --vacation: #8b4513; /* Marrom para férias */
+      --vacation: #8b4513; 
       --occurrence: #ef4444; 
       
-      /* Cores dos Cargos */
-      --cargo1: #e0f2fe; /* Azul clarinho */
-      --cargo2: #ffedd5; /* Laranja clarinho */
-      --cargo3: #fef9c3; /* Amarelo clarinho */
+      --cargo1: #e0f2fe; 
+      --cargo2: #ffedd5; 
+      --cargo3: #fef9c3; 
       
       --text: #1e293b;
       --muted: #64748b;
     }
-
-    /* Removido o bloqueio global que estava quebrando o celular */
+    
+    /* BLOQUEIO TOTAL DA PÁGINA PARA NÃO ARRASTAR */
     html, body {
       margin: 0;
       padding: 0;
+      width: 100vw;
+      overflow-x: hidden;
     }
-    
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: var(--bg);
@@ -39,182 +40,124 @@
 
     h1 { font-size: 1.2rem; text-align: center; margin-bottom: 15px; }
 
-    .controls {
-      background: var(--surface);
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      margin-bottom: 15px;
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    select {
-      padding: 8px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 1rem;
-      flex: 1;
-      min-width: 140px;
-    }
-
-    details {
-      background: var(--surface);
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-      overflow: hidden;
-    }
-
-    summary {
-      padding: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      background: #f1f5f9;
-      list-style: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .controls { background: var(--surface); padding: 15px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    select { padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; flex: 1; min-width: 140px; }
+    details { background: var(--surface); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; overflow: hidden; }
+    summary { padding: 15px; font-weight: bold; cursor: pointer; background: #f1f5f9; list-style: none; display: flex; justify-content: space-between; align-items: center; }
     summary::after { content: "⚙️"; }
 
     .config-grid { padding: 15px; display: grid; gap: 15px; }
     .employee-card { border: 1px solid var(--border); padding: 15px; border-radius: 8px; background: #fafafa; }
-    
     .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
     .row .name-input { flex: 1; font-weight:bold; border:none; border-bottom:1px solid #ccc; padding:6px; min-width: 150px; background: transparent; font-size: 1.05rem;}
     .row .visibility { white-space: nowrap; font-size: 0.9rem; color: var(--muted); font-weight: bold;}
-
     .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
     label { font-size: 0.8rem; color: #475569; display: block; margin-bottom: 4px; font-weight: 600;}
-    input[type="number"], input[type="date"], textarea, select.cargo-select { 
-      width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; font-size: 1rem;
-    }
-
+    input[type="number"], input[type="date"], textarea, select.cargo-select { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; font-size: 1rem; }
     .bulk-actions { display:flex; gap:8px; padding: 0 15px 8px; flex-wrap: wrap; }
     .bulk-actions button { padding: 8px 12px; border: 1px solid var(--border); background:#f8fafc; border-radius:6px; cursor:pointer; font-size:0.9rem; flex: 1; }
     .link-inline { font-size: 0.85rem; background: none; border: none; cursor: pointer; padding: 0; }
 
     /* =========================================
-       CONTAINER DA TABELA (COM SCROLL APENAS AQUI)
+       ZONA DA TABELA (SCROLL BLINDADO)
        ========================================= */
     .calendar-container {
       width: 100%; 
-      overflow-x: auto; /* A barra de rolagem horizontal funciona APENAS na tabela */
+      max-width: 100vw;
+      overflow-x: auto; 
+      overflow-y: hidden;
       -webkit-overflow-scrolling: touch; 
       background: var(--surface);
       border-radius: 12px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      padding-bottom: 10px;
+      padding-bottom: 15px;
+      position: relative;
     }
 
-    /* =========================================
-       A TABELA E A COLUNA FIXA (BLINDADA)
-       ========================================= */
     #scheduleTable { 
-      width: max-content; /* Faz a tabela esticar além da tela para gerar o scroll */
-      border-collapse: separate; /* Fundamental para o sticky funcionar */
-      border-spacing: 0; 
+      table-layout: fixed; 
+      width: max-content; 
+      border-collapse: separate !important; 
+      border-spacing: 0 !important; 
+      min-width: 800px;
     }
     
     #scheduleTable th, #scheduleTable td { 
       border-bottom: 1px solid var(--border); 
       border-right: 1px solid var(--border); 
       text-align: center; 
-      padding: 10px 0; /* Padding vertical ajustado */
+      padding: 10px 0; 
       font-size: 0.85rem;
       background-color: #ffffff;
-      
-      /* QUADRADOS DOS DIAS EXATAMENTE COM 40px */
-      width: 40px; 
-      min-width: 40px; 
-      max-width: 40px;
-      box-sizing: border-box;
     }
     
     #scheduleTable th { background-color: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
 
-    /* COLUNA DOS NOMES CHUMBADA NA ESQUERDA */
-    #scheduleTable th:first-child,
-    #scheduleTable td:first-child {
-      position: -webkit-sticky; /* Para iPhone/Safari */
-      position: sticky;         /* Para Android/Chrome */
-      left: 0;                  /* Cola no lado esquerdo da tela */
+    /* A CLASSE MÁGICA: APLICAÇÃO DIRETA NO NOME
+       Isto impede que o telemóvel ignore o comando
+    */
+    .fixar-nome {
+      position: -webkit-sticky !important; 
+      position: sticky !important;         
+      left: 0 !important;
       
-      width: 130px;      
-      min-width: 130px;
-      max-width: 130px;
-      text-align: left;
-      padding-left: 10px;
+      width: 120px !important;      
+      min-width: 120px !important;
+      max-width: 120px !important;
+      
+      text-align: left !important;
+      padding-left: 10px !important;
       font-weight: bold;
-      z-index: 10;              /* Fica por cima das células que deslizam */
       
-      border-right: 2px solid #94a3b8; /* Borda mais forte separando dos dias */
-      box-shadow: 3px 0 5px rgba(0,0,0,0.05); /* Sombra para dar profundidade */
+      background-color: #ffffff !important;
+      z-index: 50 !important; 
+      
+      border-right: 2px solid #94a3b8 !important; 
+      outline: 1px solid #e2e8f0; /* Previne falhas gráficas no iOS */
+      box-shadow: 3px 0px 6px rgba(0,0,0,0.1) !important; 
       
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    #scheduleTable td:first-child {
-      background-color: #ffffff; 
-      border-left: 1px solid var(--border);
-    }
-    
-    #scheduleTable th:first-child {
-      background-color: #f1f5f9;
-      z-index: 11; /* O topo esquerdo fica acima de tudo */
-      border-left: 1px solid var(--border);
+    th.fixar-nome {
+      background-color: #f1f5f9 !important;
+      z-index: 60 !important; 
     }
 
-    /* Comportamento de clique nas células de dias */
-    #scheduleTable td:not(:first-child) { cursor: pointer; transition: filter 0.2s; }
-    #scheduleTable td:not(:first-child):active { filter: brightness(0.8); }
+    /* QUADRADOS DOS DIAS A EXATOS 40PX */
+    .dia-quadrado {
+      width: 40px !important;
+      min-width: 40px !important;
+      max-width: 40px !important;
+      box-sizing: border-box;
+      cursor: pointer;
+      transition: filter 0.2s;
+    }
+    .dia-quadrado:active { filter: brightness(0.8); }
 
-    /* Cores das Células */
+    /* Cores */
     .folga { background-color: var(--success) !important; color: white !important; font-weight: bold; }
     .ferias { background-color: var(--vacation) !important; color: white !important; font-weight: bold; }
     .ocorrencia { background-color: var(--occurrence) !important; color: white !important; font-weight: bold; }
-    
     .cargo1-bg { background-color: var(--cargo1) !important; }
     .cargo2-bg { background-color: var(--cargo2) !important; }
     .cargo3-bg { background-color: var(--cargo3) !important; }
 
     .legend { color: var(--muted); font-size: 0.85rem; margin: 6px 0 12px; text-align: center; line-height: 1.6; }
-
-    .save-btn {
-      padding: 10px 14px; background: var(--primary); color: white; border: none;
-      border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: bold;
-    }
-    
-    .apply-btn {
-      padding: 8px 12px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem;
-    }
-    
+    .save-btn { padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: bold; }
+    .apply-btn { padding: 8px 12px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
     .empty-hint { color: var(--muted); text-align:center; padding: 14px; font-size:0.9rem; }
-  
-    .actions-bar {
-      position:sticky; top:0; z-index:999; display:flex; justify-content:flex-end; gap:8px;
-      margin-bottom:12px; padding:8px; background:#f8fafc; border-bottom:1px solid #e2e8f0;
-    }
+    .actions-bar { position:sticky; top:0; z-index:999; display:flex; justify-content:flex-end; gap:8px; margin-bottom:12px; padding:8px; background:#f8fafc; border-bottom:1px solid #e2e8f0; }
 
     /* Listas e Modal */
     .list-container { padding: 20px; display: none; background: var(--surface); border-radius: 12px; }
     .list-container table { min-width: 100%; border-collapse: collapse; }
     .list-container th { text-align: left; padding: 10px; border-bottom: 2px solid var(--border); }
 
-    .modal-overlay {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000;
-      backdrop-filter: blur(2px);
-    }
-    .modal-content {
-      background: #fff; padding: 20px; border-radius: 12px; width: 90%; max-width: 450px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(2px); }
+    .modal-content { background: #fff; padding: 20px; border-radius: 12px; width: 90%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     .modal-content textarea { height: 100px; margin-top: 5px; resize: vertical; font-family: inherit; width: 100%; box-sizing: border-box; }
     .modal-buttons { display: flex; gap: 10px; justify-content: space-between; margin-top: 15px; flex-wrap: wrap; }
     .btn-action { padding: 12px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1; text-align: center; font-size: 0.95rem; }
@@ -418,7 +361,6 @@
       return cur >= start && cur <= end;
     }
 
-    // Apaga as datas de férias e renderiza novamente
     function clearVacation(index) {
       employees[index].vacationStart = '';
       employees[index].vacationEnd = '';
@@ -496,10 +438,11 @@
 
       const daysInMonth = new Date(year, month + 1, 0).getDate();
       
-      let htmlHeader = '<th>Func.</th>';
+      // Aplicar classe explícita fixar-nome
+      let htmlHeader = '<th class="fixar-nome">Func.</th>';
       for (let d = 1; d <= daysInMonth; d++) {
         const date = new Date(year, month, d);
-        htmlHeader += `<th style="${(date.getDay() === 0 || date.getDay() === 6) ? 'background:#e2e8f0' : ''}">${d}</th>`;
+        htmlHeader += `<th class="dia-quadrado" style="${(date.getDay() === 0 || date.getDay() === 6) ? 'background:#e2e8f0' : ''}">${d}</th>`;
       }
       headerRow.innerHTML = htmlHeader;
 
@@ -508,7 +451,8 @@
       selected.forEach(emp => {
         const empIndex = employees.findIndex(e => e.id === emp.id);
         
-        htmlBody += `<tr><td title="${emp.name}">${emp.name}</td>`;
+        // Aplicar classe explícita fixar-nome
+        htmlBody += `<tr><td class="fixar-nome" title="${emp.name}">${emp.name}</td>`;
 
         for (let d = 1; d <= daysInMonth; d++) {
           const date = new Date(year, month, d);
@@ -518,18 +462,18 @@
           const vac = isVacation(date, emp);
           const isOff = !vac && isDayOff(date, emp);
 
-          let content = '', classes = '', title = '';
+          let content = '', classes = 'dia-quadrado ', title = '';
 
           if (occReason) {
-            classes = 'ocorrencia'; content = '⚠️'; title = `${occReason}`;
+            classes += 'ocorrencia'; content = '⚠️'; title = `${occReason}`;
           } else if (vac) {
-            classes = 'ferias'; title = 'Férias';
+            classes += 'ferias'; title = 'Férias';
           } else if (isOff) {
-            classes = 'folga'; content = 'F'; title = 'Folga';
+            classes += 'folga'; content = 'F'; title = 'Folga';
           } else {
-            if (emp.cargo === 'cargo1') classes = 'cargo1-bg';
-            else if (emp.cargo === 'cargo2') classes = 'cargo2-bg';
-            else if (emp.cargo === 'cargo3') classes = 'cargo3-bg';
+            if (emp.cargo === 'cargo1') classes += 'cargo1-bg';
+            else if (emp.cargo === 'cargo2') classes += 'cargo2-bg';
+            else if (emp.cargo === 'cargo3') classes += 'cargo3-bg';
           }
 
           htmlBody += `<td class="${classes}" title="${title}" onclick="openModal(${empIndex}, '${dateStr}')">${content}</td>`;
@@ -615,7 +559,7 @@
       allOccurrences.sort((a, b) => b.date.localeCompare(a.date));
       listBody.innerHTML = '';
       if (allOccurrences.length === 0) {
-        listBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #64748b; padding: 30px;">Nenhuma ausência registrada.</td></tr>`;
+        listBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #64748b; padding: 30px;">Nenhuma ausência registada.</td></tr>`;
       } else {
         allOccurrences.forEach(occ => {
           const [y, m, d] = occ.date.split('-');
