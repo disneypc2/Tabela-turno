@@ -1,4 +1,3 @@
-
 <html lang="pt-PT">
 <head>
   <meta charset="UTF-8" />
@@ -7,7 +6,7 @@
   <style>
     :root {
       --primary: #2563eb;
-      --bg: #f8fafc;
+      --bg: #fcf4e3; /* Cor Palha aplicada aqui */
       --surface: #ffffff;
       --border: #e2e8f0;
       --success: #22c55e;
