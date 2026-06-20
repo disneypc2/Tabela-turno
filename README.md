@@ -6,7 +6,7 @@
   <style>
     :root {
       --primary: #2563eb;
-      --bg: #fcf4e3; /* Cor Palha aplicada aqui */
+      --bg: #e0ffff; /* Cor Ciano Claro aplicada aqui */
       --surface: #ffffff;
       --border: #e2e8f0;
       --success: #22c55e;
