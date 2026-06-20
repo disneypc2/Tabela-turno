@@ -6,7 +6,7 @@
   <style>
     :root {
       --primary: #2563eb;
-      --bg: #e0ffff; /* Cor Ciano Claro */
+      --bg: #e0ffff; /* Cor Ciano Claro aplicada aqui */
       --surface: #ffffff;
       --border: #e2e8f0;
       --success: #22c55e;
@@ -57,12 +57,13 @@
       background: var(--surface);
       border-radius: 12px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      display: block;
     }
 
-    /* ── TABELA ── */
+    /* ── TABELA ──
+       border-collapse:separate é OBRIGATÓRIO para position:sticky funcionar
+       numa célula de tabela em todos os browsers. */
     #scheduleTable {
-      border-collapse: separate; /* OBRIGATÓRIO PARA STICKY */
+      border-collapse: separate;
       border-spacing: 0;
       width: max-content;
       min-width: 100%;
@@ -76,7 +77,6 @@
       padding: 10px 0;
       font-size: 0.85rem;
       background-color: #ffffff;
-      background-clip: padding-box;
     }
 
     #scheduleTable th {
@@ -85,32 +85,34 @@
       border-top: 1px solid var(--border);
     }
 
-    /* ── COLUNA FIXADA (SEM OVERFLOW HIDDEN AQUI!) ── */
+    /* ── COLUNA FIXADA ──
+       Fundo sólido é essencial: sem ele o conteúdo dos dias
+       aparece por baixo do nome durante o scroll. */
     .fixar-nome {
       position: -webkit-sticky;
       position: sticky;
       left: 0;
-      z-index: 10;
-      background-color: #ffffff;
-      border-right: 2px solid #94a3b8;
-      border-left: 1px solid var(--border);
-      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-      padding: 0 10px !important; /* Espaço para o nome */
+      width: 130px;
+      min-width: 130px;
+      max-width: 130px;
       text-align: left !important;
-    }
-
-    th.fixar-nome {
-      background-color: #f1f5f9;
-      z-index: 11;
-    }
-
-    /* Caixa extra para evitar que o texto grande quebre o telemóvel */
-    .nome-wrapper {
-      width: 110px;
+      padding-left: 10px !important;
+      font-weight: bold;
+      background-color: #ffffff !important;
+      z-index: 2;
+      border-right: 2px solid #94a3b8 !important;
+      border-left: 1px solid var(--border) !important;
+      box-shadow: 4px 0 6px -2px rgba(0,0,0,0.12);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-weight: bold;
+    }
+
+    /* Cabeçalho da coluna fixa precisa de z-index maior
+       para ficar sobre as células fixas das linhas abaixo */
+    th.fixar-nome {
+      background-color: #f1f5f9 !important;
+      z-index: 3;
     }
 
     /* ── CÉLULAS DOS DIAS ── */
@@ -124,12 +126,12 @@
     .dia-quadrado:active { filter: brightness(0.8); }
 
     /* ── ESTADOS ── */
-    .folga      { background-color: var(--success); color: white; font-weight: bold; }
-    .ferias     { background-color: var(--vacation); color: white; font-weight: bold; }
-    .ocorrencia { background-color: var(--occurrence); color: white; font-weight: bold; }
-    .cargo1-bg  { background-color: var(--cargo1); }
-    .cargo2-bg  { background-color: var(--cargo2); }
-    .cargo3-bg  { background-color: var(--cargo3); }
+    .folga      { background-color: var(--success)    !important; color: white !important; font-weight: bold; }
+    .ferias     { background-color: var(--vacation)   !important; color: white !important; font-weight: bold; }
+    .ocorrencia { background-color: var(--occurrence) !important; color: white !important; font-weight: bold; }
+    .cargo1-bg  { background-color: var(--cargo1) !important; }
+    .cargo2-bg  { background-color: var(--cargo2) !important; }
+    .cargo3-bg  { background-color: var(--cargo3) !important; }
 
     .legend { color: var(--muted); font-size: 0.85rem; margin: 6px 0 12px; text-align: center; line-height: 1.6; }
     .save-btn { padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: bold; }
@@ -152,7 +154,7 @@
 
     @media (max-width: 600px) {
       .actions-bar { flex-direction: column; align-items: stretch; }
-      .actions-bar .save-btn { width: 100%; margin-bottom: 5px; text-align: center; }
+      .actions-bar .save-btn { width: 100% !important; margin-bottom: 5px; text-align: center; }
       .controls { flex-direction: column; }
       .input-group { grid-template-columns: 1fr; }
       .modal-buttons { flex-direction: column; }
@@ -392,7 +394,7 @@
       if (isNaN(month) || isNaN(year)) return;
       const days = new Date(year, month + 1, 0).getDate();
 
-      let hdr = '<th class="fixar-nome"><div class="nome-wrapper">Func.</div></th>';
+      let hdr = '<th class="fixar-nome">Func.</th>';
       for (let d = 1; d <= days; d++){
         const date = new Date(year, month, d);
         const wknd = date.getDay() === 0 || date.getDay() === 6;
@@ -404,10 +406,7 @@
       let body = '';
       selected.forEach(emp => {
         const ei = employees.findIndex(e => e.id === emp.id);
-        
-        // Aqui o texto é protegido pelo nome-wrapper, resolvendo o bug do celular!
-        body += `<td class="fixar-nome" title="${emp.name}"><div class="nome-wrapper">${emp.name}</div></td>`;
-        
+        body += `<tr><td class="fixar-nome" title="${emp.name}">${emp.name}</td>`;
         for (let d = 1; d <= days; d++){
           const date = new Date(year, month, d);
           const ds   = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
