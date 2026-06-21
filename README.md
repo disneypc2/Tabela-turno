@@ -64,7 +64,7 @@
 
     /* PAINEL DOS NOMES (Totalmente Fixo) */
     .fixed-column {
-      width: 130px;
+      width: 110px; /* Reduzido para dar mais espaço panorâmico aos dias */
       flex-shrink: 0; 
       background-color: #ffffff;
       border-right: 2px solid #94a3b8;
@@ -92,20 +92,20 @@
     
     .scroll-column .sync-table { 
       width: max-content; 
-      table-layout: auto; /* DEIXA ESTICAR PARA NÃO ESPREMER OS NÚMEROS */
+      table-layout: auto; 
     }
 
     .sync-table tr {
-      height: 48px !important; /* ALTURA TRAVADA E CONFORTÁVEL */
+      height: 38px !important; /* Altura mais compacta / panorâmica */
     }
 
     .sync-table th, .sync-table td {
-      height: 48px !important;
+      height: 38px !important;
       border-bottom: 1px solid var(--border);
       padding: 0;
       text-align: center;
       vertical-align: middle;
-      font-size: 0.9rem;
+      font-size: 0.8rem; /* Fonte ligeiramente menor para encaixar perfeitamente */
       box-sizing: border-box;
     }
 
@@ -117,6 +117,7 @@
       padding-left: 10px;
       padding-right: 5px;
       font-weight: bold;
+      font-size: 0.85rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -125,10 +126,10 @@
     /* Especificidades dos Dias */
     .scroll-column th, .scroll-column td {
       border-right: 1px solid var(--border);
-      width: 45px !important; /* LARGURA EXATA */
-      min-width: 45px !important;
-      max-width: 45px !important;
-      white-space: nowrap !important; /* PROÍBE O TEXTO DE QUEBRAR LINHA */
+      width: 36px !important; /* Quadrados mais finos para caberem mais na tela */
+      min-width: 36px !important;
+      max-width: 36px !important;
+      white-space: nowrap !important;
       word-break: keep-all !important;
     }
 
@@ -144,7 +145,7 @@
     .cargo2-bg  { background-color: var(--cargo2) !important; }
     .cargo3-bg  { background-color: var(--cargo3) !important; }
 
-    .legend { color: var(--muted); font-size: 0.85rem; margin: 6px 0 12px; text-align: center; line-height: 1.6; }
+    .legend { color: var(--muted); font-size: 0.8rem; margin: 6px 0 12px; text-align: center; line-height: 1.6; }
     .save-btn { padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: bold; }
     .apply-btn { padding: 8px 12px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
     .empty-hint { color: var(--muted); text-align: center; padding: 14px; font-size: 0.9rem; }
