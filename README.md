@@ -6,7 +6,7 @@
   <style>
     :root {
       --primary: #2563eb;
-      --bg: #e0ffff; /* Cor Ciano Claro aplicada aqui */
+      --bg: #e0ffff; /* Cor Ciano Claro */
       --surface: #ffffff;
       --border: #e2e8f0;
       --success: #22c55e;
@@ -49,89 +49,94 @@
     .bulk-actions button { padding: 8px 12px; border: 1px solid var(--border); background: #f8fafc; border-radius: 6px; cursor: pointer; font-size: 0.9rem; flex: 1; }
     .link-inline { font-size: 0.85rem; background: none; border: none; cursor: pointer; padding: 0; }
 
-    /* ── WRAPPER DE SCROLL ── */
-    .calendar-container {
+    /* =========================================
+       NOVA ESTRUTURA BLINDADA (2 TABELAS)
+       ========================================= */
+    .calendar-wrapper {
+      display: flex;
       width: 100%;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
       background: var(--surface);
       border-radius: 12px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      overflow: hidden; /* Corta as bordas para ficar arredondado */
+      margin-bottom: 10px;
     }
 
-    /* ── TABELA ──
-       border-collapse:separate é OBRIGATÓRIO para position:sticky funcionar
-       numa célula de tabela em todos os browsers. */
-    #scheduleTable {
-      border-collapse: separate;
-      border-spacing: 0;
-      width: max-content;
-      min-width: 100%;
+    /* PAINEL DOS NOMES (Totalmente Fixo) */
+    .fixed-panel {
+      width: 120px;
+      flex-shrink: 0; /* Impede de encolher */
+      background-color: #ffffff;
+      border-right: 2px solid #94a3b8;
+      box-shadow: 3px 0px 5px rgba(0,0,0,0.08);
+      z-index: 10;
     }
 
-    #scheduleTable th,
-    #scheduleTable td {
-      border-bottom: 1px solid var(--border);
-      border-right: 1px solid var(--border);
-      text-align: center;
-      padding: 10px 0;
-      font-size: 0.85rem;
+    /* PAINEL DOS DIAS (Apenas este rola horizontalmente) */
+    .scroll-panel {
+      flex-grow: 1;
+      overflow-x: auto; /* Scroll horizontal apenas aqui */
+      -webkit-overflow-scrolling: touch; /* Deslize suave no telemóvel */
       background-color: #ffffff;
     }
 
-    #scheduleTable th {
+    /* Regras Comuns para as 2 Tabelas */
+    .fixed-panel table, 
+    .scroll-panel table {
+      width: 100%;
+      border-collapse: collapse; /* Como agora são 2 painéis, podemos usar collapse! */
+      table-layout: fixed;
+    }
+
+    .fixed-panel th, .fixed-panel td,
+    .scroll-panel th, .scroll-panel td {
+      height: 45px; /* ALTURA ESTRITA PARA GARANTIR ALINHAMENTO DAS DUAS TABELAS */
+      border-bottom: 1px solid var(--border);
+      padding: 0;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 0.85rem;
+      box-sizing: border-box;
+    }
+
+    /* Cabeçalhos Comuns */
+    .fixed-panel th, 
+    .scroll-panel th {
       background-color: #f1f5f9;
       font-weight: 600;
       border-top: 1px solid var(--border);
     }
 
-    /* ── COLUNA FIXADA ──
-       Fundo sólido é essencial: sem ele o conteúdo dos dias
-       aparece por baixo do nome durante o scroll. */
-    .fixar-nome {
-      position: -webkit-sticky;
-      position: sticky;
-      left: 0;
-      width: 130px;
-      min-width: 130px;
-      max-width: 130px;
-      text-align: left !important;
-      padding-left: 10px !important;
+    /* Especificidades dos Nomes */
+    .fixed-panel td {
+      text-align: left;
+      padding: 0 8px;
       font-weight: bold;
-      background-color: #ffffff !important;
-      z-index: 2;
-      border-right: 2px solid #94a3b8 !important;
-      border-left: 1px solid var(--border) !important;
-      box-shadow: 4px 0 6px -2px rgba(0,0,0,0.12);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    /* Cabeçalho da coluna fixa precisa de z-index maior
-       para ficar sobre as células fixas das linhas abaixo */
-    th.fixar-nome {
-      background-color: #f1f5f9 !important;
-      z-index: 3;
-    }
-
-    /* ── CÉLULAS DOS DIAS ── */
-    .dia-quadrado {
-      width: 40px;
+    /* Especificidades dos Dias */
+    .scroll-panel th, 
+    .scroll-panel td {
+      border-right: 1px solid var(--border);
+      width: 40px; /* QUADRADOS DOS DIAS A EXATOS 40PX */
       min-width: 40px;
       max-width: 40px;
-      cursor: pointer;
-      transition: filter 0.15s;
     }
-    .dia-quadrado:active { filter: brightness(0.8); }
 
-    /* ── ESTADOS ── */
-    .folga      { background-color: var(--success)    !important; color: white !important; font-weight: bold; }
-    .ferias     { background-color: var(--vacation)   !important; color: white !important; font-weight: bold; }
-    .ocorrencia { background-color: var(--occurrence) !important; color: white !important; font-weight: bold; }
-    .cargo1-bg  { background-color: var(--cargo1) !important; }
-    .cargo2-bg  { background-color: var(--cargo2) !important; }
-    .cargo3-bg  { background-color: var(--cargo3) !important; }
+    /* Comportamento de clique nas células de dias */
+    .scroll-panel td { cursor: pointer; transition: filter 0.15s; }
+    .scroll-panel td:active { filter: brightness(0.8); }
+
+    /* ── ESTADOS (Cores) ── */
+    .folga      { background-color: var(--success); color: white; font-weight: bold; }
+    .ferias     { background-color: var(--vacation); color: white; font-weight: bold; }
+    .ocorrencia { background-color: var(--occurrence); color: white; font-weight: bold; }
+    .cargo1-bg  { background-color: var(--cargo1); }
+    .cargo2-bg  { background-color: var(--cargo2); }
+    .cargo3-bg  { background-color: var(--cargo3); }
 
     .legend { color: var(--muted); font-size: 0.85rem; margin: 6px 0 12px; text-align: center; line-height: 1.6; }
     .save-btn { padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: bold; }
@@ -154,7 +159,7 @@
 
     @media (max-width: 600px) {
       .actions-bar { flex-direction: column; align-items: stretch; }
-      .actions-bar .save-btn { width: 100% !important; margin-bottom: 5px; text-align: center; }
+      .actions-bar .save-btn { width: 100%; margin-bottom: 5px; text-align: center; }
       .controls { flex-direction: column; }
       .input-group { grid-template-columns: 1fr; }
       .modal-buttons { flex-direction: column; }
@@ -195,13 +200,27 @@
     </div>
   </details>
 
-  <div class="calendar-container" id="calendarContainer">
-    <table id="scheduleTable">
-      <thead><tr id="headerRow"></tr></thead>
-      <tbody id="bodyRows"></tbody>
-    </table>
-    <div id="emptyHint" class="empty-hint" style="display:none;">Nenhum funcionário selecionado.</div>
+  <div class="calendar-wrapper" id="calendarContainer">
+    <div class="fixed-panel">
+      <table id="nameTable">
+        <thead>
+          <tr><th>Func.</th></tr>
+        </thead>
+        <tbody id="nameRows"></tbody>
+      </table>
+    </div>
+    
+    <div class="scroll-panel" id="scrollPanel">
+      <table id="daysTable">
+        <thead>
+          <tr id="daysHeaderRow"></tr>
+        </thead>
+        <tbody id="daysRows"></tbody>
+      </table>
+    </div>
   </div>
+  
+  <div id="emptyHint" class="empty-hint" style="display:none;">Nenhum funcionário selecionado.</div>
 
   <div class="list-container" id="listContainer">
     <button class="save-btn" style="width:100%;margin-bottom:15px;background:var(--muted);" onclick="toggleOccurrencesList()">⬅️ Retornar para a Escala</button>
@@ -282,8 +301,9 @@
     const selMonth   = document.getElementById('selMonth');
     const selYear    = document.getElementById('selYear');
     const configList = document.getElementById('configList');
-    const headerRow  = document.getElementById('headerRow');
-    const bodyRows   = document.getElementById('bodyRows');
+    const nameRows   = document.getElementById('nameRows');
+    const daysHeader = document.getElementById('daysHeaderRow');
+    const daysRows   = document.getElementById('daysRows');
     const emptyHint  = document.getElementById('emptyHint');
     const modal      = document.getElementById('occurrenceModal');
 
@@ -394,42 +414,54 @@
       if (isNaN(month) || isNaN(year)) return;
       const days = new Date(year, month + 1, 0).getDate();
 
-      let hdr = '<th class="fixar-nome">Func.</th>';
+      // Renderizar Dias (Cabeçalho da Direita)
+      let hdrDays = '';
       for (let d = 1; d <= days; d++){
         const date = new Date(year, month, d);
         const wknd = date.getDay() === 0 || date.getDay() === 6;
-        hdr += `<th class="dia-quadrado"${wknd ? ' style="background:#e2e8f0"' : ''}>${d}</th>`;
+        hdrDays += `<th style="${wknd ? 'background:#e2e8f0;' : ''}">${d}</th>`;
       }
-      headerRow.innerHTML = hdr;
+      daysHeader.innerHTML = hdrDays;
 
       const selected = employees.filter(e => e.visible);
-      let body = '';
+      
+      let htmlNames = '';
+      let htmlDays = '';
+
       selected.forEach(emp => {
         const ei = employees.findIndex(e => e.id === emp.id);
-        body += `<tr><td class="fixar-nome" title="${emp.name}">${emp.name}</td>`;
+        
+        // Coluna Esquerda (Nomes)
+        htmlNames += `<tr><td title="${emp.name}">${emp.name}</td></tr>`;
+        
+        // Coluna Direita (Dias)
+        htmlDays += `<tr>`;
         for (let d = 1; d <= days; d++){
           const date = new Date(year, month, d);
           const ds   = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
           const occ  = emp.occurrences && emp.occurrences[ds];
           const vac  = isVacation(date, emp);
           const off  = !vac && isDayOff(date, emp);
-          let content = '', cls = 'dia-quadrado ', title = '';
+          let content = '', cls = '', title = '';
           if (occ){
-            cls += 'ocorrencia'; content = '⚠️'; title = occ;
+            cls = 'ocorrencia'; content = '⚠️'; title = occ;
           } else if (vac){
-            cls += 'ferias'; title = 'Férias';
+            cls = 'ferias'; title = 'Férias';
           } else if (off){
-            cls += 'folga'; content = 'F'; title = 'Folga';
+            cls = 'folga'; content = 'F'; title = 'Folga';
           } else {
-            if      (emp.cargo === 'cargo1') cls += 'cargo1-bg';
-            else if (emp.cargo === 'cargo2') cls += 'cargo2-bg';
-            else if (emp.cargo === 'cargo3') cls += 'cargo3-bg';
+            if      (emp.cargo === 'cargo1') cls = 'cargo1-bg';
+            else if (emp.cargo === 'cargo2') cls = 'cargo2-bg';
+            else if (emp.cargo === 'cargo3') cls = 'cargo3-bg';
           }
-          body += `<td class="${cls}" title="${title}" onclick="openModal(${ei},'${ds}')">${content}</td>`;
+          htmlDays += `<td class="${cls}" title="${title}" onclick="openModal(${ei},'${ds}')">${content}</td>`;
         }
-        body += '</tr>';
+        htmlDays += `</tr>`;
       });
-      bodyRows.innerHTML = body;
+      
+      nameRows.innerHTML = htmlNames;
+      daysRows.innerHTML = htmlDays;
+      
       emptyHint.style.display = selected.length ? 'none' : 'block';
     }
 
@@ -465,7 +497,7 @@
       const ctrl = document.getElementById('mainControls');
       const det  = document.getElementById('configDetails');
       if (list.style.display === 'block'){
-        list.style.display = 'none'; cal.style.display = 'block';
+        list.style.display = 'none'; cal.style.display = 'flex';
         ctrl.style.display = 'flex'; det.style.display = 'block';
       } else {
         refreshOccurrencesList();
