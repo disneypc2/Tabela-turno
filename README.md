@@ -83,23 +83,33 @@
     /* Regras Comuns para as 2 Tabelas */
     .sync-table {
       border-collapse: collapse; 
-      table-layout: fixed;
     }
 
-    .fixed-column .sync-table { width: 100%; }
-    .scroll-column .sync-table { width: max-content; min-width: 100%; }
+    .fixed-column .sync-table { 
+      width: 100%; 
+      table-layout: fixed; 
+    }
+    
+    .scroll-column .sync-table { 
+      width: max-content; 
+      table-layout: auto; /* DEIXA ESTICAR PARA NÃO ESPREMER OS NÚMEROS */
+    }
+
+    .sync-table tr {
+      height: 48px !important; /* ALTURA TRAVADA E CONFORTÁVEL */
+    }
 
     .sync-table th, .sync-table td {
-      height: 45px; /* ALTURA ESTRITA PARA GARANTIR ALINHAMENTO */
+      height: 48px !important;
       border-bottom: 1px solid var(--border);
       padding: 0;
       text-align: center;
       vertical-align: middle;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       box-sizing: border-box;
     }
 
-    .sync-table th { background-color: #f1f5f9; font-weight: 600; }
+    .sync-table th { background-color: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
 
     /* Especificidades dos Nomes */
     .fixed-column th, .fixed-column td {
@@ -115,9 +125,11 @@
     /* Especificidades dos Dias */
     .scroll-column th, .scroll-column td {
       border-right: 1px solid var(--border);
-      width: 42px; /* QUADRADOS COM TAMANHO CONFORTÁVEL */
-      min-width: 42px;
-      max-width: 42px;
+      width: 45px !important; /* LARGURA EXATA */
+      min-width: 45px !important;
+      max-width: 45px !important;
+      white-space: nowrap !important; /* PROÍBE O TEXTO DE QUEBRAR LINHA */
+      word-break: keep-all !important;
     }
 
     /* Comportamento de clique nas células de dias */
@@ -125,12 +137,12 @@
     .scroll-column td:active { filter: brightness(0.8); }
 
     /* ── ESTADOS (Cores) ── */
-    .folga      { background-color: var(--success); color: white; font-weight: bold; }
-    .ferias     { background-color: var(--vacation); color: white; font-weight: bold; }
-    .ocorrencia { background-color: var(--occurrence); color: white; font-weight: bold; }
-    .cargo1-bg  { background-color: var(--cargo1); }
-    .cargo2-bg  { background-color: var(--cargo2); }
-    .cargo3-bg  { background-color: var(--cargo3); }
+    .folga      { background-color: var(--success) !important; color: white !important; font-weight: bold; }
+    .ferias     { background-color: var(--vacation) !important; color: white !important; font-weight: bold; }
+    .ocorrencia { background-color: var(--occurrence) !important; color: white !important; font-weight: bold; }
+    .cargo1-bg  { background-color: var(--cargo1) !important; }
+    .cargo2-bg  { background-color: var(--cargo2) !important; }
+    .cargo3-bg  { background-color: var(--cargo3) !important; }
 
     .legend { color: var(--muted); font-size: 0.85rem; margin: 6px 0 12px; text-align: center; line-height: 1.6; }
     .save-btn { padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: bold; }
@@ -291,8 +303,11 @@
     const selMonth   = document.getElementById('selMonth');
     const selYear    = document.getElementById('selYear');
     const configList = document.getElementById('configList');
-    const modal      = document.getElementById('occurrenceModal');
+    const nameRows   = document.getElementById('nameRows');
+    const daysHeader = document.getElementById('daysHeaderRow');
+    const daysRows   = document.getElementById('daysRows');
     const emptyHint  = document.getElementById('emptyHint');
+    const modal      = document.getElementById('occurrenceModal');
 
     function init(){
       initData();
@@ -401,10 +416,8 @@
       if (isNaN(month) || isNaN(year)) return;
       const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-      // HEADER TABELA NOMES (Fixa)
       document.getElementById('nameHeader').innerHTML = '<th>Func.</th>';
 
-      // HEADER TABELA DIAS (Rolável)
       let hdrDays = '';
       for (let d = 1; d <= daysInMonth; d++){
         const date = new Date(year, month, d);
@@ -420,10 +433,8 @@
       selected.forEach(emp => {
         const ei = employees.findIndex(e => e.id === emp.id);
         
-        // Linha do Nome (Fixa)
         htmlNames += `<tr><td title="${emp.name}">${emp.name}</td></tr>`;
         
-        // Linha dos Dias (Rolável)
         htmlDays += `<tr>`;
         for (let d = 1; d <= daysInMonth; d++){
           const date = new Date(year, month, d);
