@@ -64,7 +64,7 @@
 
     /* PAINEL DOS NOMES (Totalmente Fixo) */
     .fixed-column {
-      width: 110px; /* Reduzido para dar mais espaço panorâmico aos dias */
+      width: 120px;
       flex-shrink: 0; 
       background-color: #ffffff;
       border-right: 2px solid #94a3b8;
@@ -92,20 +92,20 @@
     
     .scroll-column .sync-table { 
       width: max-content; 
-      table-layout: auto; 
+      table-layout: auto; /* Deixa esticar para não espremer os números */
     }
 
     .sync-table tr {
-      height: 38px !important; /* Altura mais compacta / panorâmica */
+      height: 40px !important; /* Altura confortável */
     }
 
     .sync-table th, .sync-table td {
-      height: 38px !important;
+      height: 40px !important;
       border-bottom: 1px solid var(--border);
       padding: 0;
       text-align: center;
       vertical-align: middle;
-      font-size: 0.8rem; /* Fonte ligeiramente menor para encaixar perfeitamente */
+      font-size: 0.85rem;
       box-sizing: border-box;
     }
 
@@ -126,10 +126,10 @@
     /* Especificidades dos Dias */
     .scroll-column th, .scroll-column td {
       border-right: 1px solid var(--border);
-      width: 36px !important; /* Quadrados mais finos para caberem mais na tela */
-      min-width: 36px !important;
-      max-width: 36px !important;
-      white-space: nowrap !important;
+      width: 40px !important; /* Quadrados exatamente com 40px */
+      min-width: 40px !important;
+      max-width: 40px !important;
+      white-space: nowrap !important; /* Proíbe o número de saltar de linha */
       word-break: keep-all !important;
     }
 
@@ -145,7 +145,7 @@
     .cargo2-bg  { background-color: var(--cargo2) !important; }
     .cargo3-bg  { background-color: var(--cargo3) !important; }
 
-    .legend { color: var(--muted); font-size: 0.8rem; margin: 6px 0 12px; text-align: center; line-height: 1.6; }
+    .legend { color: var(--muted); font-size: 0.85rem; margin: 6px 0 12px; text-align: center; line-height: 1.6; }
     .save-btn { padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: bold; }
     .apply-btn { padding: 8px 12px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
     .empty-hint { color: var(--muted); text-align: center; padding: 14px; font-size: 0.9rem; }
@@ -256,8 +256,12 @@
   </div>
 
   <script>
-    const startYear = 2026, endYear = 2030, defaultEmployees = 10;
-    const STORAGE_KEY_V2 = 'escalaData_v2', LEGACY_KEY_V1 = 'escalaData_v1';
+    // Configurado para gerar 20 funcionários
+    const startYear = 2026, endYear = 2030, defaultEmployees = 20; 
+    
+    // Nova chave de armazenamento (V3) forçará a criação dos 20 funcionários automaticamente
+    const STORAGE_KEY = 'escalaData_v3'; 
+    
     let employees = [], activeEmpIndex = -1, activeDateStr = '';
 
     function toInt(n, fb = 0){ const v = parseInt(n, 10); return isNaN(v) ? fb : v; }
@@ -282,22 +286,13 @@
     }
 
     function initData(){
-      const v2 = localStorage.getItem(STORAGE_KEY_V2);
-      if (v2){
-        try { employees = (JSON.parse(v2) || []).map(ensureShape); } catch(e){ employees = []; }
-      } else {
-        const v1 = localStorage.getItem(LEGACY_KEY_V1);
-        if (v1){
-          try {
-            employees = (JSON.parse(v1) || []).map((e, i) => ensureShape({
-              id: e.id ?? (i+1), name: e.name ?? `Funcionário ${i+1}`,
-              startDate: e.startDate ?? '2026-01-01', visible: true,
-              cycles: [{ label:'A', workDays: toInt(e.workDays,6), offDays: toInt(e.offDays,2) }, { label:'B', workDays:5, offDays:2 }]
-            }, i));
-          } catch(e){}
-        }
-        if (!employees || !employees.length)
-          for (let i = 0; i < defaultEmployees; i++) employees.push(ensureShape({}, i));
+      const data = localStorage.getItem(STORAGE_KEY);
+      if (data){
+        try { employees = (JSON.parse(data) || []).map(ensureShape); } catch(e){ employees = []; }
+      } 
+      
+      if (!employees || !employees.length) {
+        for (let i = 0; i < defaultEmployees; i++) employees.push(ensureShape({}, i));
       }
     }
 
@@ -406,7 +401,7 @@
     function selectAll(flag){ employees.forEach(e => e.visible = !!flag); renderConfigPanel(); renderCalendar(); }
 
     function saveData(){
-      localStorage.setItem(STORAGE_KEY_V2, JSON.stringify(employees));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
       renderCalendar();
       if (document.getElementById('listContainer').style.display === 'block') refreshOccurrencesList();
       alert('Dados guardados com sucesso!');
