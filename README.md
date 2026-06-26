@@ -64,7 +64,7 @@
 
     /* PAINEL DOS NOMES (Totalmente Fixo) */
     .fixed-column {
-      width: 120px;
+      width: 110px; /* Reduzido para dar mais espaço panorâmico aos dias */
       flex-shrink: 0; 
       background-color: #ffffff;
       border-right: 2px solid #94a3b8;
@@ -92,20 +92,20 @@
     
     .scroll-column .sync-table { 
       width: max-content; 
-      table-layout: auto; /* Deixa esticar para não espremer os números */
+      table-layout: auto; 
     }
 
     .sync-table tr {
-      height: 40px !important; /* Altura confortável */
+      height: 38px !important; /* Altura mais compacta / panorâmica */
     }
 
     .sync-table th, .sync-table td {
-      height: 40px !important;
+      height: 38px !important;
       border-bottom: 1px solid var(--border);
       padding: 0;
       text-align: center;
       vertical-align: middle;
-      font-size: 0.85rem;
+      font-size: 0.8rem; /* Fonte ligeiramente menor para encaixar perfeitamente */
       box-sizing: border-box;
     }
 
@@ -126,10 +126,10 @@
     /* Especificidades dos Dias */
     .scroll-column th, .scroll-column td {
       border-right: 1px solid var(--border);
-      width: 40px !important; /* Quadrados exatamente com 40px */
-      min-width: 40px !important;
-      max-width: 40px !important;
-      white-space: nowrap !important; /* Proíbe o número de saltar de linha */
+      width: 36px !important; /* Quadrados mais finos para caberem mais na tela */
+      min-width: 36px !important;
+      max-width: 36px !important;
+      white-space: nowrap !important;
       word-break: keep-all !important;
     }
 
@@ -145,7 +145,7 @@
     .cargo2-bg  { background-color: var(--cargo2) !important; }
     .cargo3-bg  { background-color: var(--cargo3) !important; }
 
-    .legend { color: var(--muted); font-size: 0.85rem; margin: 6px 0 12px; text-align: center; line-height: 1.6; }
+    .legend { color: var(--muted); font-size: 0.8rem; margin: 6px 0 12px; text-align: center; line-height: 1.6; }
     .save-btn { padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: bold; }
     .apply-btn { padding: 8px 12px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
     .empty-hint { color: var(--muted); text-align: center; padding: 14px; font-size: 0.9rem; }
@@ -259,8 +259,8 @@
     // Configurado para gerar 20 funcionários
     const startYear = 2026, endYear = 2030, defaultEmployees = 20; 
     
-    // Nova chave de armazenamento (V3) forçará a criação dos 20 funcionários automaticamente
-    const STORAGE_KEY = 'escalaData_v3'; 
+    // Nova chave de armazenamento (V4) forçará a renderização limpa da Escala C
+    const STORAGE_KEY = 'escalaData_v4'; 
     
     let employees = [], activeEmpIndex = -1, activeDateStr = '';
 
@@ -276,11 +276,15 @@
       emp.vacationEnd   = emp.vacationEnd   ?? '';
       emp.cargo       = emp.cargo || '';
       emp.occurrences = emp.occurrences || {};
+      
       const c1 = emp.cycles?.[0] ?? { workDays: 6, offDays: 2 };
       const c2 = emp.cycles?.[1] ?? { workDays: 5, offDays: 2 };
+      const c3 = emp.cycles?.[2] ?? { workDays: 0, offDays: 0 }; // Escala C (Por defeito 0)
+      
       emp.cycles = [
         { label: 'A', workDays: toInt(c1.workDays, 6), offDays: toInt(c1.offDays, 2) },
-        { label: 'B', workDays: toInt(c2.workDays, 5), offDays: toInt(c2.offDays, 2) }
+        { label: 'B', workDays: toInt(c2.workDays, 5), offDays: toInt(c2.offDays, 2) },
+        { label: 'C', workDays: toInt(c3.workDays, 0), offDays: toInt(c3.offDays, 0) }
       ];
       return emp;
     }
@@ -323,14 +327,23 @@
       const cur   = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
       const diff  = Math.floor((cur - start) / 86400000);
       if (diff < 0) return false;
+      
       const w1=toInt(emp.cycles[0].workDays,6), o1=toInt(emp.cycles[0].offDays,2);
       const w2=toInt(emp.cycles[1].workDays,5), o2=toInt(emp.cycles[1].offDays,2);
-      const l1=w1+o1, l2=w2+o2;
-      if (!l1 && !l2) return false;
-      if (!l1) return (diff % l2) >= w2;
-      if (!l2) return (diff % l1) >= w1;
-      const r = diff % (l1 + l2);
-      return r < l1 ? r >= w1 : (r - l1) >= w2;
+      const w3=toInt(emp.cycles[2].workDays,0), o3=toInt(emp.cycles[2].offDays,0);
+      
+      const l1=w1+o1, l2=w2+o2, l3=w3+o3;
+      const totalLen = l1 + l2 + l3;
+      
+      if (totalLen === 0) return false;
+      
+      const r = diff % totalLen;
+      
+      if (l1 > 0 && r < l1) return r >= w1;
+      if (l2 > 0 && r < l1 + l2) return (r - l1) >= w2;
+      if (l3 > 0 && r < l1 + l2 + l3) return (r - l1 - l2) >= w3;
+      
+      return false;
     }
 
     function isVacation(dateObj, emp){
@@ -391,6 +404,10 @@
           <div class="input-group">
             <div><label>Escala B - Trab.</label><input type="number" min="0" value="${emp.cycles[1].workDays}" onchange="updateCycle(${index},1,'workDays',this.value)" /></div>
             <div><label>Escala B - Folga</label><input type="number" min="0" value="${emp.cycles[1].offDays}"  onchange="updateCycle(${index},1,'offDays',this.value)" /></div>
+          </div>
+          <div class="input-group">
+            <div><label>Escala C (Opc.) - Trab.</label><input type="number" min="0" value="${emp.cycles[2].workDays}" onchange="updateCycle(${index},2,'workDays',this.value)" /></div>
+            <div><label>Escala C (Opc.) - Folga</label><input type="number" min="0" value="${emp.cycles[2].offDays}"  onchange="updateCycle(${index},2,'offDays',this.value)" /></div>
           </div>`;
         configList.appendChild(div);
       });
