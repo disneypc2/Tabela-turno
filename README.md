@@ -6,7 +6,7 @@
   <style>
     :root {
       --primary: #2563eb;
-      --bg: #e0ffff; /* Cor Ciano Claro */
+      --bg: #e0ffff;
       --surface: #ffffff;
       --border: #e2e8f0;
       --success: #22c55e;
@@ -18,152 +18,56 @@
       --text: #1e293b;
       --muted: #64748b;
     }
-
     * { box-sizing: border-box; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      margin: 0;
-      padding: 10px;
-    }
-
-    h1 { font-size: 1.2rem; text-align: center; margin-bottom: 15px; }
-
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; }
     .controls { background: var(--surface); padding: 15px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
     select { padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; flex: 1; min-width: 140px; }
     details { background: var(--surface); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; overflow: hidden; }
     summary { padding: 15px; font-weight: bold; cursor: pointer; background: #f1f5f9; list-style: none; display: flex; justify-content: space-between; align-items: center; }
     summary::after { content: "⚙️"; }
-
     .config-grid { padding: 15px; display: grid; gap: 15px; }
     .employee-card { border: 1px solid var(--border); padding: 15px; border-radius: 8px; background: #fafafa; }
     .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
     .row .name-input { flex: 1; font-weight: bold; border: none; border-bottom: 1px solid #ccc; padding: 6px; min-width: 150px; background: transparent; font-size: 1.05rem; }
-    .row .visibility { white-space: nowrap; font-size: 0.9rem; color: var(--muted); font-weight: bold; }
     .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
     label { font-size: 0.8rem; color: #475569; display: block; margin-bottom: 4px; font-weight: 600; }
     input[type="number"], input[type="date"], textarea, select.cargo-select { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; }
     .bulk-actions { display: flex; gap: 8px; padding: 0 15px 8px; flex-wrap: wrap; }
     .bulk-actions button { padding: 8px 12px; border: 1px solid var(--border); background: #f8fafc; border-radius: 6px; cursor: pointer; font-size: 0.9rem; flex: 1; }
     .link-inline { font-size: 0.85rem; background: none; border: none; cursor: pointer; padding: 0; }
-
-    /* =========================================
-       ESTRUTURA BLINDADA (2 TABELAS SINCRONIZADAS)
-       ========================================= */
-    .calendar-wrapper {
-      display: flex;
-      width: 100%;
-      background: var(--surface);
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      overflow: hidden;
-      margin-bottom: 10px;
-    }
-
-    /* PAINEL DOS NOMES (Totalmente Fixo) */
-    .fixed-column {
-      width: 110px; /* Reduzido para dar mais espaço panorâmico aos dias */
-      flex-shrink: 0; 
-      background-color: #ffffff;
-      border-right: 2px solid #94a3b8;
-      box-shadow: 3px 0px 5px rgba(0,0,0,0.08);
-      z-index: 10;
-    }
-
-    /* PAINEL DOS DIAS (Apenas este rola horizontalmente) */
-    .scroll-column {
-      flex-grow: 1;
-      overflow-x: auto; 
-      -webkit-overflow-scrolling: touch; 
-      background-color: #ffffff;
-    }
-
-    /* Regras Comuns para as 2 Tabelas */
-    .sync-table {
-      border-collapse: collapse; 
-    }
-
-    .fixed-column .sync-table { 
-      width: 100%; 
-      table-layout: fixed; 
-    }
-    
-    .scroll-column .sync-table { 
-      width: max-content; 
-      table-layout: auto; 
-    }
-
-    .sync-table tr {
-      height: 38px !important; /* Altura mais compacta / panorâmica */
-    }
-
-    .sync-table th, .sync-table td {
-      height: 38px !important;
-      border-bottom: 1px solid var(--border);
-      padding: 0;
-      text-align: center;
-      vertical-align: middle;
-      font-size: 0.8rem; /* Fonte ligeiramente menor para encaixar perfeitamente */
-      box-sizing: border-box;
-    }
-
+    .calendar-wrapper { display: flex; width: 100%; background: var(--surface); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 10px; }
+    .fixed-column { width: 110px; flex-shrink: 0; background-color: #ffffff; border-right: 2px solid #94a3b8; box-shadow: 3px 0px 5px rgba(0,0,0,0.08); z-index: 10; }
+    .scroll-column { flex-grow: 1; overflow-x: auto; -webkit-overflow-scrolling: touch; background-color: #ffffff; }
+    .sync-table { border-collapse: collapse; }
+    .fixed-column .sync-table { width: 100%; table-layout: fixed; }
+    .scroll-column .sync-table { width: max-content; table-layout: auto; }
+    .sync-table tr { height: 38px !important; }
+    .sync-table th, .sync-table td { height: 38px !important; border-bottom: 1px solid var(--border); padding: 0; text-align: center; vertical-align: middle; font-size: 0.8rem; box-sizing: border-box; }
     .sync-table th { background-color: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
-
-    /* Especificidades dos Nomes */
-    .fixed-column th, .fixed-column td {
-      text-align: left;
-      padding-left: 10px;
-      padding-right: 5px;
-      font-weight: bold;
-      font-size: 0.85rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Especificidades dos Dias */
-    .scroll-column th, .scroll-column td {
-      border-right: 1px solid var(--border);
-      width: 36px !important; /* Quadrados mais finos para caberem mais na tela */
-      min-width: 36px !important;
-      max-width: 36px !important;
-      white-space: nowrap !important;
-      word-break: keep-all !important;
-    }
-
-    /* Comportamento de clique nas células de dias */
+    .fixed-column th, .fixed-column td { text-align: left; padding-left: 10px; padding-right: 5px; font-weight: bold; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .scroll-column th, .scroll-column td { border-right: 1px solid var(--border); width: 36px !important; min-width: 36px !important; max-width: 36px !important; white-space: nowrap !important; word-break: keep-all !important; }
     .scroll-column td { cursor: pointer; transition: filter 0.15s; }
     .scroll-column td:active { filter: brightness(0.8); }
-
-    /* ── ESTADOS (Cores) ── */
-    .folga      { background-color: var(--success) !important; color: white !important; font-weight: bold; }
-    .ferias     { background-color: var(--vacation) !important; color: white !important; font-weight: bold; }
+    .folga { background-color: var(--success) !important; color: white !important; font-weight: bold; }
+    .ferias { background-color: var(--vacation) !important; color: white !important; font-weight: bold; }
     .ocorrencia { background-color: var(--occurrence) !important; color: white !important; font-weight: bold; }
-    .cargo1-bg  { background-color: var(--cargo1) !important; }
-    .cargo2-bg  { background-color: var(--cargo2) !important; }
-    .cargo3-bg  { background-color: var(--cargo3) !important; }
-
-    .legend { color: var(--muted); font-size: 0.8rem; margin: 6px 0 12px; text-align: center; line-height: 1.6; }
-    .save-btn { padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: bold; }
-    .apply-btn { padding: 8px 12px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
-    .empty-hint { color: var(--muted); text-align: center; padding: 14px; font-size: 0.9rem; }
+    .cargo1-bg { background-color: var(--cargo1) !important; }
+    .cargo2-bg { background-color: var(--cargo2) !important; }
+    .cargo3-bg { background-color: var(--cargo3) !important; }
     .actions-bar { position: sticky; top: 0; z-index: 999; display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 12px; padding: 8px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+    .btn-action { padding: 12px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 5px; }
 
     .list-container { padding: 20px; display: none; background: var(--surface); border-radius: 12px; }
     .list-container table { min-width: 100%; border-collapse: collapse; }
     .list-container th { text-align: left; padding: 10px; border-bottom: 2px solid var(--border); }
-
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(2px); }
     .modal-content { background: #fff; padding: 20px; border-radius: 12px; width: 90%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     .modal-content textarea { height: 100px; margin-top: 5px; resize: vertical; font-family: inherit; width: 100%; box-sizing: border-box; }
     .modal-buttons { display: flex; gap: 10px; justify-content: space-between; margin-top: 15px; flex-wrap: wrap; }
-    .btn-action { padding: 12px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1; text-align: center; font-size: 0.95rem; }
     .btn-save-occ   { background: var(--primary);    color: white; }
     .btn-cancel-occ { background: #e2e8f0;           color: #1e293b; }
     .btn-delete-occ { background: var(--occurrence); color: white; }
-
+    
     @media (max-width: 600px) {
       .actions-bar { flex-direction: column; align-items: stretch; }
       .actions-bar .save-btn { width: 100%; margin-bottom: 5px; text-align: center; }
@@ -175,22 +79,21 @@
   </style>
 </head>
 <body>
-  <h1>📅 Escala de Folgas</h1>
 
   <div class="actions-bar">
-    <button class="save-btn" style="background:#f59e0b;" onclick="toggleOccurrencesList()">📋 Relatório de Ausências</button>
-    <button class="save-btn" onclick="saveData()">💾 Salvar Tudo</button>
-    <button class="save-btn" onclick="toggleConfig()">⚙️ Configurações</button>
+    <button class="save-btn" onclick="toggleOccurrencesList()" style="background:#f59e0b; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">📋 Ausências</button>
+    <button class="save-btn" onclick="saveData()" style="background:var(--primary); color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">💾 Salvar</button>
+    <button class="save-btn" onclick="toggleConfig()" style="background:var(--primary); color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">⚙️ Config.</button>
   </div>
 
   <div class="controls" id="mainControls">
     <select id="selMonth" onchange="renderCalendar()"></select>
-    <select id="selYear"  onchange="renderCalendar()"></select>
+    <select id="selYear" onchange="renderCalendar()"></select>
   </div>
 
   <details id="configDetails">
-    <summary>Configurar Escalas (Toque aqui)</summary>
-    <div class="bulk-actions">
+    <summary>Configurar Escalas</summary>
+    <div class="bulk-actions" style="padding: 10px 15px;">
       <button onclick="selectAll(true)">Selecionar todos</button>
       <button onclick="selectAll(false)">Ocultar todos</button>
     </div>
@@ -205,6 +108,11 @@
       <span style="background:#8b4513;color:#fff;padding:2px 6px;border-radius:4px;display:inline-block;margin:2px;">Férias</span>
       <span style="background:#ef4444;color:#fff;padding:2px 6px;border-radius:4px;display:inline-block;margin:2px;">Afastamento/Falta (⚠️)</span>
     </div>
+    <div style="padding: 15px; display: flex; gap: 10px;">
+      <button class="btn-action" style="background:#64748b; color:white; padding:10px; border-radius:6px;" onclick="exportData()">⬇️ Exportar Backup</button>
+      <input type="file" id="importFile" style="display:none;" onchange="importData(event)">
+      <button class="btn-action" style="background:#64748b; color:white; padding:10px; border-radius:6px;" onclick="document.getElementById('importFile').click()">⬆️ Importar Backup</button>
+    </div>
   </details>
 
   <div class="calendar-wrapper" id="calendarContainer">
@@ -214,7 +122,6 @@
         <tbody id="nameRows"></tbody>
       </table>
     </div>
-    
     <div class="scroll-column" id="scrollPanel">
       <table class="sync-table">
         <thead><tr id="daysHeader"></tr></thead>
@@ -226,7 +133,7 @@
   <div id="emptyHint" class="empty-hint" style="display:none;">Nenhum funcionário selecionado.</div>
 
   <div class="list-container" id="listContainer">
-    <button class="save-btn" style="width:100%;margin-bottom:15px;background:var(--muted);" onclick="toggleOccurrencesList()">⬅️ Retornar para a Escala</button>
+    <button class="btn-action" style="background:var(--muted); color:white; margin-bottom:15px;" onclick="toggleOccurrencesList()">⬅️ Retornar para a Escala</button>
     <h2 style="margin-top:0;color:#1e293b;font-size:1.2rem;">Lista de Ausências</h2>
     <table>
       <thead>
@@ -256,13 +163,31 @@
   </div>
 
   <script>
-    // Configurado para gerar 20 funcionários
-    const startYear = 2026, endYear = 2030, defaultEmployees = 20; 
-    
-    // Nova chave de armazenamento (V4) forçará a renderização limpa da Escala C
-    const STORAGE_KEY = 'escalaData_v4'; 
-    
+    const STORAGE_KEY = 'meu_backup_escala_seguro'; // NÃO ALTERE ESTA LINHA EM FUTUROS PROMPTS
+    const startYear = 2026, endYear = 2030, defaultEmployees = 20;
     let employees = [], activeEmpIndex = -1, activeDateStr = '';
+
+    function exportData() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      if(!data) { alert("Não há dados para exportar."); return; }
+      const blob = new Blob([data], {type: "application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "backup_escala.json";
+      a.click();
+    }
+    
+    function importData(event) {
+      const file = event.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => { 
+        localStorage.setItem(STORAGE_KEY, e.target.result); 
+        alert("Dados importados com sucesso! A página vai recarregar.");
+        location.reload(); 
+      };
+      reader.readAsText(file);
+    }
 
     function toInt(n, fb = 0){ const v = parseInt(n, 10); return isNaN(v) ? fb : v; }
 
@@ -279,7 +204,7 @@
       
       const c1 = emp.cycles?.[0] ?? { workDays: 6, offDays: 2 };
       const c2 = emp.cycles?.[1] ?? { workDays: 5, offDays: 2 };
-      const c3 = emp.cycles?.[2] ?? { workDays: 0, offDays: 0 }; // Escala C (Por defeito 0)
+      const c3 = emp.cycles?.[2] ?? { workDays: 0, offDays: 0 }; 
       
       emp.cycles = [
         { label: 'A', workDays: toInt(c1.workDays, 6), offDays: toInt(c1.offDays, 2) },
@@ -304,7 +229,7 @@
     const selYear    = document.getElementById('selYear');
     const configList = document.getElementById('configList');
     const nameRows   = document.getElementById('nameRows');
-    const daysHeader = document.getElementById('daysHeaderRow');
+    const daysHeader = document.getElementById('daysHeader');
     const daysRows   = document.getElementById('daysRows');
     const emptyHint  = document.getElementById('emptyHint');
     const modal      = document.getElementById('occurrenceModal');
