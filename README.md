@@ -9,20 +9,19 @@
        ========================================= */
     :root {
       --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e0ffff 100%);
+      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e0ffff 100%); /* Ciano Claro */
       --surface: rgba(255, 255, 255, 0.95);
       --border: #e2e8f0;
-      --success: #10b981; /* Verde mais vibrante */
+      --success: #10b981; 
       --vacation: #8b4513; 
-      --occurrence: #ef4444; /* Vermelho moderno */
+      --occurrence: #ef4444; 
       --cargo1: #e0f2fe;
       --cargo2: #ffedd5;
       --cargo3: #fef9c3;
       --text: #0f172a;
       --muted: #64748b;
       --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
       --radius: 12px;
     }
 
@@ -34,19 +33,19 @@
       background-attachment: fixed;
       color: var(--text); 
       margin: 0; 
-      padding: 10px; 
-      padding-top: 70px; /* Espaço para a barra fixa */
+      padding: 0 10px 10px 10px; /* Margem superior removida para a barra encaixar perfeito */
     }
 
-    /* BARRA DE AÇÕES GLASSMORPHISM (Desfoque de fundo) */
+    /* BARRA DE AÇÕES GLASSMORPHISM (Sticky evita sobreposições!) */
     .actions-bar { 
-      position: fixed; 
-      top: 0; left: 0; right: 0;
+      position: sticky; 
+      top: 0; 
       z-index: 9999; 
       display: flex; 
       justify-content: flex-end; 
       gap: 10px; 
-      padding: 12px 15px; 
+      padding: 12px; 
+      margin: 0 -10px 20px -10px; /* Estica até às bordas do ecrã */
       background: rgba(255, 255, 255, 0.85); 
       backdrop-filter: blur(12px); 
       -webkit-backdrop-filter: blur(12px);
@@ -59,22 +58,16 @@
       font-family: inherit;
       border: none; 
       border-radius: 8px; 
-      font-weight: 600; 
+      font-weight: 700; 
       cursor: pointer; 
       transition: all 0.2s ease; 
       box-shadow: var(--shadow-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
     }
-    .save-btn:hover, .btn-action:hover, .apply-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-      filter: brightness(1.05);
+    .save-btn:active, .btn-action:active, .apply-btn:active {
+      transform: scale(0.97);
     }
 
-    .save-btn { padding: 10px 16px; background: var(--primary); color: white; font-size: 0.95rem; }
+    .save-btn { padding: 12px 16px; background: var(--primary); color: white; font-size: 0.95rem; }
     .btn-action { padding: 12px 16px; width: 100%; margin-top: 5px; }
     .apply-btn { padding: 8px 14px; background: #3b82f6; color: white; font-size: 0.9rem; }
 
@@ -97,9 +90,7 @@
       transition: border-color 0.2s;
     }
     select:focus, input:focus, textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      outline: none; border-color: var(--primary);
     }
     select { flex: 1; min-width: 140px; cursor: pointer; }
 
@@ -113,14 +104,14 @@
     }
     summary { 
       padding: 16px; 
-      font-weight: 700; 
+      font-weight: 800; 
       font-size: 1.05rem;
       cursor: pointer; 
-      background: linear-gradient(135deg, #2563eb, #1e40af); 
+      background: #0f172a; 
       color: white;
       list-style: none; display: flex; justify-content: space-between; align-items: center; 
     }
-    summary::after { content: "⚙️"; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2)); }
+    summary::after { content: "⚙️"; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.4)); }
 
     /* CARTÕES DE FUNCIONÁRIOS REFINADOS */
     .config-grid { padding: 20px; display: grid; gap: 20px; background: #f8fafc; }
@@ -130,47 +121,46 @@
       padding: 18px; 
       border-radius: 12px; 
       box-shadow: var(--shadow-sm); 
-      transition: all 0.2s ease;
     }
-    .employee-card:hover { border-color: #cbd5e1; box-shadow: var(--shadow-md); }
     .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
     .row .name-input { 
       flex: 1; font-weight: 800; border: none; border-bottom: 2px solid transparent; 
       padding: 6px 0; min-width: 150px; background: transparent; font-size: 1.15rem; color: var(--text);
     }
-    .row .name-input:focus { border-bottom: 2px solid var(--primary); background: transparent; box-shadow: none; }
-    .row .visibility { white-space: nowrap; font-size: 0.85rem; color: var(--muted); font-weight: 700; background: #f1f5f9; padding: 6px 10px; border-radius: 20px; }
+    .row .name-input:focus { border-bottom: 2px solid var(--primary); }
+    .row .visibility { white-space: nowrap; font-size: 0.85rem; color: var(--text); font-weight: 700; background: #f1f5f9; padding: 6px 10px; border-radius: 20px; }
     
     .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-    label { font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    label { font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
     
     .bulk-actions { display: flex; gap: 8px; padding: 15px; flex-wrap: wrap; background: #ffffff; border-bottom: 1px solid var(--border); }
-    .bulk-actions button { padding: 8px 14px; border: 1px solid var(--border); background: #f8fafc; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; flex: 1; transition: 0.2s; }
+    .bulk-actions button { padding: 10px 14px; border: 1px solid var(--border); background: #f8fafc; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 700; flex: 1; transition: 0.2s; }
     .bulk-actions button:hover { background: #e2e8f0; }
 
     .link-inline { font-size: 0.85rem; background: none; border: none; cursor: pointer; padding: 0; transition: opacity 0.2s; }
-    .link-inline:hover { opacity: 0.7; }
 
-    /* TABELAS BLINDADAS COM CANTOS ARREDONDADOS */
+    /* TABELAS BLINDADAS (VISÃO PANORÂMICA) */
     .calendar-wrapper { 
       display: flex; width: 100%; background: #ffffff; border-radius: var(--radius); 
       box-shadow: var(--shadow-md); overflow: hidden; margin-bottom: 10px; 
       border: 1px solid rgba(226, 232, 240, 0.8);
     }
-    .fixed-column { width: 110px; flex-shrink: 0; background-color: #ffffff; border-right: 2px solid #cbd5e1; box-shadow: 4px 0px 8px rgba(0,0,0,0.06); z-index: 10; }
+    .fixed-column { width: 115px; flex-shrink: 0; background-color: #ffffff; border-right: 2px solid #cbd5e1; box-shadow: 4px 0px 8px rgba(0,0,0,0.06); z-index: 10; }
     .scroll-column { flex-grow: 1; overflow-x: auto; -webkit-overflow-scrolling: touch; background-color: #ffffff; }
     
     .sync-table { border-collapse: collapse; }
     .fixed-column .sync-table { width: 100%; table-layout: fixed; }
     .scroll-column .sync-table { width: max-content; table-layout: auto; }
     
-    .sync-table tr { height: 42px !important; }
+    .sync-table tr { height: 40px !important; }
     .sync-table th, .sync-table td { 
-      height: 42px !important; border-bottom: 1px solid var(--border); padding: 0; 
+      height: 40px !important; border-bottom: 1px solid var(--border); padding: 0; 
       text-align: center; vertical-align: middle; font-size: 0.85rem; box-sizing: border-box; 
     }
-    .sync-table th { background-color: #f8fafc; font-weight: 700; border-top: 1px solid var(--border); color: #334155; }
-    .fixed-column th, .fixed-column td { text-align: left; padding-left: 12px; padding-right: 5px; font-weight: 700; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #1e293b; }
+    .sync-table th { background-color: #f8fafc; font-weight: 800; border-top: 1px solid var(--border); color: #334155; }
+    .fixed-column th, .fixed-column td { text-align: left; padding-left: 12px; padding-right: 5px; font-weight: 800; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #1e293b; }
+    
+    /* Quadrados com 38px para visão panorâmica */
     .scroll-column th, .scroll-column td { border-right: 1px solid var(--border); width: 38px !important; min-width: 38px !important; max-width: 38px !important; white-space: nowrap !important; word-break: keep-all !important; }
     .scroll-column td { cursor: pointer; transition: filter 0.1s; }
     .scroll-column td:active { filter: brightness(0.85); transform: scale(0.95); }
@@ -198,12 +188,12 @@
     .btn-cancel-occ { background: #f1f5f9; color: #334155; }
     .btn-delete-occ { background: #fee2e2; color: var(--occurrence); }
 
+    /* RESOLUÇÃO DO PROBLEMA DE SOBREPOSIÇÃO NO MOBILE */
     @media (max-width: 600px) {
-      body { padding-top: 130px; } /* Mais espaço para os botões encavalados no mobile */
-      .actions-bar { flex-direction: column; align-items: stretch; gap: 6px; padding: 10px; }
-      .actions-bar .save-btn { width: 100%; text-align: center; padding: 12px; }
+      .actions-bar { flex-direction: column; align-items: stretch; gap: 8px; }
+      .actions-bar .save-btn { width: 100%; text-align: center; padding: 14px; margin: 0; }
       .controls { flex-direction: column; }
-      .input-group { grid-template-columns: 1fr; gap: 8px; }
+      .input-group { grid-template-columns: 1fr; gap: 12px; }
       .modal-buttons { flex-direction: column; }
       #btnGroupRight { flex-direction: column; width: 100%; gap: 10px; }
     }
@@ -211,20 +201,18 @@
 </head>
 <body>
 
-  <!-- BARRA FIXA DE NAVEGAÇÃO -->
+  <!-- BARRA SUPERIOR STICKY (Resolve o bug de sobreposição) -->
   <div class="actions-bar">
     <button class="save-btn" onclick="toggleOccurrencesList()" style="background:#f59e0b; color:white;">📋 Relatório de Ausências</button>
     <button class="save-btn" onclick="saveData()">💾 Guardar Alterações</button>
     <button class="save-btn" onclick="toggleConfig()" style="background:#0f172a; color:white;">⚙️ Configurações</button>
   </div>
 
-  <!-- SELEÇÃO DE MÊS E ANO -->
   <div class="controls" id="mainControls">
     <select id="selMonth" onchange="renderCalendar()"></select>
     <select id="selYear" onchange="renderCalendar()"></select>
   </div>
 
-  <!-- PAINEL DE CONFIGURAÇÕES -->
   <details id="configDetails">
     <summary>Painel de Gestão de Escalas</summary>
     <div class="bulk-actions">
@@ -232,18 +220,17 @@
       <button onclick="selectAll(false)">🙈 Ocultar Todos</button>
     </div>
     
-    <!-- Aqui são inseridos os cartões dos funcionários gerados pelo JS -->
     <div class="config-grid" id="configList"></div>
     
     <div class="legend">
       <strong>Cores de Trabalho:</strong>
-      <span style="background:#e0f2fe;padding:4px 8px;border:1px solid #cbd5e1;border-radius:6px;display:inline-block;margin:2px;font-weight:600;">C1</span>
-      <span style="background:#ffedd5;padding:4px 8px;border:1px solid #cbd5e1;border-radius:6px;display:inline-block;margin:2px;font-weight:600;">C2</span>
-      <span style="background:#fef9c3;padding:4px 8px;border:1px solid #cbd5e1;border-radius:6px;display:inline-block;margin:2px;font-weight:600;">C3</span><br />
+      <span style="background:#e0f2fe;padding:4px 8px;border:1px solid #cbd5e1;border-radius:6px;display:inline-block;margin:2px;font-weight:700;">C1</span>
+      <span style="background:#ffedd5;padding:4px 8px;border:1px solid #cbd5e1;border-radius:6px;display:inline-block;margin:2px;font-weight:700;">C2</span>
+      <span style="background:#fef9c3;padding:4px 8px;border:1px solid #cbd5e1;border-radius:6px;display:inline-block;margin:2px;font-weight:700;">C3</span><br />
       <strong style="margin-top:8px; display:inline-block;">Demais Códigos:</strong>
-      <span style="background:var(--success);color:#fff;padding:4px 8px;border-radius:6px;display:inline-block;margin:2px;font-weight:bold;">Folga</span>
-      <span style="background:var(--vacation);color:#fff;padding:4px 8px;border-radius:6px;display:inline-block;margin:2px;font-weight:bold;">Férias</span>
-      <span style="background:var(--occurrence);color:#fff;padding:4px 8px;border-radius:6px;display:inline-block;margin:2px;font-weight:bold;">Falta (⚠️)</span>
+      <span style="background:var(--success);color:#fff;padding:4px 8px;border-radius:6px;display:inline-block;margin:2px;font-weight:700;">Folga</span>
+      <span style="background:var(--vacation);color:#fff;padding:4px 8px;border-radius:6px;display:inline-block;margin:2px;font-weight:700;">Férias</span>
+      <span style="background:var(--occurrence);color:#fff;padding:4px 8px;border-radius:6px;display:inline-block;margin:2px;font-weight:700;">Falta (⚠️)</span>
     </div>
     
     <div style="padding: 20px; display: flex; gap: 10px; background:#f1f5f9; border-top: 1px solid var(--border);">
@@ -253,7 +240,6 @@
     </div>
   </details>
 
-  <!-- TABELAS DA ESCALA -->
   <div class="calendar-wrapper" id="calendarContainer">
     <div class="fixed-column">
       <table class="sync-table">
@@ -271,7 +257,6 @@
   
   <div id="emptyHint" class="empty-hint" style="display:none;">⚠️ Nenhum funcionário selecionado. Por favor, marque "Mostrar" nas configurações.</div>
 
-  <!-- RELATÓRIO DE AUSÊNCIAS -->
   <div class="list-container" id="listContainer">
     <button class="btn-action" style="background:#64748b; color:white; margin-bottom:20px;" onclick="toggleOccurrencesList()">⬅️ Retornar para a Escala</button>
     <h2 style="margin-top:0;color:#0f172a;font-size:1.3rem; font-weight:800;">Lista Oficial de Ausências</h2>
@@ -287,11 +272,10 @@
     </table>
   </div>
 
-  <!-- MODAL DE AUSÊNCIA -->
   <div class="modal-overlay" id="occurrenceModal">
     <div class="modal-content">
       <h3 id="occTitle" style="margin-top:0;color:#0f172a; font-weight:800;">Registar Ausência</h3>
-      <label for="occReason" style="font-weight:700;color:#475569;">Motivo (Ex: Atestado Médico, Falta)</label>
+      <label for="occReason" style="font-weight:800;color:#475569;">Motivo (Ex: Atestado, Falta)</label>
       <textarea id="occReason" placeholder="Descreva aqui o motivo detalhado..."></textarea>
       <div class="modal-buttons">
         <button class="btn-action btn-delete-occ" id="btnDelOcc" onclick="deleteOccurrence()">🗑️ Excluir Registo</button>
@@ -303,15 +287,11 @@
     </div>
   </div>
 
-  <!-- =========================================
-       SCRIPTS JAVASCRIPT
-       ========================================= -->
   <script>
     const STORAGE_KEY = 'meu_backup_escala_seguro'; // NÃO ALTERE ISTO
     const startYear = 2026, endYear = 2030, defaultEmployees = 20;
     let employees = [], activeEmpIndex = -1, activeDateStr = '';
 
-    // BACKUPS
     function exportData() {
       const data = localStorage.getItem(STORAGE_KEY);
       if(!data) { alert("Não há dados para exportar."); return; }
@@ -427,7 +407,6 @@
       renderConfigPanel(); renderCalendar();
     }
 
-    // Função de Mostrar/Ocultar Escala C do Design Vendável
     window.toggleEscalaC = function(index) {
       const el = document.getElementById('escalaC_' + index);
       const icon = document.getElementById('iconC_' + index);
@@ -446,7 +425,6 @@
         const div = document.createElement('div');
         div.className = 'employee-card';
         
-        // Verifica se a Escala C já tem dados guardados para a mostrar automaticamente
         const hasC = emp.cycles[2].workDays > 0 || emp.cycles[2].offDays > 0;
 
         div.innerHTML = `
@@ -465,7 +443,7 @@
               </select>
             </div>
             <div>
-              <label>Início da Escala</label>
+              <label>Início da Escala (Trabalho)</label>
               <div style="display:flex;gap:5px;">
                 <input type="date" value="${emp.startDate}" onchange="updateEmp(${index},'startDate',this.value);renderCalendar();" style="flex:1;" />
                 <button class="apply-btn" onclick="renderCalendar()">✔</button>
@@ -491,7 +469,6 @@
               <div><label>Escala B - Dias Folga</label><input type="number" min="0" value="${emp.cycles[1].offDays}"  onchange="updateCycle(${index},1,'offDays',this.value)" /></div>
             </div>
             
-            <!-- ÁREA DA ESCALA C (Oculta por defeito) -->
             <button class="btn-action" style="background:#f8fafc; color:var(--primary); font-size:0.85rem; border: 1px solid var(--border); padding:8px; margin-top:5px; box-shadow:none;" onclick="toggleEscalaC(${index}); return false;">
               <span id="iconC_${index}">${hasC ? '➖ Ocultar' : '➕ Adicionar'}</span> Escala C (Opcional)
             </button>
