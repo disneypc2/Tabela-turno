@@ -2,210 +2,94 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="color-scheme" content="light" />
   <title>Gestor de Escalas PRO</title>
   <style>
-    /* =========================================
-       PALETA DE CORES PREMIUM E MODERNAS
-       ========================================= */
     :root {
+      color-scheme: light; /* Força o navegador a respeitar as cores claras nos inputs */
       --primary: #2563eb;
-      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e0ffff 100%); /* Ciano Claro */
-      --surface: rgba(255, 255, 255, 0.95);
+      --bg: #e0ffff;
+      --surface: #ffffff;
       --border: #e2e8f0;
-      --success: #10b981; 
-      --vacation: #8b4513; 
-      --occurrence: #ef4444; 
+      --success: #22c55e;
+      --vacation: #8b4513;
+      --occurrence: #ef4444;
       --cargo1: #e0f2fe;
       --cargo2: #ffedd5;
       --cargo3: #fef9c3;
-      --text: #0f172a;
+      --text: #1e293b;
       --muted: #64748b;
-      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-      --radius: 12px;
     }
-
     * { box-sizing: border-box; }
-
-    body { 
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-      background: var(--bg-gradient); 
-      background-attachment: fixed;
-      color: var(--text); 
-      margin: 0; 
-      padding: 0 10px 10px 10px; /* Margem superior removida para a barra encaixar perfeito */
-    }
-
-    /* BARRA DE AÇÕES GLASSMORPHISM (Sticky evita sobreposições!) */
-    .actions-bar { 
-      position: sticky; 
-      top: 0; 
-      z-index: 9999; 
-      display: flex; 
-      justify-content: flex-end; 
-      gap: 10px; 
-      padding: 12px; 
-      margin: 0 -10px 20px -10px; /* Estica até às bordas do ecrã */
-      background: rgba(255, 255, 255, 0.85); 
-      backdrop-filter: blur(12px); 
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(226, 232, 240, 0.8); 
-      box-shadow: var(--shadow-sm);
-    }
-
-    /* BOTÕES MODERNOS */
-    .save-btn, .btn-action, .apply-btn { 
-      font-family: inherit;
-      border: none; 
-      border-radius: 8px; 
-      font-weight: 700; 
-      cursor: pointer; 
-      transition: all 0.2s ease; 
-      box-shadow: var(--shadow-sm);
-    }
-    .save-btn:active, .btn-action:active, .apply-btn:active {
-      transform: scale(0.97);
-    }
-
-    .save-btn { padding: 12px 16px; background: var(--primary); color: white; font-size: 0.95rem; }
-    .btn-action { padding: 12px 16px; width: 100%; margin-top: 5px; }
-    .apply-btn { padding: 8px 14px; background: #3b82f6; color: white; font-size: 0.9rem; }
-
-    /* CONTROLES E DETALHES COM SOMBRAS PREMIUM */
-    .controls { 
-      background: var(--surface); 
-      padding: 15px; 
-      border-radius: var(--radius); 
-      box-shadow: var(--shadow-md); 
-      margin-bottom: 15px; 
-      display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; 
-      border: 1px solid rgba(255,255,255,0.5);
-    }
-    select, input[type="number"], input[type="date"], textarea, select.cargo-select { 
-      padding: 10px; 
-      border: 1px solid var(--border); 
-      border-radius: 8px; 
-      font-size: 0.95rem; 
-      background: #f8fafc;
-      transition: border-color 0.2s;
-    }
-    select:focus, input:focus, textarea:focus {
-      outline: none; border-color: var(--primary);
-    }
-    select { flex: 1; min-width: 140px; cursor: pointer; }
-
-    details { 
-      background: var(--surface); 
-      border-radius: var(--radius); 
-      box-shadow: var(--shadow-md); 
-      margin-bottom: 20px; 
-      overflow: hidden; 
-      border: 1px solid rgba(255,255,255,0.5);
-    }
-    summary { 
-      padding: 16px; 
-      font-weight: 800; 
-      font-size: 1.05rem;
-      cursor: pointer; 
-      background: #0f172a; 
-      color: white;
-      list-style: none; display: flex; justify-content: space-between; align-items: center; 
-    }
-    summary::after { content: "⚙️"; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.4)); }
-
-    /* CARTÕES DE FUNCIONÁRIOS REFINADOS */
-    .config-grid { padding: 20px; display: grid; gap: 20px; background: #f8fafc; }
-    .employee-card { 
-      background: #ffffff; 
-      border: 1px solid var(--border); 
-      padding: 18px; 
-      border-radius: 12px; 
-      box-shadow: var(--shadow-sm); 
-    }
-    .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-    .row .name-input { 
-      flex: 1; font-weight: 800; border: none; border-bottom: 2px solid transparent; 
-      padding: 6px 0; min-width: 150px; background: transparent; font-size: 1.15rem; color: var(--text);
-    }
-    .row .name-input:focus { border-bottom: 2px solid var(--primary); }
-    .row .visibility { white-space: nowrap; font-size: 0.85rem; color: var(--text); font-weight: 700; background: #f1f5f9; padding: 6px 10px; border-radius: 20px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; }
+    .controls { background: var(--surface); padding: 15px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    select { padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; flex: 1; min-width: 140px; }
+    details { background: var(--surface); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; overflow: hidden; }
+    summary { padding: 15px; font-weight: bold; cursor: pointer; background: #f1f5f9; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+    summary::after { content: "⚙️"; }
+    .config-grid { padding: 15px; display: grid; gap: 15px; }
+    .employee-card { border: 1px solid var(--border); padding: 15px; border-radius: 8px; background: #fafafa; }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .row .name-input { flex: 1; font-weight: bold; border: none; border-bottom: 1px solid #ccc; padding: 6px; min-width: 150px; background: transparent; font-size: 1.05rem; }
+    .row .visibility { white-space: nowrap; font-size: 0.9rem; color: var(--muted); font-weight: bold; }
+    .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    label { font-size: 0.8rem; color: #475569; display: block; margin-bottom: 4px; font-weight: 600; }
+    input[type="number"], input[type="date"], textarea, select.cargo-select { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; }
+    .bulk-actions { display: flex; gap: 8px; padding: 0 15px 8px; flex-wrap: wrap; }
+    .bulk-actions button { padding: 8px 12px; border: 1px solid var(--border); background: #f8fafc; border-radius: 6px; cursor: pointer; font-size: 0.9rem; flex: 1; }
+    .link-inline { font-size: 0.85rem; background: none; border: none; cursor: pointer; padding: 0; }
     
-    .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-    label { font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-    
-    .bulk-actions { display: flex; gap: 8px; padding: 15px; flex-wrap: wrap; background: #ffffff; border-bottom: 1px solid var(--border); }
-    .bulk-actions button { padding: 10px 14px; border: 1px solid var(--border); background: #f8fafc; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 700; flex: 1; transition: 0.2s; }
-    .bulk-actions button:hover { background: #e2e8f0; }
-
-    .link-inline { font-size: 0.85rem; background: none; border: none; cursor: pointer; padding: 0; transition: opacity 0.2s; }
-
-    /* TABELAS BLINDADAS (VISÃO PANORÂMICA) */
-    .calendar-wrapper { 
-      display: flex; width: 100%; background: #ffffff; border-radius: var(--radius); 
-      box-shadow: var(--shadow-md); overflow: hidden; margin-bottom: 10px; 
-      border: 1px solid rgba(226, 232, 240, 0.8);
-    }
-    .fixed-column { width: 115px; flex-shrink: 0; background-color: #ffffff; border-right: 2px solid #cbd5e1; box-shadow: 4px 0px 8px rgba(0,0,0,0.06); z-index: 10; }
+    .calendar-wrapper { display: flex; width: 100%; background: var(--surface); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 10px; }
+    .fixed-column { width: 110px; flex-shrink: 0; background-color: #ffffff; border-right: 2px solid #94a3b8; box-shadow: 3px 0px 5px rgba(0,0,0,0.08); z-index: 10; }
     .scroll-column { flex-grow: 1; overflow-x: auto; -webkit-overflow-scrolling: touch; background-color: #ffffff; }
-    
     .sync-table { border-collapse: collapse; }
     .fixed-column .sync-table { width: 100%; table-layout: fixed; }
     .scroll-column .sync-table { width: max-content; table-layout: auto; }
+    .sync-table tr { height: 38px !important; }
+    .sync-table th, .sync-table td { height: 38px !important; border-bottom: 1px solid var(--border); padding: 0; text-align: center; vertical-align: middle; font-size: 0.8rem; box-sizing: border-box; }
+    .sync-table th { background-color: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
+    .fixed-column td { text-align: left; padding-left: 10px; padding-right: 5px; font-weight: bold; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .scroll-column td { width: 36px !important; min-width: 36px !important; max-width: 36px !important; white-space: nowrap !important; word-break: keep-all !important; cursor: pointer; transition: filter 0.15s; }
+    .scroll-column td:active { filter: brightness(0.8); }
     
-    .sync-table tr { height: 40px !important; }
-    .sync-table th, .sync-table td { 
-      height: 40px !important; border-bottom: 1px solid var(--border); padding: 0; 
-      text-align: center; vertical-align: middle; font-size: 0.85rem; box-sizing: border-box; 
-    }
-    .sync-table th { background-color: #f8fafc; font-weight: 800; border-top: 1px solid var(--border); color: #334155; }
-    .fixed-column th, .fixed-column td { text-align: left; padding-left: 12px; padding-right: 5px; font-weight: 800; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #1e293b; }
-    
-    /* Quadrados com 38px para visão panorâmica */
-    .scroll-column th, .scroll-column td { border-right: 1px solid var(--border); width: 38px !important; min-width: 38px !important; max-width: 38px !important; white-space: nowrap !important; word-break: keep-all !important; }
-    .scroll-column td { cursor: pointer; transition: filter 0.1s; }
-    .scroll-column td:active { filter: brightness(0.85); transform: scale(0.95); }
-
-    .folga { background-color: var(--success) !important; color: white !important; font-weight: 800; }
-    .ferias { background-color: var(--vacation) !important; color: white !important; font-weight: 800; }
-    .ocorrencia { background-color: var(--occurrence) !important; color: white !important; font-weight: 800; }
+    .folga { background-color: var(--success) !important; color: white !important; font-weight: bold; }
+    .ferias { background-color: var(--vacation) !important; color: white !important; font-weight: bold; }
+    .ocorrencia { background-color: var(--occurrence) !important; color: white !important; font-weight: bold; }
     .cargo1-bg { background-color: var(--cargo1) !important; }
     .cargo2-bg { background-color: var(--cargo2) !important; }
     .cargo3-bg { background-color: var(--cargo3) !important; }
-
-    .legend { color: var(--muted); font-size: 0.8rem; margin: 15px 0; text-align: center; line-height: 1.8; background: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
-    .empty-hint { color: var(--muted); text-align: center; padding: 20px; font-size: 0.95rem; background: white; border-radius: var(--radius); box-shadow: var(--shadow-sm); }
-
-    .list-container { padding: 20px; display: none; background: #ffffff; border-radius: var(--radius); box-shadow: var(--shadow-md); }
-    .list-container table { min-width: 100%; border-collapse: collapse; margin-top: 15px; }
-    .list-container th { text-align: left; padding: 12px; border-bottom: 2px solid var(--border); background: #f8fafc; color: var(--muted); font-size: 0.85rem; text-transform: uppercase; }
     
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.7); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(4px); }
-    .modal-content { background: #ffffff; padding: 25px; border-radius: 16px; width: 90%; max-width: 400px; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
-    .modal-content textarea { height: 100px; margin-top: 8px; resize: vertical; width: 100%; }
-    .modal-buttons { display: flex; gap: 10px; justify-content: space-between; margin-top: 20px; flex-wrap: wrap; }
-    
-    .btn-save-occ { background: var(--primary); color: white; }
-    .btn-cancel-occ { background: #f1f5f9; color: #334155; }
-    .btn-delete-occ { background: #fee2e2; color: var(--occurrence); }
+    .actions-bar { position: sticky; top: 0; z-index: 999; display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 12px; padding: 8px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+    .btn-action { padding: 12px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 5px; }
+    .apply-btn { padding: 8px 12px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+    .save-btn { padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: bold; }
 
-    /* RESOLUÇÃO DO PROBLEMA DE SOBREPOSIÇÃO NO MOBILE */
+    .list-container { padding: 20px; display: none; background: var(--surface); border-radius: 12px; }
+    .list-container table { min-width: 100%; border-collapse: collapse; }
+    .list-container th { text-align: left; padding: 10px; border-bottom: 2px solid var(--border); }
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(2px); }
+    .modal-content { background: #fff; padding: 20px; border-radius: 12px; width: 90%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    .modal-content textarea { height: 100px; margin-top: 5px; resize: vertical; font-family: inherit; width: 100%; box-sizing: border-box; }
+    .modal-buttons { display: flex; gap: 10px; justify-content: space-between; margin-top: 15px; flex-wrap: wrap; }
+    .btn-save-occ   { background: var(--primary);    color: white; }
+    .btn-cancel-occ { background: #e2e8f0;           color: #1e293b; }
+    .btn-delete-occ { background: var(--occurrence); color: white; }
+    
     @media (max-width: 600px) {
-      .actions-bar { flex-direction: column; align-items: stretch; gap: 8px; }
-      .actions-bar .save-btn { width: 100%; text-align: center; padding: 14px; margin: 0; }
+      .actions-bar { flex-direction: column; align-items: stretch; }
+      .actions-bar .save-btn { width: 100% !important; margin-bottom: 5px; text-align: center; }
       .controls { flex-direction: column; }
-      .input-group { grid-template-columns: 1fr; gap: 12px; }
+      .input-group { grid-template-columns: 1fr; }
       .modal-buttons { flex-direction: column; }
       #btnGroupRight { flex-direction: column; width: 100%; gap: 10px; }
     }
   </style>
 </head>
 <body>
-
-  <!-- BARRA SUPERIOR STICKY (Resolve o bug de sobreposição) -->
   <div class="actions-bar">
-    <button class="save-btn" onclick="toggleOccurrencesList()" style="background:#f59e0b; color:white;">📋 Relatório de Ausências</button>
-    <button class="save-btn" onclick="saveData()">💾 Guardar Alterações</button>
-    <button class="save-btn" onclick="toggleConfig()" style="background:#0f172a; color:white;">⚙️ Configurações</button>
+    <button class="save-btn" onclick="toggleOccurrencesList()" style="background:#f59e0b;">📋 Ausências</button>
+    <button class="save-btn" onclick="saveData()">💾 Salvar</button>
+    <button class="save-btn" onclick="toggleConfig()" style="background:#0f172a;">⚙️ Config.</button>
   </div>
 
   <div class="controls" id="mainControls">
@@ -214,59 +98,30 @@
   </div>
 
   <details id="configDetails">
-    <summary>Painel de Gestão de Escalas</summary>
+    <summary>Configurar Escalas</summary>
     <div class="bulk-actions">
-      <button onclick="selectAll(true)">👁️ Mostrar Todos</button>
-      <button onclick="selectAll(false)">🙈 Ocultar Todos</button>
+      <button onclick="selectAll(true)">Selecionar todos</button>
+      <button onclick="selectAll(false)">Ocultar todos</button>
     </div>
-    
     <div class="config-grid" id="configList"></div>
-    
-    <div class="legend">
-      <strong>Cores de Trabalho:</strong>
-      <span style="background:#e0f2fe;padding:4px 8px;border:1px solid #cbd5e1;border-radius:6px;display:inline-block;margin:2px;font-weight:700;">C1</span>
-      <span style="background:#ffedd5;padding:4px 8px;border:1px solid #cbd5e1;border-radius:6px;display:inline-block;margin:2px;font-weight:700;">C2</span>
-      <span style="background:#fef9c3;padding:4px 8px;border:1px solid #cbd5e1;border-radius:6px;display:inline-block;margin:2px;font-weight:700;">C3</span><br />
-      <strong style="margin-top:8px; display:inline-block;">Demais Códigos:</strong>
-      <span style="background:var(--success);color:#fff;padding:4px 8px;border-radius:6px;display:inline-block;margin:2px;font-weight:700;">Folga</span>
-      <span style="background:var(--vacation);color:#fff;padding:4px 8px;border-radius:6px;display:inline-block;margin:2px;font-weight:700;">Férias</span>
-      <span style="background:var(--occurrence);color:#fff;padding:4px 8px;border-radius:6px;display:inline-block;margin:2px;font-weight:700;">Falta (⚠️)</span>
-    </div>
-    
-    <div style="padding: 20px; display: flex; gap: 10px; background:#f1f5f9; border-top: 1px solid var(--border);">
-      <button class="btn-action" style="background:#475569; color:white; margin:0;" onclick="exportData()">⬇️ Exportar Backup</button>
+    <div style="padding: 15px; display: flex; gap: 10px; background:#f1f5f9; border-top: 1px solid var(--border);">
+      <button class="btn-action" style="background:#64748b; color:white; margin:0;" onclick="exportData()">⬇️ Exportar Backup</button>
       <input type="file" id="importFile" style="display:none;" onchange="importData(event)">
-      <button class="btn-action" style="background:#475569; color:white; margin:0;" onclick="document.getElementById('importFile').click()">⬆️ Importar Backup</button>
+      <button class="btn-action" style="background:#64748b; color:white; margin:0;" onclick="document.getElementById('importFile').click()">⬆️ Importar Backup</button>
     </div>
   </details>
 
   <div class="calendar-wrapper" id="calendarContainer">
-    <div class="fixed-column">
-      <table class="sync-table">
-        <thead><tr id="nameHeader"></tr></thead>
-        <tbody id="nameRows"></tbody>
-      </table>
-    </div>
-    <div class="scroll-column" id="scrollPanel">
-      <table class="sync-table">
-        <thead><tr id="daysHeader"></tr></thead>
-        <tbody id="daysRows"></tbody>
-      </table>
-    </div>
+    <div class="fixed-column"><table class="sync-table"><thead><tr id="nameHeader"></tr></thead><tbody id="nameRows"></tbody></table></div>
+    <div class="scroll-column" id="scrollPanel"><table class="sync-table"><thead><tr id="daysHeaderRow"></tr></thead><tbody id="daysRows"></tbody></table></div>
   </div>
-  
-  <div id="emptyHint" class="empty-hint" style="display:none;">⚠️ Nenhum funcionário selecionado. Por favor, marque "Mostrar" nas configurações.</div>
 
   <div class="list-container" id="listContainer">
-    <button class="btn-action" style="background:#64748b; color:white; margin-bottom:20px;" onclick="toggleOccurrencesList()">⬅️ Retornar para a Escala</button>
-    <h2 style="margin-top:0;color:#0f172a;font-size:1.3rem; font-weight:800;">Lista Oficial de Ausências</h2>
+    <button class="save-btn" style="width:100%;margin-bottom:15px;background:var(--muted);" onclick="toggleOccurrencesList()">⬅️ Retornar para a Escala</button>
+    <h2 style="margin-top:0;color:#1e293b;font-size:1.2rem;">Lista de Ausências</h2>
     <table>
       <thead>
-        <tr>
-          <th style="width:90px;">Data</th>
-          <th style="width:150px;">Funcionário</th>
-          <th>Motivo Justificado</th>
-        </tr>
+        <tr><th style="width:90px;">Data</th><th style="width:150px;">Func.</th><th>Motivo</th></tr>
       </thead>
       <tbody id="absencesListBody"></tbody>
     </table>
@@ -274,21 +129,21 @@
 
   <div class="modal-overlay" id="occurrenceModal">
     <div class="modal-content">
-      <h3 id="occTitle" style="margin-top:0;color:#0f172a; font-weight:800;">Registar Ausência</h3>
-      <label for="occReason" style="font-weight:800;color:#475569;">Motivo (Ex: Atestado, Falta)</label>
-      <textarea id="occReason" placeholder="Descreva aqui o motivo detalhado..."></textarea>
+      <h3 id="occTitle" style="margin-top:0;color:#1e293b;">Registar Ausência</h3>
+      <label for="occReason" style="font-weight:bold;color:#334155;">Motivo (Atestado, falta...)</label>
+      <textarea id="occReason" placeholder="Descreva aqui o motivo..."></textarea>
       <div class="modal-buttons">
-        <button class="btn-action btn-delete-occ" id="btnDelOcc" onclick="deleteOccurrence()">🗑️ Excluir Registo</button>
+        <button class="btn-action btn-delete-occ" id="btnDelOcc" onclick="deleteOccurrence()">🗑️ Excluir</button>
         <div style="display:flex;gap:10px;width:100%;justify-content:flex-end;" id="btnGroupRight">
           <button class="btn-action btn-cancel-occ" onclick="closeModal()">Cancelar</button>
-          <button class="btn-action btn-save-occ"   onclick="saveOccurrence()">Salvar Registo</button>
+          <button class="btn-action btn-save-occ"   onclick="saveOccurrence()">Salvar</button>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    const STORAGE_KEY = 'meu_backup_escala_seguro'; // NÃO ALTERE ISTO
+    const STORAGE_KEY = 'meu_backup_escala_seguro'; 
     const startYear = 2026, endYear = 2030, defaultEmployees = 20;
     let employees = [], activeEmpIndex = -1, activeDateStr = '';
 
@@ -353,9 +208,8 @@
     const selYear    = document.getElementById('selYear');
     const configList = document.getElementById('configList');
     const nameRows   = document.getElementById('nameRows');
-    const daysHeader = document.getElementById('daysHeader');
+    const daysHeader = document.getElementById('daysHeaderRow');
     const daysRows   = document.getElementById('daysRows');
-    const emptyHint  = document.getElementById('emptyHint');
     const modal      = document.getElementById('occurrenceModal');
 
     function init(){
@@ -383,8 +237,8 @@
       
       const l1=w1+o1, l2=w2+o2, l3=w3+o3;
       const totalLen = l1 + l2 + l3;
-      if (totalLen === 0) return false;
       
+      if (totalLen === 0) return false;
       const r = diff % totalLen;
       if (l1 > 0 && r < l1) return r >= w1;
       if (l2 > 0 && r < l1 + l2) return (r - l1) >= w2;
@@ -434,7 +288,7 @@
           </div>
           <div class="input-group">
             <div>
-              <label>Cargo / Cor</label>
+              <label>Cargo do Funcionário</label>
               <select class="cargo-select" onchange="updateEmp(${index},'cargo',this.value);renderCalendar();">
                 <option value="">Nenhum (Branco)</option>
                 <option value="cargo1" ${emp.cargo==='cargo1'?'selected':''}>Cargo 1 (Azul)</option>
@@ -443,38 +297,48 @@
               </select>
             </div>
             <div>
-              <label>Início da Escala (Trabalho)</label>
+              <label>Início da Escala</label>
               <div style="display:flex;gap:5px;">
                 <input type="date" value="${emp.startDate}" onchange="updateEmp(${index},'startDate',this.value);renderCalendar();" style="flex:1;" />
                 <button class="apply-btn" onclick="renderCalendar()">✔</button>
               </div>
             </div>
           </div>
-          <div style="display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid #f1f5f9;padding-top:12px;margin-top:12px;margin-bottom:6px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;border-top:1px dashed #ccc;padding-top:10px;margin-top:10px;margin-bottom:4px;">
             <label style="margin:0;">Período de Férias</label>
-            <button class="link-inline" style="color:#ef4444;font-weight:bold;" onclick="clearVacation(${index});return false;">🗑️ Limpar Férias</button>
+            <button class="link-inline" style="color:#ef4444;font-weight:bold;" onclick="clearVacation(${index});return false;">🗑️ Limpar Marcação</button>
           </div>
           <div class="input-group">
-            <div><label style="font-weight:normal;">Início</label><input type="date" value="${emp.vacationStart}" onchange="updateEmp(${index},'vacationStart',this.value);renderCalendar();" /></div>
-            <div><label style="font-weight:normal;">Fim</label><input type="date" value="${emp.vacationEnd}" onchange="updateEmp(${index},'vacationEnd',this.value);renderCalendar();" /></div>
+            <div>
+              <label style="font-weight:normal;">Início</label>
+              <div style="display:flex;gap:5px;">
+                <input type="date" value="${emp.vacationStart}" onchange="updateEmp(${index},'vacationStart',this.value);renderCalendar();" style="flex:1;" />
+                <button class="apply-btn" onclick="renderCalendar()">✔</button>
+              </div>
+            </div>
+            <div>
+              <label style="font-weight:normal;">Fim</label>
+              <div style="display:flex;gap:5px;">
+                <input type="date" value="${emp.vacationEnd}" onchange="updateEmp(${index},'vacationEnd',this.value);renderCalendar();" style="flex:1;" />
+                <button class="apply-btn" onclick="renderCalendar()">✔</button>
+              </div>
+            </div>
           </div>
-          
           <div style="border-top: 2px dashed #f1f5f9; padding-top: 15px; margin-top: 15px;">
             <div class="input-group">
-              <div><label>Escala A - Dias Trab.</label><input type="number" min="0" value="${emp.cycles[0].workDays}" onchange="updateCycle(${index},0,'workDays',this.value)" /></div>
-              <div><label>Escala A - Dias Folga</label><input type="number" min="0" value="${emp.cycles[0].offDays}"  onchange="updateCycle(${index},0,'offDays',this.value)" /></div>
+              <div><label>Escala A - Trab.</label><input type="number" min="0" value="${emp.cycles[0].workDays}" onchange="updateCycle(${index},0,'workDays',this.value)" /></div>
+              <div><label>Escala A - Folga</label><input type="number" min="0" value="${emp.cycles[0].offDays}"  onchange="updateCycle(${index},0,'offDays',this.value)" /></div>
             </div>
             <div class="input-group">
-              <div><label>Escala B - Dias Trab.</label><input type="number" min="0" value="${emp.cycles[1].workDays}" onchange="updateCycle(${index},1,'workDays',this.value)" /></div>
-              <div><label>Escala B - Dias Folga</label><input type="number" min="0" value="${emp.cycles[1].offDays}"  onchange="updateCycle(${index},1,'offDays',this.value)" /></div>
+              <div><label>Escala B - Trab.</label><input type="number" min="0" value="${emp.cycles[1].workDays}" onchange="updateCycle(${index},1,'workDays',this.value)" /></div>
+              <div><label>Escala B - Folga</label><input type="number" min="0" value="${emp.cycles[1].offDays}"  onchange="updateCycle(${index},1,'offDays',this.value)" /></div>
             </div>
-            
             <button class="btn-action" style="background:#f8fafc; color:var(--primary); font-size:0.85rem; border: 1px solid var(--border); padding:8px; margin-top:5px; box-shadow:none;" onclick="toggleEscalaC(${index}); return false;">
               <span id="iconC_${index}">${hasC ? '➖ Ocultar' : '➕ Adicionar'}</span> Escala C (Opcional)
             </button>
             <div id="escalaC_${index}" class="input-group" style="margin-top:12px; display: ${hasC ? 'grid' : 'none'};">
-              <div><label>Escala C - Dias Trab.</label><input type="number" min="0" value="${emp.cycles[2].workDays}" onchange="updateCycle(${index},2,'workDays',this.value)" /></div>
-              <div><label>Escala C - Dias Folga</label><input type="number" min="0" value="${emp.cycles[2].offDays}"  onchange="updateCycle(${index},2,'offDays',this.value)" /></div>
+              <div><label>Escala C - Trab.</label><input type="number" min="0" value="${emp.cycles[2].workDays}" onchange="updateCycle(${index},2,'workDays',this.value)" /></div>
+              <div><label>Escala C - Folga</label><input type="number" min="0" value="${emp.cycles[2].offDays}"  onchange="updateCycle(${index},2,'offDays',this.value)" /></div>
             </div>
           </div>`;
         configList.appendChild(div);
@@ -489,7 +353,7 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
       renderCalendar();
       if (document.getElementById('listContainer').style.display === 'block') refreshOccurrencesList();
-      alert('Tabela salva com sucesso no navegador!');
+      alert('Dados guardados com sucesso!');
     }
 
     function renderCalendar(){
@@ -497,7 +361,7 @@
       if (isNaN(month) || isNaN(year)) return;
       const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-      document.getElementById('nameHeader').innerHTML = '<th>Nome do Colaborador</th>';
+      document.getElementById('nameHeader').innerHTML = '<th>Func.</th>';
 
       let hdrDays = '';
       for (let d = 1; d <= daysInMonth; d++){
@@ -505,7 +369,7 @@
         const wknd = date.getDay() === 0 || date.getDay() === 6;
         hdrDays += `<th style="${wknd ? 'background:#e2e8f0;' : ''}">${d}</th>`;
       }
-      document.getElementById('daysHeader').innerHTML = hdrDays;
+      daysHeader.innerHTML = hdrDays;
 
       const selected = employees.filter(e => e.visible);
       let htmlNames = '';
@@ -544,7 +408,8 @@
       document.getElementById('nameRows').innerHTML = htmlNames;
       document.getElementById('daysRows').innerHTML = htmlDays;
       
-      emptyHint.style.display = selected.length ? 'none' : 'block';
+      const emptyHint = document.getElementById('emptyHint');
+      if(emptyHint) emptyHint.style.display = selected.length ? 'none' : 'block';
     }
 
     function openModal(ei, ds){
@@ -601,9 +466,9 @@
         : all.map(o => {
             const [y,m,d] = o.date.split('-');
             return `<tr style="border-bottom:1px solid #e2e8f0;">
-              <td style="padding:12px;text-align:left;">${d}/${m}</td>
-              <td style="font-weight:bold;text-align:left;padding:12px;">${o.name}</td>
-              <td style="text-align:left;padding:12px;color:#ef4444;font-weight:600;">${o.reason}</td>
+              <td style="padding:10px;text-align:left;">${d}/${m}</td>
+              <td style="font-weight:bold;text-align:left;padding:10px;">${o.name}</td>
+              <td style="text-align:left;padding:10px;color:#ef4444;font-weight:500;">${o.reason}</td>
             </tr>`;
           }).join('');
     }
