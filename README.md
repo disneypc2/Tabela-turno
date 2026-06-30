@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Gestor de Escalas PRO</title>
+  <title>TABELA DE TURNO</title>
   <style>
     :root {
       --primary: #2563eb;
@@ -21,7 +21,7 @@
     * { box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; }
     
-    /* Novo estilo para o título 3D Arrojado */
+    /* Título 3D Arrojado */
     .titulo-3d {
       text-align: center;
       font-size: 2.2rem;
@@ -99,7 +99,7 @@
       .input-group { grid-template-columns: 1fr; }
       .modal-buttons { flex-direction: column; }
       #btnGroupRight { flex-direction: column; width: 100%; gap: 10px; }
-      .titulo-3d { font-size: 1.8rem; margin: 15px 0; } /* Ajuste de tamanho para celular */
+      .titulo-3d { font-size: 1.8rem; margin: 15px 0; } 
     }
   </style>
 </head>
@@ -166,6 +166,13 @@
     const STORAGE_KEY = 'meu_backup_escala_seguro'; 
     const startYear = 2026, endYear = 2030, defaultEmployees = 20;
     let employees = [], activeEmpIndex = -1, activeDateStr = '';
+
+    // Força o navegador a dar um micro-scroll para tentar esconder a barra de título nativa do Android
+    window.onload = function() {
+      setTimeout(function() {
+        window.scrollTo(0, 1);
+      }, 100);
+    };
 
     function exportData() {
       const data = localStorage.getItem(STORAGE_KEY);
