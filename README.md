@@ -6,10 +6,10 @@
   <style>
     :root {
       --primary: #2563eb;
-      --bg: #f8fafc;
+      --bg: #e0ffff;
       --surface: #ffffff;
       --border: #e2e8f0;
-      --success: #22c55e; /* Verde usado no botão Aplicar */
+      --success: #22c55e;
       --vacation: #8b4513;
       --occurrence: #ef4444;
       --cargo1: #e0f2fe;
@@ -21,39 +21,53 @@
     * { box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; }
     
-    /* Layout mais limpo e profissional */
-    .controls { background: var(--surface); padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-    select { padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; flex: 1; min-width: 140px; background-color: #fff; }
-    details { background: var(--surface); border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; overflow: hidden; }
-    summary { padding: 15px; font-weight: 600; cursor: pointer; background: #f1f5f9; list-style: none; display: flex; justify-content: space-between; align-items: center; }
-    
+    /* Novo estilo para o título 3D Arrojado */
+    .titulo-3d {
+      text-align: center;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #1e293b;
+      text-transform: uppercase;
+      margin: 10px 0 20px 0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      letter-spacing: 2px;
+      text-shadow:
+        1px 1px 0 #cbd5e1,
+        2px 2px 0 #94a3b8,
+        3px 3px 0 #64748b,
+        4px 4px 0 #475569,
+        5px 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .controls { background: var(--surface); padding: 15px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    select { padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; flex: 1; min-width: 140px; }
+    details { background: var(--surface); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; overflow: hidden; }
+    summary { padding: 15px; font-weight: bold; cursor: pointer; background: #f1f5f9; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+    summary::after { content: "⚙️"; }
     .config-grid { padding: 15px; display: grid; gap: 15px; }
-    .employee-card { border: 1px solid var(--border); padding: 15px; border-radius: 8px; background: #ffffff; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-    .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-    .row .name-input { flex: 1; font-weight: 600; border: 1px solid var(--border); border-radius: 4px; padding: 8px; min-width: 150px; font-size: 1.05rem; }
-    .row .visibility { white-space: nowrap; font-size: 0.9rem; color: var(--muted); font-weight: 500; }
-    
-    .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-    label { font-size: 0.8rem; color: var(--muted); display: block; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-    input[type="number"], input[type="date"], textarea, select.cargo-select { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; background-color: #fff; }
-    
+    .employee-card { border: 1px solid var(--border); padding: 15px; border-radius: 8px; background: #fafafa; }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .row .name-input { flex: 1; font-weight: bold; border: none; border-bottom: 1px solid #ccc; padding: 6px; min-width: 150px; background: transparent; font-size: 1.05rem; }
+    .row .visibility { white-space: nowrap; font-size: 0.9rem; color: var(--muted); font-weight: bold; }
+    .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    label { font-size: 0.8rem; color: #475569; display: block; margin-bottom: 4px; font-weight: 600; }
+    input[type="number"], input[type="date"], textarea, select.cargo-select { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; }
     .bulk-actions { display: flex; gap: 8px; padding: 0 15px 8px; flex-wrap: wrap; }
-    .bulk-actions button { padding: 8px 12px; border: 1px solid var(--border); background: #ffffff; border-radius: 6px; cursor: pointer; font-size: 0.9rem; flex: 1; font-weight: 500; transition: background 0.2s; }
-    .bulk-actions button:hover { background: #f1f5f9; }
+    .bulk-actions button { padding: 8px 12px; border: 1px solid var(--border); background: #f8fafc; border-radius: 6px; cursor: pointer; font-size: 0.9rem; flex: 1; }
     .link-inline { font-size: 0.85rem; background: none; border: none; cursor: pointer; padding: 0; }
     
-    .calendar-wrapper { display: flex; width: 100%; background: var(--surface); border-radius: 8px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 10px; }
-    .fixed-column { width: 110px; flex-shrink: 0; background-color: #ffffff; border-right: 2px solid var(--border); z-index: 10; }
+    .calendar-wrapper { display: flex; width: 100%; background: var(--surface); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 10px; }
+    .fixed-column { width: 110px; flex-shrink: 0; background-color: #ffffff; border-right: 2px solid #94a3b8; box-shadow: 3px 0px 5px rgba(0,0,0,0.08); z-index: 10; }
     .scroll-column { flex-grow: 1; overflow-x: auto; -webkit-overflow-scrolling: touch; background-color: #ffffff; }
     .sync-table { border-collapse: collapse; }
     .fixed-column .sync-table { width: 100%; table-layout: fixed; }
     .scroll-column .sync-table { width: max-content; table-layout: auto; }
-    .sync-table tr { height: 42px !important; }
-    .sync-table th, .sync-table td { height: 42px !important; border-bottom: 1px solid var(--border); padding: 0; text-align: center; vertical-align: middle; font-size: 0.85rem; box-sizing: border-box; }
-    .sync-table th { background-color: #f8fafc; font-weight: 600; border-top: 1px solid var(--border); color: var(--text); }
-    .fixed-column td { text-align: left; padding-left: 12px; padding-right: 5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
-    .scroll-column td { width: 38px !important; min-width: 38px !important; max-width: 38px !important; white-space: nowrap !important; word-break: keep-all !important; cursor: pointer; transition: filter 0.15s; }
-    .scroll-column td:active { filter: brightness(0.9); }
+    .sync-table tr { height: 38px !important; }
+    .sync-table th, .sync-table td { height: 38px !important; border-bottom: 1px solid var(--border); padding: 0; text-align: center; vertical-align: middle; font-size: 0.8rem; box-sizing: border-box; }
+    .sync-table th { background-color: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
+    .fixed-column td { text-align: left; padding-left: 10px; padding-right: 5px; font-weight: bold; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .scroll-column td { width: 36px !important; min-width: 36px !important; max-width: 36px !important; white-space: nowrap !important; word-break: keep-all !important; cursor: pointer; transition: filter 0.15s; }
+    .scroll-column td:active { filter: brightness(0.8); }
     
     .folga { background-color: var(--success) !important; color: white !important; font-weight: bold; }
     .ferias { background-color: var(--vacation) !important; color: white !important; font-weight: bold; }
@@ -62,45 +76,40 @@
     .cargo2-bg { background-color: var(--cargo2) !important; }
     .cargo3-bg { background-color: var(--cargo3) !important; }
     
-    /* Botões do topo sem emojis e mais profissionais */
-    .actions-bar { position: sticky; top: 0; z-index: 999; display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 15px; padding: 10px 0; background: var(--bg); }
-    .btn-action { padding: 12px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 5px; }
-    
-    /* O Botão Aplicar Verde */
-    .apply-btn { padding: 8px 12px; background: var(--success); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; transition: opacity 0.2s; }
-    .apply-btn:active { opacity: 0.8; }
-    
-    .save-btn { padding: 10px 16px; border: none; border-radius: 6px; font-size: 0.95rem; cursor: pointer; font-weight: 600; letter-spacing: 0.3px; }
-    .btn-outline { background: #ffffff; color: var(--text); border: 1px solid var(--border); }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-dark { background: var(--text); color: white; }
+    .actions-bar { position: sticky; top: 0; z-index: 999; display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 12px; padding: 8px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+    .btn-action { padding: 12px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 5px; }
+    .apply-btn { padding: 8px 12px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+    .save-btn { padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: bold; }
 
-    .list-container { padding: 20px; display: none; background: var(--surface); border-radius: 8px; border: 1px solid var(--border); }
-    .list-container table { min-width: 100%; border-collapse: collapse; margin-top: 15px; }
-    .list-container th { text-align: left; padding: 12px 10px; border-bottom: 2px solid var(--border); color: var(--muted); text-transform: uppercase; font-size: 0.85rem; }
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.4); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(2px); }
-    .modal-content { background: #fff; padding: 25px; border-radius: 12px; width: 90%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-    .modal-content textarea { height: 100px; margin-top: 8px; resize: vertical; font-family: inherit; width: 100%; box-sizing: border-box; }
-    .modal-buttons { display: flex; gap: 10px; justify-content: space-between; margin-top: 20px; flex-wrap: wrap; }
-    .btn-save-occ   { background: var(--primary); color: white; }
-    .btn-cancel-occ { background: #f1f5f9; color: var(--text); border: 1px solid var(--border); }
+    .list-container { padding: 20px; display: none; background: var(--surface); border-radius: 12px; }
+    .list-container table { min-width: 100%; border-collapse: collapse; }
+    .list-container th { text-align: left; padding: 10px; border-bottom: 2px solid var(--border); }
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(2px); }
+    .modal-content { background: #fff; padding: 20px; border-radius: 12px; width: 90%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    .modal-content textarea { height: 100px; margin-top: 5px; resize: vertical; font-family: inherit; width: 100%; box-sizing: border-box; }
+    .modal-buttons { display: flex; gap: 10px; justify-content: space-between; margin-top: 15px; flex-wrap: wrap; }
+    .btn-save-occ   { background: var(--primary);    color: white; }
+    .btn-cancel-occ { background: #e2e8f0;           color: #1e293b; }
     .btn-delete-occ { background: var(--occurrence); color: white; }
     
     @media (max-width: 600px) {
-      .actions-bar { flex-direction: column; align-items: stretch; padding: 10px; background: #ffffff; border-bottom: 1px solid var(--border); border-radius: 8px; margin-bottom: 15px;}
+      .actions-bar { flex-direction: column; align-items: stretch; }
       .actions-bar .save-btn { width: 100% !important; margin-bottom: 5px; text-align: center; }
       .controls { flex-direction: column; }
       .input-group { grid-template-columns: 1fr; }
       .modal-buttons { flex-direction: column; }
       #btnGroupRight { flex-direction: column; width: 100%; gap: 10px; }
+      .titulo-3d { font-size: 1.8rem; margin: 15px 0; } /* Ajuste de tamanho para celular */
     }
   </style>
 </head>
 <body>
+  <h1 class="titulo-3d">TABELA DE TURNO</h1>
+
   <div class="actions-bar">
-    <button class="save-btn btn-outline" onclick="toggleOccurrencesList()">Relatório de Ausências</button>
-    <button class="save-btn btn-primary" onclick="saveData()">Guardar Alterações</button>
-    <button class="save-btn btn-dark" onclick="toggleConfig()">Configurações</button>
+    <button class="save-btn" onclick="toggleOccurrencesList()" style="background:#f59e0b;">📋 Ausências</button>
+    <button class="save-btn" onclick="saveData()">💾 Salvar</button>
+    <button class="save-btn" onclick="toggleConfig()" style="background:#0f172a;">⚙️ Config.</button>
   </div>
 
   <div class="controls" id="mainControls">
@@ -109,16 +118,16 @@
   </div>
 
   <details id="configDetails">
-    <summary>Gerir Escalas</summary>
+    <summary>Configurar Escalas</summary>
     <div class="bulk-actions">
       <button onclick="selectAll(true)">Selecionar todos</button>
       <button onclick="selectAll(false)">Ocultar todos</button>
     </div>
     <div class="config-grid" id="configList"></div>
-    <div style="padding: 15px; display: flex; gap: 10px; background:#f8fafc; border-top: 1px solid var(--border);">
-      <button class="btn-action btn-outline" style="margin:0;" onclick="exportData()">Exportar Backup</button>
+    <div style="padding: 15px; display: flex; gap: 10px; background:#f1f5f9; border-top: 1px solid var(--border);">
+      <button class="btn-action" style="background:#64748b; color:white; margin:0;" onclick="exportData()">⬇️ Exportar Backup</button>
       <input type="file" id="importFile" style="display:none;" onchange="importData(event)">
-      <button class="btn-action btn-outline" style="margin:0;" onclick="document.getElementById('importFile').click()">Importar Backup</button>
+      <button class="btn-action" style="background:#64748b; color:white; margin:0;" onclick="document.getElementById('importFile').click()">⬆️ Importar Backup</button>
     </div>
   </details>
 
@@ -128,11 +137,11 @@
   </div>
 
   <div class="list-container" id="listContainer">
-    <button class="save-btn btn-outline" style="width:100%;" onclick="toggleOccurrencesList()">Retornar para a Escala</button>
-    <h2 style="margin-top:20px;color:#1e293b;font-size:1.2rem;">Relatório de Ausências</h2>
+    <button class="save-btn" style="width:100%;margin-bottom:15px;background:var(--muted);" onclick="toggleOccurrencesList()">⬅️ Retornar para a Escala</button>
+    <h2 style="margin-top:0;color:#1e293b;font-size:1.2rem;">Lista de Ausências</h2>
     <table>
       <thead>
-        <tr><th style="width:90px;">Data</th><th style="width:150px;">Funcionário</th><th>Motivo</th></tr>
+        <tr><th style="width:90px;">Data</th><th style="width:150px;">Func.</th><th>Motivo</th></tr>
       </thead>
       <tbody id="absencesListBody"></tbody>
     </table>
@@ -141,13 +150,13 @@
   <div class="modal-overlay" id="occurrenceModal">
     <div class="modal-content">
       <h3 id="occTitle" style="margin-top:0;color:#1e293b;">Registar Ausência</h3>
-      <label for="occReason">Motivo (Atestado, falta...)</label>
-      <textarea id="occReason" placeholder="Descreva o motivo..."></textarea>
+      <label for="occReason" style="font-weight:bold;color:#334155;">Motivo (Atestado, falta...)</label>
+      <textarea id="occReason" placeholder="Descreva aqui o motivo..."></textarea>
       <div class="modal-buttons">
-        <button class="btn-action btn-delete-occ" id="btnDelOcc" onclick="deleteOccurrence()">Excluir Registo</button>
+        <button class="btn-action btn-delete-occ" id="btnDelOcc" onclick="deleteOccurrence()">🗑️ Excluir</button>
         <div style="display:flex;gap:10px;width:100%;justify-content:flex-end;" id="btnGroupRight">
           <button class="btn-action btn-cancel-occ" onclick="closeModal()">Cancelar</button>
-          <button class="btn-action btn-save-occ"   onclick="saveOccurrence()">Confirmar</button>
+          <button class="btn-action btn-save-occ"   onclick="saveOccurrence()">Salvar</button>
         </div>
       </div>
     </div>
@@ -277,10 +286,10 @@
       const icon = document.getElementById('iconC_' + index);
       if(el.style.display === 'none') {
         el.style.display = 'grid';
-        icon.innerText = 'Ocultar';
+        icon.innerText = '➖ Ocultar';
       } else {
         el.style.display = 'none';
-        icon.innerText = 'Adicionar';
+        icon.innerText = '➕ Adicionar';
       }
     };
 
@@ -295,62 +304,61 @@
         div.innerHTML = `
           <div class="row">
             <input class="name-input" type="text" value="${emp.name}" onchange="updateEmp(${index},'name',this.value)" />
-            <label class="visibility"><input type="checkbox" ${emp.visible ? 'checked' : ''} onchange="updateEmp(${index},'visible',this.checked);renderCalendar();"> Visível</label>
+            <label class="visibility"><input type="checkbox" ${emp.visible ? 'checked' : ''} onchange="updateEmp(${index},'visible',this.checked);renderCalendar();"> Mostrar</label>
           </div>
           <div class="input-group">
             <div>
-              <label>Cargo / Cor</label>
+              <label>Cargo do Funcionário</label>
               <select class="cargo-select" onchange="updateEmp(${index},'cargo',this.value);renderCalendar();">
-                <option value="">Padrão (Branco)</option>
-                <option value="cargo1" ${emp.cargo==='cargo1'?'selected':''}>Opção 1 (Azul)</option>
-                <option value="cargo2" ${emp.cargo==='cargo2'?'selected':''}>Opção 2 (Laranja)</option>
-                <option value="cargo3" ${emp.cargo==='cargo3'?'selected':''}>Opção 3 (Amarelo)</option>
+                <option value="">Nenhum (Branco)</option>
+                <option value="cargo1" ${emp.cargo==='cargo1'?'selected':''}>Cargo 1 (Azul)</option>
+                <option value="cargo2" ${emp.cargo==='cargo2'?'selected':''}>Cargo 2 (Laranja)</option>
+                <option value="cargo3" ${emp.cargo==='cargo3'?'selected':''}>Cargo 3 (Amarelo)</option>
               </select>
             </div>
             <div>
-              <label>Início do Ciclo</label>
+              <label>Início da Escala</label>
               <div style="display:flex;gap:5px;">
                 <input type="date" value="${emp.startDate}" onchange="updateEmp(${index},'startDate',this.value);renderCalendar();" style="flex:1;" />
-                <button class="apply-btn" onclick="renderCalendar()">Aplicar</button>
+                <button class="apply-btn" onclick="renderCalendar()">✔</button>
               </div>
             </div>
           </div>
-          <div style="display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid var(--border);padding-top:15px;margin-top:15px;margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;border-top:1px dashed #ccc;padding-top:10px;margin-top:10px;margin-bottom:4px;">
             <label style="margin:0;">Período de Férias</label>
-            <button class="link-inline" style="color:var(--occurrence);font-weight:600;" onclick="clearVacation(${index});return false;">Limpar Datas</button>
+            <button class="link-inline" style="color:#ef4444;font-weight:bold;" onclick="clearVacation(${index});return false;">🗑️ Limpar Marcação</button>
           </div>
           <div class="input-group">
             <div>
-              <label style="font-weight:normal;">Data de Início</label>
+              <label style="font-weight:normal;">Início</label>
               <div style="display:flex;gap:5px;">
                 <input type="date" value="${emp.vacationStart}" onchange="updateEmp(${index},'vacationStart',this.value);renderCalendar();" style="flex:1;" />
-                <button class="apply-btn" onclick="renderCalendar()">Aplicar</button>
+                <button class="apply-btn" onclick="renderCalendar()">✔</button>
               </div>
             </div>
             <div>
-              <label style="font-weight:normal;">Data de Fim</label>
+              <label style="font-weight:normal;">Fim</label>
               <div style="display:flex;gap:5px;">
                 <input type="date" value="${emp.vacationEnd}" onchange="updateEmp(${index},'vacationEnd',this.value);renderCalendar();" style="flex:1;" />
-                <button class="apply-btn" onclick="renderCalendar()">Aplicar</button>
+                <button class="apply-btn" onclick="renderCalendar()">✔</button>
               </div>
             </div>
           </div>
-          <div style="border-top: 1px solid var(--border); padding-top: 15px; margin-top: 15px;">
-            <label>Padrão de Turnos</label>
-            <div class="input-group" style="margin-top:8px;">
-              <div><label style="font-weight:normal;">Ciclo A - Dias Trab.</label><input type="number" min="0" value="${emp.cycles[0].workDays}" onchange="updateCycle(${index},0,'workDays',this.value)" /></div>
-              <div><label style="font-weight:normal;">Ciclo A - Folgas</label><input type="number" min="0" value="${emp.cycles[0].offDays}"  onchange="updateCycle(${index},0,'offDays',this.value)" /></div>
+          <div style="border-top: 2px dashed #f1f5f9; padding-top: 15px; margin-top: 15px;">
+            <div class="input-group">
+              <div><label>Escala A - Trab.</label><input type="number" min="0" value="${emp.cycles[0].workDays}" onchange="updateCycle(${index},0,'workDays',this.value)" /></div>
+              <div><label>Escala A - Folga</label><input type="number" min="0" value="${emp.cycles[0].offDays}"  onchange="updateCycle(${index},0,'offDays',this.value)" /></div>
             </div>
             <div class="input-group">
-              <div><label style="font-weight:normal;">Ciclo B - Dias Trab.</label><input type="number" min="0" value="${emp.cycles[1].workDays}" onchange="updateCycle(${index},1,'workDays',this.value)" /></div>
-              <div><label style="font-weight:normal;">Ciclo B - Folgas</label><input type="number" min="0" value="${emp.cycles[1].offDays}"  onchange="updateCycle(${index},1,'offDays',this.value)" /></div>
+              <div><label>Escala B - Trab.</label><input type="number" min="0" value="${emp.cycles[1].workDays}" onchange="updateCycle(${index},1,'workDays',this.value)" /></div>
+              <div><label>Escala B - Folga</label><input type="number" min="0" value="${emp.cycles[1].offDays}"  onchange="updateCycle(${index},1,'offDays',this.value)" /></div>
             </div>
-            <button class="btn-action btn-outline" style="font-size:0.85rem; padding:8px; margin-top:5px;" onclick="toggleEscalaC(${index}); return false;">
-              <span id="iconC_${index}">${hasC ? 'Ocultar' : 'Adicionar'}</span> Ciclo C (Opcional)
+            <button class="btn-action" style="background:#f8fafc; color:var(--primary); font-size:0.85rem; border: 1px solid var(--border); padding:8px; margin-top:5px; box-shadow:none;" onclick="toggleEscalaC(${index}); return false;">
+              <span id="iconC_${index}">${hasC ? '➖ Ocultar' : '➕ Adicionar'}</span> Escala C (Opcional)
             </button>
             <div id="escalaC_${index}" class="input-group" style="margin-top:12px; display: ${hasC ? 'grid' : 'none'};">
-              <div><label style="font-weight:normal;">Ciclo C - Dias Trab.</label><input type="number" min="0" value="${emp.cycles[2].workDays}" onchange="updateCycle(${index},2,'workDays',this.value)" /></div>
-              <div><label style="font-weight:normal;">Ciclo C - Folgas</label><input type="number" min="0" value="${emp.cycles[2].offDays}"  onchange="updateCycle(${index},2,'offDays',this.value)" /></div>
+              <div><label>Escala C - Trab.</label><input type="number" min="0" value="${emp.cycles[2].workDays}" onchange="updateCycle(${index},2,'workDays',this.value)" /></div>
+              <div><label>Escala C - Folga</label><input type="number" min="0" value="${emp.cycles[2].offDays}"  onchange="updateCycle(${index},2,'offDays',this.value)" /></div>
             </div>
           </div>`;
         configList.appendChild(div);
@@ -365,7 +373,7 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
       renderCalendar();
       if (document.getElementById('listContainer').style.display === 'block') refreshOccurrencesList();
-      alert('Alterações guardadas com sucesso.');
+      alert('Dados guardados com sucesso!');
     }
 
     function renderCalendar(){
@@ -373,7 +381,7 @@
       if (isNaN(month) || isNaN(year)) return;
       const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-      document.getElementById('nameHeader').innerHTML = '<th>Funcionário</th>';
+      document.getElementById('nameHeader').innerHTML = '<th>Func.</th>';
 
       let hdrDays = '';
       for (let d = 1; d <= daysInMonth; d++){
@@ -402,7 +410,7 @@
           
           let content = '', cls = '', title = '';
           if (occ){
-            cls = 'ocorrencia'; content = 'Ausente'; title = occ;
+            cls = 'ocorrencia'; content = '⚠️'; title = occ;
           } else if (vac){
             cls = 'ferias'; title = 'Férias';
           } else if (off){
@@ -419,6 +427,9 @@
       
       document.getElementById('nameRows').innerHTML = htmlNames;
       document.getElementById('daysRows').innerHTML = htmlDays;
+      
+      const emptyHint = document.getElementById('emptyHint');
+      if(emptyHint) emptyHint.style.display = selected.length ? 'none' : 'block';
     }
 
     function openModal(ei, ds){
@@ -471,13 +482,13 @@
       });
       all.sort((a, b) => b.date.localeCompare(a.date));
       body.innerHTML = all.length === 0
-        ? `<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:30px;">Nenhum registo encontrado.</td></tr>`
+        ? `<tr><td colspan="3" style="text-align:center;color:#64748b;padding:30px;">Nenhuma ausência registada.</td></tr>`
         : all.map(o => {
             const [y,m,d] = o.date.split('-');
-            return `<tr style="border-bottom:1px solid var(--border);">
-              <td style="padding:12px 10px;text-align:left;font-size:0.9rem;">${d}/${m}</td>
-              <td style="font-weight:600;text-align:left;padding:12px 10px;font-size:0.9rem;">${o.name}</td>
-              <td style="text-align:left;padding:12px 10px;color:var(--occurrence);font-weight:500;font-size:0.9rem;">${o.reason}</td>
+            return `<tr style="border-bottom:1px solid #e2e8f0;">
+              <td style="padding:10px;text-align:left;">${d}/${m}</td>
+              <td style="font-weight:bold;text-align:left;padding:10px;">${o.name}</td>
+              <td style="text-align:left;padding:10px;color:#ef4444;font-weight:500;">${o.reason}</td>
             </tr>`;
           }).join('');
     }
