@@ -2,11 +2,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="color-scheme" content="light" />
   <title>Gestor de Escalas PRO</title>
   <style>
     :root {
-      color-scheme: light; /* Força o navegador a respeitar as cores claras nos inputs */
       --primary: #2563eb;
       --bg: #e0ffff;
       --surface: #ffffff;
