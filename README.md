@@ -2,7 +2,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#e0ffff" />
+  
   <title>TABELA DE TURNO</title>
   <style>
     :root {
@@ -22,7 +26,6 @@
     * { box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0 10px 10px 10px; }
     
-    /* Área da Imagem de Fundo (Banner) */
     .header-banner {
       width: calc(100% + 20px);
       margin-left: -10px;
@@ -36,7 +39,6 @@
       margin-bottom: 20px;
     }
 
-    /* Título 3D Arrojado atualizado para encaixar no banner */
     .titulo-3d {
       font-size: 2.2rem;
       font-weight: 900;
@@ -90,10 +92,11 @@
     .cargo2-bg { background-color: var(--cargo2) !important; }
     .cargo3-bg { background-color: var(--cargo3) !important; }
     
-    .actions-bar { position: sticky; top: 0; z-index: 999; display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 12px; padding: 8px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+    .actions-bar { position: sticky; top: 0; z-index: 999; display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 12px; padding: 8px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; }
     .btn-action { padding: 12px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 5px; }
     .apply-btn { padding: 8px 12px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
-    .save-btn { padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: bold; }
+    .save-btn { padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: bold; flex: 1; text-align: center; }
+    .fullscreen-btn { background: #10b981; }
 
     .list-container { padding: 20px; display: none; background: var(--surface); border-radius: 12px; }
     .list-container table { min-width: 100%; border-collapse: collapse; }
@@ -124,6 +127,7 @@
   </div>
 
   <div class="actions-bar">
+    <button class="save-btn fullscreen-btn" onclick="toggleFullScreen()" id="btnFullscreen">🔲 Tela Cheia</button>
     <button class="save-btn" onclick="toggleOccurrencesList()" style="background:#f59e0b;">📋 Ausências</button>
     <button class="save-btn" onclick="saveData()">💾 Salvar</button>
     <button class="save-btn" onclick="toggleConfig()" style="background:#0f172a;">⚙️ Config.</button>
@@ -184,12 +188,23 @@
     const startYear = 2026, endYear = 2030, defaultEmployees = 20;
     let employees = [], activeEmpIndex = -1, activeDateStr = '';
 
-    // Micro-scroll mantido para ajudar com barras de celular
-    window.onload = function() {
-      setTimeout(function() {
-        window.scrollTo(0, 1);
-      }, 100);
-    };
+    // Função de Tela Cheia para "engolir" a barra do sistema
+    function toggleFullScreen() {
+      const doc = window.document;
+      const docEl = doc.documentElement;
+      const btn = document.getElementById('btnFullscreen');
+
+      const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+      const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+      if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+        requestFullScreen.call(docEl);
+        btn.innerText = "❌ Sair Tela Cheia";
+      } else {
+        cancelFullScreen.call(doc);
+        btn.innerText = "🔲 Tela Cheia";
+      }
+    }
 
     function exportData() {
       const data = localStorage.getItem(STORAGE_KEY);
