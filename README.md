@@ -26,13 +26,13 @@
       width: calc(100% + 20px);
       margin-left: -10px;
       margin-top: 0;
-      padding: 40px 15px;
+      padding: 30px 15px; /* Reduzido levemente para poupar espaço vertical */
       background-image: linear-gradient(rgba(224, 255, 255, 0.3), rgba(224, 255, 255, 1)), url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80');
       background-size: cover;
       background-position: center;
       text-align: center;
       border-bottom: 2px solid #cbd5e1;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     .titulo-3d {
@@ -69,8 +69,9 @@
     .link-inline { font-size: 0.85rem; background: none; border: none; cursor: pointer; padding: 0; }
     
     .calendar-wrapper { display: flex; width: 100%; background: var(--surface); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 10px; }
-    /* Reduzido de 110px para 90px para dar mais espaço aos dias */
-    .fixed-column { width: 90px; flex-shrink: 0; background-color: #ffffff; border-right: 2px solid #94a3b8; box-shadow: 3px 0px 5px rgba(0,0,0,0.08); z-index: 10; }
+    
+    /* Largura padrão maior para os nomes no desktop/telas grandes */
+    .fixed-column { width: 130px; flex-shrink: 0; background-color: #ffffff; border-right: 2px solid #94a3b8; box-shadow: 3px 0px 5px rgba(0,0,0,0.08); z-index: 10; }
     .scroll-column { flex-grow: 1; overflow-x: auto; -webkit-overflow-scrolling: touch; background-color: #ffffff; }
     .sync-table { border-collapse: collapse; }
     .fixed-column .sync-table { width: 100%; table-layout: fixed; }
@@ -78,8 +79,9 @@
     .sync-table tr { height: 38px !important; }
     .sync-table th, .sync-table td { height: 38px !important; border-bottom: 1px solid var(--border); padding: 0; text-align: center; vertical-align: middle; font-size: 0.8rem; box-sizing: border-box; }
     .sync-table th { background-color: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
-    .fixed-column td { text-align: left; padding-left: 6px; padding-right: 4px; font-weight: bold; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    /* Reduzido de 38px para 34px para caberem no mínimo 7 dias na tela */
+    .fixed-column td { text-align: left; padding-left: 8px; padding-right: 4px; font-weight: bold; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    
+    /* Dias levemente ajustados */
     .scroll-column td { width: 34px !important; min-width: 34px !important; max-width: 34px !important; white-space: nowrap !important; word-break: keep-all !important; cursor: pointer; transition: filter 0.15s; font-size: 0.75rem; }
     .scroll-column td:active { filter: brightness(0.8); }
     
@@ -108,6 +110,7 @@
     .btn-cancel-occ { background: #e2e8f0;           color: #1e293b; }
     .btn-delete-occ { background: var(--occurrence); color: white; }
     
+    /* OTMIZAÇÃO MÁXIMA DE TELA PARA CELULARES */
     @media (max-width: 600px) {
       .actions-bar { flex-direction: column; align-items: stretch; }
       .actions-bar .save-btn { width: 100% !important; margin-bottom: 5px; text-align: center; }
@@ -116,6 +119,20 @@
       .modal-buttons { flex-direction: column; }
       #btnGroupRight { flex-direction: column; width: 100%; gap: 10px; }
       .titulo-3d { font-size: 1.8rem; } 
+      
+      /* Aqui é a mágica: a tabela encosta nas bordas da tela */
+      .calendar-wrapper { 
+        width: calc(100% + 20px); 
+        margin-left: -10px; 
+        margin-right: -10px; 
+        border-radius: 0; /* Remove curvas laterais para aproveitar cada pixel */
+        border-left: none; 
+        border-right: none; 
+      }
+      /* Aumentamos o espaço para os nomes para não espremer */
+      .fixed-column { width: 115px; } 
+      /* Ajuste perfeito dos dias para caberem no mínimo 7 */
+      .scroll-column td { width: 33px !important; min-width: 33px !important; max-width: 33px !important; }
     }
   </style>
 </head>
@@ -439,7 +456,6 @@
       selected.forEach(emp => {
         const ei = employees.findIndex(e => e.id === emp.id);
         
-        // Novo: O nome agora é clicável e tem estilo azul sublinhado
         htmlNames += `<tr><td title="Ver faltas de ${emp.name}" onclick="openEmpHistory(${ei})" style="cursor:pointer; color:var(--primary); text-decoration:underline;">${emp.name}</td></tr>`;
         
         htmlDays += `<tr>`;
@@ -471,7 +487,6 @@
       document.getElementById('daysRows').innerHTML = htmlDays;
     }
 
-    // Modal de Lançamento de Falta Diária
     function openModal(ei, ds){
       activeEmpIndex = ei; activeDateStr = ds;
       const emp = employees[ei], [y,m,d] = ds.split('-');
@@ -498,7 +513,6 @@
       closeModal(); saveData();
     }
 
-    // Novo: Abre o Histórico Específico de 1 Funcionário
     function openEmpHistory(ei) {
       const emp = employees[ei];
       document.getElementById('empHistoryTitle').innerText = `Histórico: ${emp.name}`;
@@ -506,7 +520,6 @@
       let html = '';
       
       if (emp.occurrences && Object.keys(emp.occurrences).length > 0) {
-         // Organiza as datas da mais recente para a mais antiga
          const dates = Object.keys(emp.occurrences).sort((a,b) => b.localeCompare(a));
          dates.forEach(d => {
            const [y,m,day] = d.split('-');
@@ -527,7 +540,6 @@
       document.getElementById('empHistoryModal').style.display = 'none';
     }
 
-    // Modal da Tabela Geral da Equipe
     function toggleOccurrencesList(){
       const cal  = document.getElementById('calendarContainer');
       const list = document.getElementById('listContainer');
