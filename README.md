@@ -2,11 +2,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#e0ffff" />
-  
   <title>TABELA DE TURNO</title>
   <style>
     :root {
@@ -73,7 +69,8 @@
     .link-inline { font-size: 0.85rem; background: none; border: none; cursor: pointer; padding: 0; }
     
     .calendar-wrapper { display: flex; width: 100%; background: var(--surface); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 10px; }
-    .fixed-column { width: 110px; flex-shrink: 0; background-color: #ffffff; border-right: 2px solid #94a3b8; box-shadow: 3px 0px 5px rgba(0,0,0,0.08); z-index: 10; }
+    /* Reduzido de 110px para 90px para dar mais espaço aos dias */
+    .fixed-column { width: 90px; flex-shrink: 0; background-color: #ffffff; border-right: 2px solid #94a3b8; box-shadow: 3px 0px 5px rgba(0,0,0,0.08); z-index: 10; }
     .scroll-column { flex-grow: 1; overflow-x: auto; -webkit-overflow-scrolling: touch; background-color: #ffffff; }
     .sync-table { border-collapse: collapse; }
     .fixed-column .sync-table { width: 100%; table-layout: fixed; }
@@ -81,8 +78,9 @@
     .sync-table tr { height: 38px !important; }
     .sync-table th, .sync-table td { height: 38px !important; border-bottom: 1px solid var(--border); padding: 0; text-align: center; vertical-align: middle; font-size: 0.8rem; box-sizing: border-box; }
     .sync-table th { background-color: #f1f5f9; font-weight: 600; border-top: 1px solid var(--border); }
-    .fixed-column td { text-align: left; padding-left: 10px; padding-right: 5px; font-weight: bold; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .scroll-column td { width: 36px !important; min-width: 36px !important; max-width: 36px !important; white-space: nowrap !important; word-break: keep-all !important; cursor: pointer; transition: filter 0.15s; }
+    .fixed-column td { text-align: left; padding-left: 6px; padding-right: 4px; font-weight: bold; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* Reduzido de 38px para 34px para caberem no mínimo 7 dias na tela */
+    .scroll-column td { width: 34px !important; min-width: 34px !important; max-width: 34px !important; white-space: nowrap !important; word-break: keep-all !important; cursor: pointer; transition: filter 0.15s; font-size: 0.75rem; }
     .scroll-column td:active { filter: brightness(0.8); }
     
     .folga { background-color: var(--success) !important; color: white !important; font-weight: bold; }
@@ -96,13 +94,14 @@
     .btn-action { padding: 12px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 5px; }
     .apply-btn { padding: 8px 12px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
     .save-btn { padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.95rem; cursor: pointer; font-weight: bold; flex: 1; text-align: center; }
-    .fullscreen-btn { background: #10b981; }
 
     .list-container { padding: 20px; display: none; background: var(--surface); border-radius: 12px; }
     .list-container table { min-width: 100%; border-collapse: collapse; }
     .list-container th { text-align: left; padding: 10px; border-bottom: 2px solid var(--border); }
+    
+    /* Overlay para os Modais */
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(2px); }
-    .modal-content { background: #fff; padding: 20px; border-radius: 12px; width: 90%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    .modal-content { background: #fff; padding: 20px; border-radius: 12px; width: 90%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 85vh; overflow-y: auto; }
     .modal-content textarea { height: 100px; margin-top: 5px; resize: vertical; font-family: inherit; width: 100%; box-sizing: border-box; }
     .modal-buttons { display: flex; gap: 10px; justify-content: space-between; margin-top: 15px; flex-wrap: wrap; }
     .btn-save-occ   { background: var(--primary);    color: white; }
@@ -127,8 +126,7 @@
   </div>
 
   <div class="actions-bar">
-    <button class="save-btn fullscreen-btn" onclick="toggleFullScreen()" id="btnFullscreen">🔲 Tela Cheia</button>
-    <button class="save-btn" onclick="toggleOccurrencesList()" style="background:#f59e0b;">📋 Ausências</button>
+    <button class="save-btn" onclick="toggleOccurrencesList()" style="background:#f59e0b;">📋 Relatório Equipe</button>
     <button class="save-btn" onclick="saveData()">💾 Salvar</button>
     <button class="save-btn" onclick="toggleConfig()" style="background:#0f172a;">⚙️ Config.</button>
   </div>
@@ -159,7 +157,7 @@
 
   <div class="list-container" id="listContainer">
     <button class="save-btn" style="width:100%;margin-bottom:15px;background:var(--muted);" onclick="toggleOccurrencesList()">⬅️ Retornar para a Escala</button>
-    <h2 style="margin-top:0;color:#1e293b;font-size:1.2rem;">Lista de Ausências</h2>
+    <h2 style="margin-top:0;color:#1e293b;font-size:1.2rem;">Ausências Gerais da Equipe</h2>
     <table>
       <thead>
         <tr><th style="width:90px;">Data</th><th style="width:150px;">Func.</th><th>Motivo</th></tr>
@@ -183,28 +181,32 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="empHistoryModal">
+    <div class="modal-content">
+      <h3 id="empHistoryTitle" style="margin-top:0;color:#1e293b;">Histórico</h3>
+      <table style="width:100%; border-collapse: collapse; margin-top: 10px;">
+        <thead>
+          <tr>
+            <th style="text-align:left; border-bottom:2px solid var(--border); padding-bottom:8px;">Data</th>
+            <th style="text-align:left; border-bottom:2px solid var(--border); padding-bottom:8px;">Motivo</th>
+          </tr>
+        </thead>
+        <tbody id="empHistoryBody"></tbody>
+      </table>
+      <button class="btn-action btn-cancel-occ" onclick="closeEmpHistory()" style="margin-top: 20px; width: 100%;">Fechar Histórico</button>
+    </div>
+  </div>
+
   <script>
     const STORAGE_KEY = 'meu_backup_escala_seguro'; 
     const startYear = 2026, endYear = 2030, defaultEmployees = 20;
     let employees = [], activeEmpIndex = -1, activeDateStr = '';
 
-    // Função de Tela Cheia para "engolir" a barra do sistema
-    function toggleFullScreen() {
-      const doc = window.document;
-      const docEl = doc.documentElement;
-      const btn = document.getElementById('btnFullscreen');
-
-      const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
-      const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
-
-      if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-        requestFullScreen.call(docEl);
-        btn.innerText = "❌ Sair Tela Cheia";
-      } else {
-        cancelFullScreen.call(doc);
-        btn.innerText = "🔲 Tela Cheia";
-      }
-    }
+    window.onload = function() {
+      setTimeout(function() {
+        window.scrollTo(0, 1);
+      }, 100);
+    };
 
     function exportData() {
       const data = localStorage.getItem(STORAGE_KEY);
@@ -437,7 +439,8 @@
       selected.forEach(emp => {
         const ei = employees.findIndex(e => e.id === emp.id);
         
-        htmlNames += `<tr><td title="${emp.name}">${emp.name}</td></tr>`;
+        // Novo: O nome agora é clicável e tem estilo azul sublinhado
+        htmlNames += `<tr><td title="Ver faltas de ${emp.name}" onclick="openEmpHistory(${ei})" style="cursor:pointer; color:var(--primary); text-decoration:underline;">${emp.name}</td></tr>`;
         
         htmlDays += `<tr>`;
         for (let d = 1; d <= daysInMonth; d++){
@@ -466,11 +469,9 @@
       
       document.getElementById('nameRows').innerHTML = htmlNames;
       document.getElementById('daysRows').innerHTML = htmlDays;
-      
-      const emptyHint = document.getElementById('emptyHint');
-      if(emptyHint) emptyHint.style.display = selected.length ? 'none' : 'block';
     }
 
+    // Modal de Lançamento de Falta Diária
     function openModal(ei, ds){
       activeEmpIndex = ei; activeDateStr = ds;
       const emp = employees[ei], [y,m,d] = ds.split('-');
@@ -497,6 +498,36 @@
       closeModal(); saveData();
     }
 
+    // Novo: Abre o Histórico Específico de 1 Funcionário
+    function openEmpHistory(ei) {
+      const emp = employees[ei];
+      document.getElementById('empHistoryTitle').innerText = `Histórico: ${emp.name}`;
+      const tbody = document.getElementById('empHistoryBody');
+      let html = '';
+      
+      if (emp.occurrences && Object.keys(emp.occurrences).length > 0) {
+         // Organiza as datas da mais recente para a mais antiga
+         const dates = Object.keys(emp.occurrences).sort((a,b) => b.localeCompare(a));
+         dates.forEach(d => {
+           const [y,m,day] = d.split('-');
+           html += `<tr>
+             <td style="padding:10px 0; border-bottom:1px solid #e2e8f0; font-weight:bold;">${day}/${m}/${y}</td>
+             <td style="padding:10px 0; border-bottom:1px solid #e2e8f0; color:var(--occurrence);">${emp.occurrences[d]}</td>
+           </tr>`;
+         });
+      } else {
+         html = `<tr><td colspan="2" style="text-align:center; padding: 25px; color: var(--muted);">Nenhuma ausência registada para este funcionário.</td></tr>`;
+      }
+      
+      tbody.innerHTML = html;
+      document.getElementById('empHistoryModal').style.display = 'flex';
+    }
+
+    function closeEmpHistory() {
+      document.getElementById('empHistoryModal').style.display = 'none';
+    }
+
+    // Modal da Tabela Geral da Equipe
     function toggleOccurrencesList(){
       const cal  = document.getElementById('calendarContainer');
       const list = document.getElementById('listContainer');
@@ -521,7 +552,7 @@
       });
       all.sort((a, b) => b.date.localeCompare(a.date));
       body.innerHTML = all.length === 0
-        ? `<tr><td colspan="3" style="text-align:center;color:#64748b;padding:30px;">Nenhuma ausência registada.</td></tr>`
+        ? `<tr><td colspan="3" style="text-align:center;color:#64748b;padding:30px;">Nenhuma ausência registada na equipe.</td></tr>`
         : all.map(o => {
             const [y,m,d] = o.date.split('-');
             return `<tr style="border-bottom:1px solid #e2e8f0;">
