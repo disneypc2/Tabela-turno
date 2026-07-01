@@ -2,6 +2,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#e0ffff" />
   <title>TABELA DE TURNO</title>
   <style>
     :root {
@@ -19,24 +20,37 @@
       --muted: #64748b;
     }
     * { box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0 10px 10px 10px; }
     
-    /* Título 3D Arrojado */
-    .titulo-3d {
+    /* Área da Imagem de Fundo (Banner) */
+    .header-banner {
+      width: calc(100% + 20px);
+      margin-left: -10px;
+      margin-top: 0;
+      padding: 40px 15px;
+      background-image: linear-gradient(rgba(224, 255, 255, 0.3), rgba(224, 255, 255, 1)), url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80');
+      background-size: cover;
+      background-position: center;
       text-align: center;
+      border-bottom: 2px solid #cbd5e1;
+      margin-bottom: 20px;
+    }
+
+    /* Título 3D Arrojado atualizado para encaixar no banner */
+    .titulo-3d {
       font-size: 2.2rem;
       font-weight: 900;
       color: #1e293b;
       text-transform: uppercase;
-      margin: 10px 0 20px 0;
+      margin: 0;
       font-family: 'Segoe UI', system-ui, sans-serif;
       letter-spacing: 2px;
       text-shadow:
-        1px 1px 0 #cbd5e1,
-        2px 2px 0 #94a3b8,
-        3px 3px 0 #64748b,
-        4px 4px 0 #475569,
-        5px 5px 15px rgba(0,0,0,0.3);
+        1px 1px 0 #ffffff,
+        2px 2px 0 #cbd5e1,
+        3px 3px 0 #94a3b8,
+        4px 4px 0 #64748b,
+        5px 5px 15px rgba(0,0,0,0.4);
     }
 
     .controls { background: var(--surface); padding: 15px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
@@ -99,12 +113,15 @@
       .input-group { grid-template-columns: 1fr; }
       .modal-buttons { flex-direction: column; }
       #btnGroupRight { flex-direction: column; width: 100%; gap: 10px; }
-      .titulo-3d { font-size: 1.8rem; margin: 15px 0; } 
+      .titulo-3d { font-size: 1.8rem; } 
     }
   </style>
 </head>
 <body>
-  <h1 class="titulo-3d">TABELA DE TURNO</h1>
+
+  <div class="header-banner">
+    <h1 class="titulo-3d">TABELA DE TURNO</h1>
+  </div>
 
   <div class="actions-bar">
     <button class="save-btn" onclick="toggleOccurrencesList()" style="background:#f59e0b;">📋 Ausências</button>
@@ -167,7 +184,7 @@
     const startYear = 2026, endYear = 2030, defaultEmployees = 20;
     let employees = [], activeEmpIndex = -1, activeDateStr = '';
 
-    // Força o navegador a dar um micro-scroll para tentar esconder a barra de título nativa do Android
+    // Micro-scroll mantido para ajudar com barras de celular
     window.onload = function() {
       setTimeout(function() {
         window.scrollTo(0, 1);
